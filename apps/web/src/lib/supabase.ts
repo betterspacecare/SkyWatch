@@ -13,16 +13,23 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('⚠️  Supabase credentials not configured. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local');
 }
 
-// Create Supabase client with lock handling
+// Create Supabase client with shared session across skyguild.club subdomains
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    // Use localStorage instead of locks to avoid AbortError
     storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-    storageKey: 'skywatch-auth',
+    // Use shared storage key across all skyguild.club subdomains
+    storageKey: 'skyguild-auth',
     flowType: 'pkce',
     detectSessionInUrl: true,
+    // Set cookie domain to parent domain for cross-subdomain sharing
+    cookieOptions: {
+      domain: '.skyguild.club',
+      path: '/',
+      sameSite: 'lax',
+      secure: true,
+    },
   },
   global: {
     headers: {
