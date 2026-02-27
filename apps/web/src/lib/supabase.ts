@@ -1,9 +1,10 @@
 /**
  * Supabase Client Configuration
  * Connects SkyWatch to your existing Supabase platform
+ * Uses cookie-based auth for cross-subdomain sharing with Sky Circle
  */
 
-import { createClient } from '@supabase/supabase-js';
+import { createBrowserClient } from '@supabase/ssr';
 
 // Supabase configuration from environment variables
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -13,21 +14,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('⚠️  Supabase credentials not configured. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local');
 }
 
-// Create Supabase client with shared session across skyguild.club subdomains
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-    // Use shared storage key across all skyguild.club subdomains
-    storageKey: 'skyguild-auth',
-    flowType: 'pkce',
-    detectSessionInUrl: true,
-  },
-  global: {
-    headers: {
-      'x-client-info': 'skywatch-web',
-    },
+// Create Supabase client with cookie-based auth for cross-subdomain sharing
+export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey, {
+  cookieOptions: {
+    domain: '.skyguild.club',
+    path: '/',
+    sameSite: 'lax',
+    secure: true,
   },
 });
 

@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-three/drei": "^9.0.0",
     "@react-three/fiber": "^8.0.0",
+    "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.98.0",
     "@virtual-window/astronomy-engine": "*",
     "dotenv": "^17.3.1",
