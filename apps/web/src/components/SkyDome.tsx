@@ -378,10 +378,11 @@ const InstancedStars: React.FC<InstancedStarsProps> = ({
         <group key={`label-${star.id}`} position={position}>
           <Html distanceFactor={50} style={{ pointerEvents: 'auto', cursor: 'pointer' }} zIndexRange={[0, 100]}>
             <div onClick={() => onStarClick?.(star)} style={{
-              color: 'white',
-              fontSize: '10px',
+              color: 'rgba(255, 255, 220, 0.9)',
+              fontSize: '9px',
               whiteSpace: 'nowrap',
-              textShadow: '0 0 3px black',
+              textShadow: '0 0 3px black, 0 0 2px black',
+              transform: 'translateY(8px)',
             }}>
               {star.name}
             </div>
@@ -1135,15 +1136,17 @@ const ConstellationLines: React.FC<ConstellationLinesProps> = ({
       {/* Render constellation name labels */}
       {showNames && constellationLabels.map((label) => (
         <group key={`${label.id}-${lst.toFixed(4)}`} position={label.position}>
-          <Html distanceFactor={60} style={{ pointerEvents: 'none' }} zIndexRange={[0, 50]}>
+          <Html distanceFactor={80} style={{ pointerEvents: 'none' }} zIndexRange={[0, 30]}>
             <div style={{
               color: nameColor,
-              fontSize: '12px',
-              fontWeight: 'bold',
+              fontSize: '14px',
+              fontWeight: 500,
               whiteSpace: 'nowrap',
-              textShadow: '0 0 6px black, 0 0 3px black, 0 0 1px black',
+              textShadow: '0 0 8px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.9)',
               textTransform: 'uppercase',
-              letterSpacing: '1px',
+              letterSpacing: '3px',
+              opacity: 0.7,
+              transform: 'translateY(-20px)',
             }}>
               {label.name}
             </div>
