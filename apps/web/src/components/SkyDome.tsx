@@ -1113,7 +1113,7 @@ const ConstellationLines: React.FC<ConstellationLinesProps> = ({
     <group>
       {/* Render constellation line segments */}
       {lineGeometries.map((geom) => (
-        <line key={geom.id}>
+        <line key={`${geom.id}-${lst.toFixed(4)}`}>
           <bufferGeometry>
             <bufferAttribute
               attach="attributes-position"
@@ -1134,7 +1134,7 @@ const ConstellationLines: React.FC<ConstellationLinesProps> = ({
       
       {/* Render constellation name labels */}
       {showNames && constellationLabels.map((label) => (
-        <group key={label.id} position={label.position}>
+        <group key={`${label.id}-${lst.toFixed(4)}`} position={label.position}>
           <Html distanceFactor={60} style={{ pointerEvents: 'none' }} zIndexRange={[0, 50]}>
             <div style={{
               color: nameColor,
@@ -1228,7 +1228,7 @@ const DeepSkyObjects: React.FC<DeepSkyObjectsProps> = ({
         const nameSize = Math.round(8 * scaleFactor);
         
         return (
-          <group key={id} position={pos3D}>
+          <group key={`${id}-${lst.toFixed(4)}`} position={pos3D}>
             {/* Sphere marker scaled with FOV */}
             <mesh onClick={() => onClick?.(position)}>
               <sphereGeometry args={[sphereSize, 12, 12]} />
