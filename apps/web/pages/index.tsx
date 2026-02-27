@@ -1161,38 +1161,6 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Right Sidebar - Zoom Controls */}
-      <div style={styles.rightSidebar}>
-        <button 
-          onClick={zoomIn} 
-          style={{...styles.zoomBtn, ...(state.zoomLevel >= 5 ? styles.zoomBtnDisabled : {})}}
-          disabled={state.zoomLevel >= 5}
-          title="Zoom In"
-        >
-          +
-        </button>
-        <div style={styles.zoomIndicator}>
-          <div style={styles.zoomLevel}>{state.zoomLevel.toFixed(1)}×</div>
-          <div style={styles.zoomMag}>Mag {state.maxMagnitude.toFixed(1)}</div>
-        </div>
-        <button 
-          onClick={zoomOut} 
-          style={{...styles.zoomBtn, ...(state.zoomLevel <= 1 ? styles.zoomBtnDisabled : {})}}
-          disabled={state.zoomLevel <= 1}
-          title="Zoom Out"
-        >
-          −
-        </button>
-        <button 
-          onClick={resetZoom} 
-          style={{...styles.resetBtn, ...(state.zoomLevel === 1 ? styles.zoomBtnDisabled : {})}}
-          disabled={state.zoomLevel === 1}
-          title="Reset Zoom"
-        >
-          ↺
-        </button>
-      </div>
-
       {/* Bottom Bar - Info */}
       <div style={styles.bottomBar}>
         <div style={styles.infoGroup}>
@@ -1495,73 +1463,6 @@ const styles: Record<string, React.CSSProperties> = {
   },
   layerLabel: {
     fontSize: '13px',
-    fontWeight: 500,
-  },
-  
-  // Right Sidebar - Zoom
-  rightSidebar: {
-    position: 'absolute',
-    right: '20px',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-    background: 'rgba(0, 8, 20, 0.85)',
-    backdropFilter: 'blur(20px)',
-    padding: '12px',
-    borderRadius: '16px',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    zIndex: 50,
-  },
-  zoomBtn: {
-    width: '48px',
-    height: '48px',
-    background: 'rgba(255, 255, 255, 0.08)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
-    borderRadius: '12px',
-    color: '#ffffff',
-    fontSize: '24px',
-    fontWeight: 300,
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.2s ease',
-  },
-  zoomBtnDisabled: {
-    opacity: 0.3,
-    cursor: 'not-allowed',
-  },
-  resetBtn: {
-    width: '48px',
-    height: '48px',
-    background: 'rgba(255, 255, 255, 0.08)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
-    borderRadius: '12px',
-    color: '#ffffff',
-    fontSize: '20px',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.2s ease',
-  },
-  zoomIndicator: {
-    padding: '12px 8px',
-    textAlign: 'center',
-    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-  },
-  zoomLevel: {
-    fontSize: '16px',
-    fontWeight: 600,
-    color: '#ffffff',
-    marginBottom: '4px',
-  },
-  zoomMag: {
-    fontSize: '10px',
-    color: 'rgba(255, 255, 255, 0.5)',
     fontWeight: 500,
   },
   

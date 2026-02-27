@@ -1477,8 +1477,6 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
   onConstellationClick: _onConstellationClick, // Not yet implemented
   onCameraChange,
 }) => {
-  const [selectedStar, setSelectedStar] = useState<Star | null>(null);
-  const [selectedPlanet, setSelectedPlanet] = useState<Planet | null>(null);
   const [fov, setFov] = useState<number>(config.fov);
   
   // Handle scroll wheel for FOV zoom
@@ -1550,14 +1548,10 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
   
   // Note: Star click handling is now implemented with invisible meshes
   const handleStarClick = useCallback((star: Star) => {
-    setSelectedStar(star);
-    setSelectedPlanet(null);
     _onStarClick?.(star);
   }, [_onStarClick]);
   
   const handlePlanetClick = useCallback((planet: Planet) => {
-    setSelectedPlanet(planet);
-    setSelectedStar(null);
     onPlanetClick?.(planet);
   }, [onPlanetClick]);
   
@@ -1681,48 +1675,6 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
           enableDamping={false}
         />
       </Canvas>
-      
-      {/* Info panel for selected object */}
-      {(selectedStar || selectedPlanet) && (
-        <div style={{
-          position: 'absolute',
-          bottom: 20,
-          left: 20,
-          background: 'rgba(0, 0, 0, 0.8)',
-          color: 'white',
-          padding: '15px',
-          borderRadius: '8px',
-          minWidth: '200px',
-        }}>
-          {selectedStar && (
-            <>
-              <h3 style={{ margin: '0 0 10px 0' }}>{selectedStar.name || 'Unknown Star'}</h3>
-              <p style={{ margin: '5px 0' }}>Magnitude: {selectedStar.magnitude.toFixed(2)}</p>
-              <p style={{ margin: '5px 0' }}>RA: {selectedStar.ra.toFixed(4)}h</p>
-              <p style={{ margin: '5px 0' }}>Dec: {selectedStar.dec.toFixed(4)}°</p>
-              <p style={{ margin: '5px 0' }}>Type: {selectedStar.spectralType}</p>
-            </>
-          )}
-          {selectedPlanet && (
-            <>
-              <h3 style={{ margin: '0 0 10px 0' }}>{selectedPlanet.name}</h3>
-              <p style={{ margin: '5px 0' }}>Magnitude: {selectedPlanet.magnitude.toFixed(2)}</p>
-              <p style={{ margin: '5px 0' }}>RA: {selectedPlanet.ra.toFixed(4)}h</p>
-              <p style={{ margin: '5px 0' }}>Dec: {selectedPlanet.dec.toFixed(4)}°</p>
-            </>
-          )}
-          <button
-            onClick={() => { setSelectedStar(null); setSelectedPlanet(null); }}
-            style={{
-              marginTop: '10px',
-              padding: '5px 10px',
-              cursor: 'pointer',
-            }}
-          >
-            Close
-          </button>
-        </div>
-      )}
       
       {/* FOV indicator */}
       <div style={{
