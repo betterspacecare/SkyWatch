@@ -1009,7 +1009,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>SkyWatch - Virtual Window to the Stars</title>
+        <title>SkyWatch - Real-time Interactive Star Map | Sky Guild</title>
         <style>{`
           * {
             margin: 0;
@@ -1239,6 +1239,12 @@ export default function Home() {
             {state.isUpdating ? '🔄 Updating...' : '✓ Synced'}
           </span>
         </div>
+        <div style={styles.infoDivider} />
+        {/* Powered by Sky Guild */}
+        <a href="https://www.skyguild.club" target="_blank" rel="noopener noreferrer" style={styles.poweredBy}>
+          <span style={styles.poweredByText}>Powered by</span>
+          <img src="/SkyGuild_Logo.png" alt="Sky Guild" style={styles.poweredByLogo} />
+        </a>
       </div>
 
       {/* Loading Overlay */}
@@ -1613,6 +1619,29 @@ const styles: Record<string, React.CSSProperties> = {
     width: '1px',
     height: '24px',
     background: 'rgba(255, 255, 255, 0.1)',
+  },
+  poweredBy: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    textDecoration: 'none',
+    padding: '6px 12px',
+    borderRadius: '8px',
+    background: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    transition: 'all 0.2s ease',
+  },
+  poweredByText: {
+    fontSize: '10px',
+    fontWeight: 500,
+    color: 'rgba(255, 255, 255, 0.6)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+  },
+  poweredByLogo: {
+    height: '24px',
+    width: 'auto',
+    objectFit: 'contain',
   },
   
   // Loading Overlay
