@@ -23,13 +23,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     storageKey: 'skyguild-auth',
     flowType: 'pkce',
     detectSessionInUrl: true,
-    // Set cookie domain to parent domain for cross-subdomain sharing
-    cookieOptions: {
-      domain: '.skyguild.club',
-      path: '/',
-      sameSite: 'lax',
-      secure: true,
-    },
   },
   global: {
     headers: {
