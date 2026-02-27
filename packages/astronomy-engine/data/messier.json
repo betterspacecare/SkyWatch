@@ -1,0 +1,884 @@
+{
+  "objects": [
+    {
+      "id": "M1",
+      "name": "Crab Nebula",
+      "ra": 5.5753,
+      "dec": 22.0145,
+      "magnitude": 8.4,
+      "type": "Nebula"
+    },
+    {
+      "id": "M2",
+      "name": null,
+      "ra": 21.5583,
+      "dec": -0.8233,
+      "magnitude": 6.5,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M3",
+      "name": null,
+      "ra": 13.7033,
+      "dec": 28.3767,
+      "magnitude": 6.2,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M4",
+      "name": null,
+      "ra": 16.3933,
+      "dec": -26.5258,
+      "magnitude": 5.6,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M5",
+      "name": null,
+      "ra": 15.3100,
+      "dec": 2.0817,
+      "magnitude": 5.6,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M6",
+      "name": "Butterfly Cluster",
+      "ra": 17.6700,
+      "dec": -32.2167,
+      "magnitude": 4.2,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M7",
+      "name": "Ptolemy Cluster",
+      "ra": 17.8983,
+      "dec": -34.8167,
+      "magnitude": 3.3,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M8",
+      "name": "Lagoon Nebula",
+      "ra": 18.0633,
+      "dec": -24.3833,
+      "magnitude": 6.0,
+      "type": "Nebula"
+    },
+    {
+      "id": "M9",
+      "name": null,
+      "ra": 17.3200,
+      "dec": -18.5167,
+      "magnitude": 7.7,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M10",
+      "name": null,
+      "ra": 16.9517,
+      "dec": -4.1000,
+      "magnitude": 6.6,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M11",
+      "name": "Wild Duck Cluster",
+      "ra": 18.8517,
+      "dec": -6.2667,
+      "magnitude": 6.3,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M12",
+      "name": null,
+      "ra": 16.7867,
+      "dec": -1.9483,
+      "magnitude": 6.7,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M13",
+      "name": "Hercules Globular Cluster",
+      "ra": 16.6950,
+      "dec": 36.4617,
+      "magnitude": 5.8,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M14",
+      "name": null,
+      "ra": 17.6267,
+      "dec": -3.2450,
+      "magnitude": 7.6,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M15",
+      "name": null,
+      "ra": 21.4983,
+      "dec": 12.1667,
+      "magnitude": 6.2,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M16",
+      "name": "Eagle Nebula",
+      "ra": 18.3133,
+      "dec": -13.7833,
+      "magnitude": 6.4,
+      "type": "Nebula"
+    },
+    {
+      "id": "M17",
+      "name": "Omega Nebula",
+      "ra": 18.3467,
+      "dec": -16.1833,
+      "magnitude": 6.0,
+      "type": "Nebula"
+    },
+    {
+      "id": "M18",
+      "name": null,
+      "ra": 18.3317,
+      "dec": -17.1333,
+      "magnitude": 7.5,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M19",
+      "name": null,
+      "ra": 17.0433,
+      "dec": -26.2667,
+      "magnitude": 6.8,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M20",
+      "name": "Trifid Nebula",
+      "ra": 18.0433,
+      "dec": -23.0333,
+      "magnitude": 6.3,
+      "type": "Nebula"
+    },
+    {
+      "id": "M21",
+      "name": null,
+      "ra": 18.0733,
+      "dec": -22.5000,
+      "magnitude": 6.5,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M22",
+      "name": "Sagittarius Cluster",
+      "ra": 18.6067,
+      "dec": -23.9033,
+      "magnitude": 5.1,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M23",
+      "name": null,
+      "ra": 17.9483,
+      "dec": -19.0167,
+      "magnitude": 6.9,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M24",
+      "name": "Sagittarius Star Cloud",
+      "ra": 18.2833,
+      "dec": -18.4833,
+      "magnitude": 4.6,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M25",
+      "name": null,
+      "ra": 18.5267,
+      "dec": -19.2500,
+      "magnitude": 4.6,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M26",
+      "name": null,
+      "ra": 18.7533,
+      "dec": -9.4000,
+      "magnitude": 8.0,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M27",
+      "name": "Dumbbell Nebula",
+      "ra": 19.9933,
+      "dec": 22.7217,
+      "magnitude": 7.5,
+      "type": "Planetary Nebula"
+    },
+    {
+      "id": "M28",
+      "name": null,
+      "ra": 18.4100,
+      "dec": -24.8700,
+      "magnitude": 6.8,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M29",
+      "name": null,
+      "ra": 20.3983,
+      "dec": 38.5167,
+      "magnitude": 7.1,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M30",
+      "name": null,
+      "ra": 21.6733,
+      "dec": -23.1800,
+      "magnitude": 7.2,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M31",
+      "name": "Andromeda Galaxy",
+      "ra": 0.7123,
+      "dec": 41.2689,
+      "magnitude": 3.4,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M32",
+      "name": null,
+      "ra": 0.7117,
+      "dec": 40.8650,
+      "magnitude": 8.1,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M33",
+      "name": "Triangulum Galaxy",
+      "ra": 1.5650,
+      "dec": 30.6600,
+      "magnitude": 5.7,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M34",
+      "name": null,
+      "ra": 2.7017,
+      "dec": 42.7833,
+      "magnitude": 5.5,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M35",
+      "name": null,
+      "ra": 6.1483,
+      "dec": 24.3333,
+      "magnitude": 5.3,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M36",
+      "name": null,
+      "ra": 5.6017,
+      "dec": 34.1333,
+      "magnitude": 6.3,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M37",
+      "name": null,
+      "ra": 5.8733,
+      "dec": 32.5500,
+      "magnitude": 6.2,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M38",
+      "name": null,
+      "ra": 5.4783,
+      "dec": 35.8500,
+      "magnitude": 7.4,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M39",
+      "name": null,
+      "ra": 21.5350,
+      "dec": 48.4333,
+      "magnitude": 4.6,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M40",
+      "name": "Winnecke 4",
+      "ra": 12.3717,
+      "dec": 58.0833,
+      "magnitude": 8.4,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M41",
+      "name": null,
+      "ra": 6.7833,
+      "dec": -20.7333,
+      "magnitude": 4.5,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M42",
+      "name": "Orion Nebula",
+      "ra": 5.5883,
+      "dec": -5.3900,
+      "magnitude": 4.0,
+      "type": "Nebula"
+    },
+    {
+      "id": "M43",
+      "name": "De Mairan's Nebula",
+      "ra": 5.5933,
+      "dec": -5.2667,
+      "magnitude": 9.0,
+      "type": "Nebula"
+    },
+    {
+      "id": "M44",
+      "name": "Beehive Cluster",
+      "ra": 8.6700,
+      "dec": 19.9833,
+      "magnitude": 3.7,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M45",
+      "name": "Pleiades",
+      "ra": 3.7917,
+      "dec": 24.1167,
+      "magnitude": 1.6,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M46",
+      "name": null,
+      "ra": 7.6967,
+      "dec": -14.8167,
+      "magnitude": 6.1,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M47",
+      "name": null,
+      "ra": 7.6100,
+      "dec": -14.5000,
+      "magnitude": 4.2,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M48",
+      "name": null,
+      "ra": 8.2267,
+      "dec": -5.8000,
+      "magnitude": 5.5,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M49",
+      "name": null,
+      "ra": 12.4967,
+      "dec": 8.0000,
+      "magnitude": 8.4,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M50",
+      "name": null,
+      "ra": 7.0533,
+      "dec": -8.3333,
+      "magnitude": 5.9,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M51",
+      "name": "Whirlpool Galaxy",
+      "ra": 13.4983,
+      "dec": 47.1950,
+      "magnitude": 8.4,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M52",
+      "name": null,
+      "ra": 23.4067,
+      "dec": 61.5833,
+      "magnitude": 7.3,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M53",
+      "name": null,
+      "ra": 13.2150,
+      "dec": 18.1683,
+      "magnitude": 7.6,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M54",
+      "name": null,
+      "ra": 18.9183,
+      "dec": -30.4783,
+      "magnitude": 7.6,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M55",
+      "name": null,
+      "ra": 19.6667,
+      "dec": -30.9617,
+      "magnitude": 6.3,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M56",
+      "name": null,
+      "ra": 19.2767,
+      "dec": 30.1833,
+      "magnitude": 8.3,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M57",
+      "name": "Ring Nebula",
+      "ra": 18.8933,
+      "dec": 33.0283,
+      "magnitude": 8.8,
+      "type": "Planetary Nebula"
+    },
+    {
+      "id": "M58",
+      "name": null,
+      "ra": 12.6283,
+      "dec": 11.8183,
+      "magnitude": 9.7,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M59",
+      "name": null,
+      "ra": 12.7000,
+      "dec": 11.6467,
+      "magnitude": 9.6,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M60",
+      "name": null,
+      "ra": 12.7283,
+      "dec": 11.5517,
+      "magnitude": 8.8,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M61",
+      "name": null,
+      "ra": 12.3650,
+      "dec": 4.4733,
+      "magnitude": 9.7,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M62",
+      "name": null,
+      "ra": 17.0217,
+      "dec": -30.1133,
+      "magnitude": 6.5,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M63",
+      "name": "Sunflower Galaxy",
+      "ra": 13.2633,
+      "dec": 42.0283,
+      "magnitude": 8.6,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M64",
+      "name": "Black Eye Galaxy",
+      "ra": 12.9467,
+      "dec": 21.6817,
+      "magnitude": 8.5,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M65",
+      "name": null,
+      "ra": 11.3150,
+      "dec": 13.0917,
+      "magnitude": 9.3,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M66",
+      "name": null,
+      "ra": 11.3367,
+      "dec": 12.9917,
+      "magnitude": 8.9,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M67",
+      "name": null,
+      "ra": 8.8533,
+      "dec": 11.8167,
+      "magnitude": 6.1,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M68",
+      "name": null,
+      "ra": 12.6567,
+      "dec": -26.7450,
+      "magnitude": 7.8,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M69",
+      "name": null,
+      "ra": 18.5233,
+      "dec": -32.3483,
+      "magnitude": 7.6,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M70",
+      "name": null,
+      "ra": 18.7200,
+      "dec": -32.2917,
+      "magnitude": 7.9,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M71",
+      "name": null,
+      "ra": 19.8967,
+      "dec": 18.7783,
+      "magnitude": 8.2,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M72",
+      "name": null,
+      "ra": 20.8917,
+      "dec": -12.5367,
+      "magnitude": 9.3,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M73",
+      "name": null,
+      "ra": 20.9817,
+      "dec": -12.6333,
+      "magnitude": 9.0,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M74",
+      "name": "Phantom Galaxy",
+      "ra": 1.6117,
+      "dec": 15.7833,
+      "magnitude": 9.4,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M75",
+      "name": null,
+      "ra": 20.1017,
+      "dec": -21.9217,
+      "magnitude": 8.5,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M76",
+      "name": "Little Dumbbell Nebula",
+      "ra": 1.7033,
+      "dec": 51.5750,
+      "magnitude": 10.1,
+      "type": "Planetary Nebula"
+    },
+    {
+      "id": "M77",
+      "name": "Cetus A",
+      "ra": 2.7117,
+      "dec": -0.0133,
+      "magnitude": 8.9,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M78",
+      "name": null,
+      "ra": 5.7800,
+      "dec": 0.0500,
+      "magnitude": 8.3,
+      "type": "Nebula"
+    },
+    {
+      "id": "M79",
+      "name": null,
+      "ra": 5.4050,
+      "dec": -24.5250,
+      "magnitude": 7.7,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M80",
+      "name": null,
+      "ra": 16.2833,
+      "dec": -22.9750,
+      "magnitude": 7.3,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M81",
+      "name": "Bode's Galaxy",
+      "ra": 9.9267,
+      "dec": 69.0650,
+      "magnitude": 6.9,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M82",
+      "name": "Cigar Galaxy",
+      "ra": 9.9283,
+      "dec": 69.6800,
+      "magnitude": 8.4,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M83",
+      "name": "Southern Pinwheel Galaxy",
+      "ra": 13.6167,
+      "dec": -29.8667,
+      "magnitude": 7.6,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M84",
+      "name": null,
+      "ra": 12.4183,
+      "dec": 12.8867,
+      "magnitude": 9.1,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M85",
+      "name": null,
+      "ra": 12.4217,
+      "dec": 18.1917,
+      "magnitude": 9.1,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M86",
+      "name": null,
+      "ra": 12.4367,
+      "dec": 12.9467,
+      "magnitude": 8.9,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M87",
+      "name": "Virgo A",
+      "ra": 12.5133,
+      "dec": 12.3900,
+      "magnitude": 8.6,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M88",
+      "name": null,
+      "ra": 12.5333,
+      "dec": 14.4200,
+      "magnitude": 9.6,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M89",
+      "name": null,
+      "ra": 12.5933,
+      "dec": 12.5567,
+      "magnitude": 9.8,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M90",
+      "name": null,
+      "ra": 12.6133,
+      "dec": 13.1633,
+      "magnitude": 9.5,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M91",
+      "name": null,
+      "ra": 12.5917,
+      "dec": 14.4967,
+      "magnitude": 10.2,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M92",
+      "name": null,
+      "ra": 17.2850,
+      "dec": 43.1367,
+      "magnitude": 6.4,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M93",
+      "name": null,
+      "ra": 7.7433,
+      "dec": -23.8667,
+      "magnitude": 6.0,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M94",
+      "name": "Cat's Eye Galaxy",
+      "ra": 12.8517,
+      "dec": 41.1200,
+      "magnitude": 8.2,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M95",
+      "name": null,
+      "ra": 10.7300,
+      "dec": 11.7033,
+      "magnitude": 9.7,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M96",
+      "name": null,
+      "ra": 10.7800,
+      "dec": 11.8200,
+      "magnitude": 9.2,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M97",
+      "name": "Owl Nebula",
+      "ra": 11.2467,
+      "dec": 55.0183,
+      "magnitude": 9.9,
+      "type": "Planetary Nebula"
+    },
+    {
+      "id": "M98",
+      "name": null,
+      "ra": 12.2267,
+      "dec": 14.9000,
+      "magnitude": 10.1,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M99",
+      "name": "Coma Pinwheel Galaxy",
+      "ra": 12.3133,
+      "dec": 14.4167,
+      "magnitude": 9.9,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M100",
+      "name": null,
+      "ra": 12.3833,
+      "dec": 15.8217,
+      "magnitude": 9.3,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M101",
+      "name": "Pinwheel Galaxy",
+      "ra": 14.0533,
+      "dec": 54.3483,
+      "magnitude": 7.9,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M102",
+      "name": "Spindle Galaxy",
+      "ra": 15.1117,
+      "dec": 55.7633,
+      "magnitude": 9.9,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M103",
+      "name": null,
+      "ra": 1.5550,
+      "dec": 60.7000,
+      "magnitude": 7.4,
+      "type": "Open Cluster"
+    },
+    {
+      "id": "M104",
+      "name": "Sombrero Galaxy",
+      "ra": 12.6667,
+      "dec": -11.6217,
+      "magnitude": 8.0,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M105",
+      "name": null,
+      "ra": 10.7967,
+      "dec": 12.5817,
+      "magnitude": 9.3,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M106",
+      "name": null,
+      "ra": 12.3150,
+      "dec": 47.3033,
+      "magnitude": 8.4,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M107",
+      "name": null,
+      "ra": 16.5417,
+      "dec": -13.0533,
+      "magnitude": 7.9,
+      "type": "Globular Cluster"
+    },
+    {
+      "id": "M108",
+      "name": "Surfboard Galaxy",
+      "ra": 11.1867,
+      "dec": 55.6733,
+      "magnitude": 10.0,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M109",
+      "name": null,
+      "ra": 11.9617,
+      "dec": 53.3750,
+      "magnitude": 9.8,
+      "type": "Galaxy"
+    },
+    {
+      "id": "M110",
+      "name": null,
+      "ra": 0.6733,
+      "dec": 41.6850,
+      "magnitude": 8.5,
+      "type": "Galaxy"
+    }
+  ]
+}

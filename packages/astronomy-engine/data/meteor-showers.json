@@ -1,0 +1,67 @@
+{
+  "showers": [
+    {
+      "id": "QUA",
+      "name": "Quadrantids",
+      "ra": 15.33,
+      "dec": 49.5,
+      "peakMonth": 1,
+      "peakDay": 4,
+      "zhr": 120
+    },
+    {
+      "id": "LYR",
+      "name": "Lyrids",
+      "ra": 18.08,
+      "dec": 33.0,
+      "peakMonth": 4,
+      "peakDay": 22,
+      "zhr": 18
+    },
+    {
+      "id": "ETA",
+      "name": "Eta Aquariids",
+      "ra": 22.33,
+      "dec": -1.0,
+      "peakMonth": 5,
+      "peakDay": 6,
+      "zhr": 50
+    },
+    {
+      "id": "PER",
+      "name": "Perseids",
+      "ra": 3.07,
+      "dec": 58.0,
+      "peakMonth": 8,
+      "peakDay": 12,
+      "zhr": 100
+    },
+    {
+      "id": "ORI",
+      "name": "Orionids",
+      "ra": 6.35,
+      "dec": 15.5,
+      "peakMonth": 10,
+      "peakDay": 21,
+      "zhr": 20
+    },
+    {
+      "id": "LEO",
+      "name": "Leonids",
+      "ra": 10.13,
+      "dec": 22.0,
+      "peakMonth": 11,
+      "peakDay": 17,
+      "zhr": 15
+    },
+    {
+      "id": "GEM",
+      "name": "Geminids",
+      "ra": 7.47,
+      "dec": 32.5,
+      "peakMonth": 12,
+      "peakDay": 14,
+      "zhr": 150
+    }
+  ]
+}

@@ -1,0 +1,8822 @@
+﻿
+[
+  {
+    "id": "aql",
+    "name": "Aquila",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 98036,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 97649,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 97649,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 97278,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 97649,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 95501,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 95501,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 97804,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 99473,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 97804,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 95501,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 93747,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93747,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 93244,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 95501,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 93805,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "and",
+    "name": "Andromeda",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 677,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 3092,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 3092,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 5447,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 9640,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 5447,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 5447,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 4436,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 4436,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 3881,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "scl",
+    "name": "Sculptor",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 116231,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 4577,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 4577,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 115102,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 115102,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 116231,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "ara",
+    "name": "Ara",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 88714,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 85792,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 85792,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 83081,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 83081,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 82363,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 82363,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 85727,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 85727,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 85267,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 85267,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 85258,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 85258,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 88714,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "lib",
+    "name": "Libra",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 77853,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 76333,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 76333,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 74785,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 74785,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 72622,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 72622,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 73714,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 73714,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 76333,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cet",
+    "name": "Cetus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 10324,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 11484,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 8102,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 3419,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 3419,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 1562,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 3419,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 5364,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 5364,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 6537,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 6537,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 8645,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 8645,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 11345,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 11345,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12390,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 12390,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12770,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 12770,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 11783,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 11783,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 8102,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 10826,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12390,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 10826,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12387,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 12387,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12706,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 12706,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 14135,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 14135,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 13954,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 13954,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12828,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 12828,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 11484,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 11484,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12093,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 12093,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12706,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "ari",
+    "name": "Aries",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 13209,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 9884,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 9884,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 8903,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 8903,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 8832,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "sct",
+    "name": "Scutum",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 92175,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 92202,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 92202,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 92814,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 92814,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 90595,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 90595,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 91117,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 91117,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 92175,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "pyx",
+    "name": "Pyxis",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 42515,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 42828,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 42828,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 43409,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "boo",
+    "name": "Bo├╢tes",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 71795,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 69673,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 69673,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 72105,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 72105,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 74666,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 74666,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 73555,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 73555,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 71075,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 71075,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 71053,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 71053,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 69673,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 69673,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 67927,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 67927,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 67459,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cae",
+    "name": "Caelum",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 21060,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 21770,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 21770,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 21861,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cha",
+    "name": "Chamaeleon",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 40702,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 51839,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 51839,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 60000,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cnc",
+    "name": "Cancer",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 43103,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 42806,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 42806,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 40843,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 42806,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 42911,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 42911,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 40526,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 42911,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 44066,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cap",
+    "name": "Capricornus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 100064,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 100345,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 100345,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 104139,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 104139,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 105515,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 105515,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 106985,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 106985,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 107556,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 105515,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 105881,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 105881,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 104139,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 100345,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 102485,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 104139,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 102978,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "car",
+    "name": "Carina",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 45238,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 50099,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 50099,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 52419,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 52419,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 52468,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 52468,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 54463,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 54463,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 53253,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 53253,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 51232,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 51232,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 50371,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 50371,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 45556,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 42568,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 41037,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 41037,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 30438,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 45080,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 45556,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 45080,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 42568,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 30438,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 31685,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 41037,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 39429,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cas",
+    "name": "Cassiopeia",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 8886,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 6686,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 6686,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 4427,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 4427,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 3179,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 3179,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 746,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cen",
+    "name": "Centaurus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 71683,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 68702,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 68702,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 66657,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 66657,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 68002,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 68002,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 68282,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 68282,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 67472,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 67472,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 67464,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 67464,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 65936,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 65936,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 65109,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 67464,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 68933,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 67472,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 71352,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 71352,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 73334,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 68002,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 61932,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 61932,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 60823,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 60823,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 59196,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 59196,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 56480,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 56480,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 56561,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cep",
+    "name": "Cepheus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 109492,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 112724,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112724,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 106032,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 106032,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 105199,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 105199,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 109492,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112724,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 116727,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 116727,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 106032,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "com",
+    "name": "Coma Berenices",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 64241,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 64394,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 64394,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 60742,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cvn",
+    "name": "Canes Venatici",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 61317,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 63125,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "aur",
+    "name": "Auriga",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 28380,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 28360,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 28360,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 24608,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 24608,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 23453,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 23453,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 23015,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 25428,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 23015,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 25428,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 28380,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "col",
+    "name": "Columba",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 30277,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 29807,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 29807,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 28199,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 28199,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27628,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 27628,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 28328,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 27628,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 26634,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 26634,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 25859,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cir",
+    "name": "Circinus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 71908,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 75323,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 71908,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 74824,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "crt",
+    "name": "Crater",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 53740,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 54682,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 54682,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 55705,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 55705,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 55282,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 55282,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 53740,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 55282,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 55687,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 55687,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 56633,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 56633,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 58188,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 58188,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 57283,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 57283,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 55705,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cra",
+    "name": "Corona Australis",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 91875,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 92989,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 92989,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 93174,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93174,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 93825,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93825,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 94114,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 94114,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 94160,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 94160,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 94005,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 94005,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 93542,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93542,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 92953,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 91875,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 90887,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "crb",
+    "name": "Corona Borealis",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 76127,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 75695,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 75695,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 76267,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 76267,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 76952,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 76952,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 77512,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 77512,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 78159,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 78159,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 78493,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "crv",
+    "name": "Corvus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 61174,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 60965,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 60965,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 59803,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 59803,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 59316,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 59316,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 59199,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 59316,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 61359,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 61359,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 60965,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cru",
+    "name": "Crux",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 61084,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 60718,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 62434,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 59747,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cyg",
+    "name": "Cygnus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 94779,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 95853,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 95853,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 97165,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 97165,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 100453,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 100453,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 102098,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 100453,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 102488,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 102488,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 104732,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 104732,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 107310,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 100453,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 98110,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 98110,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 95947,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "del",
+    "name": "Delphinus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 101421,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 101769,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 101769,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 101958,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 101958,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 102532,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 102532,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 102281,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 102281,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 101769,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "dor",
+    "name": "Dorado",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 27100,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27890,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 27890,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 26069,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 26069,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27100,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 26069,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 21281,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 21281,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 19893,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "dra",
+    "name": "Draco",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 87585,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 87833,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 87833,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 85670,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 85670,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 85829,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 85829,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 87585,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 87585,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 94376,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 94376,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 97433,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 97433,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 94648,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 94648,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 89937,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 89937,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 83895,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 83895,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 80331,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 80331,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 78527,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 78527,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 75458,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 75458,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 68756,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 68756,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 61281,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 61281,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 56211,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "nor",
+    "name": "Norma",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 79509,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 80000,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 80000,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 80582,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 80582,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 78639,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 78639,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 80000,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 78639,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 79509,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "eri",
+    "name": "Eridanus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 7588,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 9007,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 9007,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 10602,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 10602,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 11407,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 11407,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12413,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 12413,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12486,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 12486,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 13847,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 13847,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 15510,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 15510,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 17797,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 17797,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 17874,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 17874,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 20042,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 20042,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 20535,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 20535,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 21393,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 21393,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 17651,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 17651,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 16611,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 16611,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 15474,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 15474,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 14146,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 14146,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12843,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 12843,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 13701,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 13701,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 15197,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 15197,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 16537,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 16537,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 17378,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 17378,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 21444,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 21444,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 22109,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 22109,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 22701,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 22701,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 23875,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 23875,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 23972,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 23972,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 21594,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "sge",
+    "name": "Sagitta",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 96837,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 97365,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 97365,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 96757,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 97365,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 98337,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 98337,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 98920,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "for",
+    "name": "Fornax",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 13147,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 14879,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "gem",
+    "name": "Gemini",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 31681,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 34088,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 34088,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 35550,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 35550,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 35350,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 35350,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 32362,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 35550,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 36962,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 36962,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 37740,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 36962,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 37826,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 36962,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 36046,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 36046,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 34693,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 34693,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 36850,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 34693,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 33018,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 34693,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 32246,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 32246,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 30883,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 32246,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 30343,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 30343,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 29655,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 29655,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 28734,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cam",
+    "name": "Camelopardalis",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 16228,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 18505,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 18505,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 22783,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 16228,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 17959,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 17959,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 22783,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 17959,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 25110,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cma",
+    "name": "Canis Major",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 33160,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 34045,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 34045,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 33347,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 33347,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 32349,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 32349,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 33977,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 33977,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 34444,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 34444,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 35037,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 35037,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 35904,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 33579,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 33856,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 33856,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 34444,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 33856,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 33165,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 33165,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 31592,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 31592,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 31416,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 31592,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 30324,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 31592,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 32349,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 33579,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 32759,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 30122,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 33579,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 33347,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 33160,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "uma",
+    "name": "Ursa Major",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 67301,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 65378,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 65378,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 62956,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 62956,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 59774,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 59774,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 54061,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 54061,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 53910,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 53910,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 58001,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 58001,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 59774,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 58001,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 57399,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 57399,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 54539,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 54539,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 50372,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 54539,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 50801,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 53910,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 48402,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 48402,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 46853,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 46853,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 44471,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 46853,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 44127,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 48402,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 48319,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 48319,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 41704,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 41704,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 46733,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 46733,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 54061,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "gru",
+    "name": "Grus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 114131,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 110997,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 110997,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 109268,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 109268,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 112122,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112122,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 114421,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 114421,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 114131,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112122,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 113638,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112122,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 112623,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 109268,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 109111,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 109111,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 108085,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "her",
+    "name": "Hercules",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 86414,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 87808,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 87808,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 85112,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 85112,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 84606,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 84606,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 84380,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 84380,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 81833,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 81833,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 81126,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 81126,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 79992,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 79992,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 77760,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 81833,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 81693,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 81693,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 80816,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 80816,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 80170,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 81693,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 83207,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 83207,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 85693,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 85693,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 84379,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 86974,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 87933,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 87933,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 88794,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 83207,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 84380,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 86974,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 85693,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "hor",
+    "name": "Horologium",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 19747,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12484,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 12484,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 14240,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "hya",
+    "name": "Hydra",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 42799,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 42402,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 42402,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 42313,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 42313,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 43109,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 43109,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 43234,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 43234,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 42799,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 43234,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 43813,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 43813,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 45336,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 45336,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 46776,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 46776,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 46509,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 46509,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 46390,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 46390,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 48356,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 48356,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 49841,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 49841,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 51069,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 51069,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 52943,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 52943,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 56343,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 56343,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 57936,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 57936,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 64166,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 64166,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 64962,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "hyi",
+    "name": "Hydrus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 2021,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 17678,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 17678,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 12394,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 12394,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 11001,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 11001,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 9236,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "ind",
+    "name": "Indus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 105319,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 101772,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 101772,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 103227,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 103227,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 105319,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "lac",
+    "name": "Lacerta",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 109937,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 111104,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 111104,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 111022,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 111022,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 110609,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 110609,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 110538,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 110538,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 111169,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 111169,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 111022,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "mon",
+    "name": "Monoceros",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 29651,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 30867,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 30867,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 34769,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 34769,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 30419,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 30419,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 29151,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 34769,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 39863,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 39863,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 37447,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "lep",
+    "name": "Lepus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 28910,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 28103,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 28103,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27288,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 27288,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 25985,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 25985,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 24305,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 25985,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27654,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 27654,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27072,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 27072,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 25606,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 25606,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 23685,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 25985,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 25606,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 24305,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 24845,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 24305,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 24327,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 23685,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 24305,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 24327,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 24244,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 24845,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 24873,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "leo",
+    "name": "Leo",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 57632,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 54879,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 54879,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 49669,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 49669,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 49583,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 49583,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 50583,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 50583,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 54872,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 54872,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 57632,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 50583,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 50335,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 50335,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 48455,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 48455,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 47908,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 54872,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 54879,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "lup",
+    "name": "Lupus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 77634,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 78970,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 78970,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 78384,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 78384,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 77634,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 78384,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 76297,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 76297,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 75141,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 75141,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 75177,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 75141,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 73273,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 76297,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 76552,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 76552,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 74395,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 74395,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 71860,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 74395,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 71536,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 71860,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 70576,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 71860,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 73273,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "lyn",
+    "name": "Lynx",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 45860,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 45688,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 45688,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 44700,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 44700,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 44248,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 44248,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 41075,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 41075,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 36145,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 36145,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 33449,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 33449,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 30060,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "lyr",
+    "name": "Lyra",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 91262,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 91971,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 91971,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 92420,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 92420,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 93194,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93194,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 92791,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 92791,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 91971,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "ant",
+    "name": "Antlia",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 51172,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 48926,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "mic",
+    "name": "Microscopium",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 105140,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 103738,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 103738,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 102831,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "mus",
+    "name": "Musca",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 62322,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 57363,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 57363,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 61199,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 61199,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 61585,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 61585,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 62322,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "oct",
+    "name": "Octans",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 107089,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 112405,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112405,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 70638,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 70638,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 107089,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "aps",
+    "name": "Apus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 72370,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 81065,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 81065,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 81852,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "oph",
+    "name": "Ophiuchus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 86032,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 86742,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 84012,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 86742,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 86032,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 83000,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 83000,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 79882,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 79882,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 81377,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 81377,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 84012,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 84012,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 85755,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "ori",
+    "name": "Orion",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 26727,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 26311,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 26311,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 25930,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 29434,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 29426,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 29434,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 28716,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 28716,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27913,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 29426,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 29038,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 29038,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27913,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 29426,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 28614,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 28614,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27989,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 27989,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 26727,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 26727,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27366,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 27366,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 24436,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 24436,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 25930,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 25930,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 25336,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 25336,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 26207,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 26207,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27989,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 25336,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 22449,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 22449,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 22549,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 22549,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 22730,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 22730,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 23123,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 22449,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 22509,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 22509,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 22845,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 29038,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 28614,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "pav",
+    "name": "Pavo",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 100751,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 105858,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 105858,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 102395,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 102395,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 99240,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 99240,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 100751,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 99240,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 98495,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 98495,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 91792,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 91792,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 93015,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93015,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 99240,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93015,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 92609,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 92609,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 90098,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 90098,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 88866,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 88866,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 92609,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 88866,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 86929,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "peg",
+    "name": "Pegasus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 1067,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 113963,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 113881,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 112158,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112158,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 109352,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 113881,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 112748,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112748,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 112440,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112440,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 109176,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 109176,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 107354,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 113963,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 112447,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112447,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 112029,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112029,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 109427,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 109427,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 107315,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 677,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 113881,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 677,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 1067,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 113881,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 113963,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "pic",
+    "name": "Pictor",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 32607,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27530,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 27530,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 27321,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "per",
+    "name": "Perseus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 17448,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 18246,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 18246,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 18614,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 18614,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 18532,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 18532,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 17358,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 17358,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 15863,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 15863,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 14328,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 14328,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 13268,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 15863,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 14576,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 14576,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 14354,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 14354,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 13254,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "equ",
+    "name": "Equuleus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 104521,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 104858,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 104858,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 105570,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 105570,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 104987,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 104987,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 104521,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "cmi",
+    "name": "Canis Minor",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 37279,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 36188,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "lmi",
+    "name": "Leo Minor",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 53229,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 51233,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 51233,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 49593,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 49593,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 46952,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 49593,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 53229,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "vul",
+    "name": "Vulpecula",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 95771,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 98543,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "umi",
+    "name": "Ursa Minor",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 11767,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 85822,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 85822,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 82080,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 82080,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 77055,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 77055,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 79822,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 79822,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 75097,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 75097,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 72607,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 72607,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 77055,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "phe",
+    "name": "Phoenix",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 5348,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 5165,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 5165,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 2072,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 2072,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 5348,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 5165,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 7083,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 7083,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 8837,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 8837,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 5165,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 5165,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 6867,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 6867,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 2072,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 2072,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 2081,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 2081,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 765,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 765,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 2072,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "psc",
+    "name": "Pisces",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 4889,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 5742,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 4889,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 6193,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 6193,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 5742,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 5742,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 7097,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 7097,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 8198,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 8198,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 9487,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 9487,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 8833,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 8833,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 7884,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 7884,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 7007,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 7007,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 4906,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 4906,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 3760,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 3760,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 1645,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 1645,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 118268,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 118268,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 116771,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 116771,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 116928,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 116928,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 115738,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 115738,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 114971,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 114971,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 115830,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 115830,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 116771,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "psa",
+    "name": "Piscis Austrinus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 113368,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 111954,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 111954,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 108661,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 108661,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 107608,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 107608,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 109422,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 109422,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 111188,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 111188,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 113246,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "vol",
+    "name": "Volans",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 37504,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 34481,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 34481,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 39794,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 39794,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 37504,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 39794,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 35228,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 39794,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 41312,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 41312,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 44382,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 44382,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 39794,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "pup",
+    "name": "Puppis",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 39757,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 38146,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 38146,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 35264,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 35264,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 31685,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 31685,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 32768,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 32768,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 36377,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 36377,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 39429,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 39429,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 39757,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "ret",
+    "name": "Reticulum",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 19780,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 19921,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 19921,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 18597,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 18597,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 17440,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 17440,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 19780,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "sgr",
+    "name": "Sagittarius",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 89931,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 90496,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 89642,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 90185,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 90185,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 88635,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 88635,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 87072,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 88635,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 89931,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 89931,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 90185,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 90185,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 93506,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93506,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 92041,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 92041,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 89931,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 92041,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 90496,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 90496,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 89341,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93506,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 93864,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93864,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 92855,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 92855,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 92041,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 92855,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 93085,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93085,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 93683,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93683,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 94820,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 94820,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 95168,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 93864,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 96406,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 96406,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 98688,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 98688,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 98412,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 98412,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 98032,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 98032,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 95347,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 98032,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 95294,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "sco",
+    "name": "Scorpius",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 85927,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 86670,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 86670,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 87073,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 87073,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 86228,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 86228,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 84143,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 84143,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 82671,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 82671,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 82514,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 82514,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 82396,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 82396,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 81266,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 81266,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 80763,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 80763,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 78401,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 80763,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 78265,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 80763,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 78820,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "ser",
+    "name": "Serpens",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 77516,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 77622,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 77622,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 77070,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 77070,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 76276,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 76276,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 77233,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 77233,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 78072,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 78072,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 77450,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 77450,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 77233,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 92946,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 89962,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 89962,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 86565,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 86565,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 86263,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 86263,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 84880,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "sex",
+    "name": "Sextans",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 51437,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 49641,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "men",
+    "name": "Mensa",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 25918,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 21949,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "tau",
+    "name": "Taurus",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 25428,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 21881,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 21881,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 20889,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 21421,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 26451,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 20205,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 20455,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 20205,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 18724,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 18724,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 15900,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 21421,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 20889,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 21421,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 20894,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 20894,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 20205,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 20889,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 20648,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 20648,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 20455,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 20455,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 17847,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "tel",
+    "name": "Telescopium",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 90568,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 90422,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "tuc",
+    "name": "Tucana",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 110130,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 114996,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 114996,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 1599,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 114996,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 2484,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "tri",
+    "name": "Triangulum",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 10670,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 10064,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 10064,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 8796,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 8796,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 10670,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "tra",
+    "name": "Triangulum Australe",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 82273,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 74946,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 74946,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 77952,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 77952,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 82273,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "aqr",
+    "name": "Aquarius",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 106278,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 109074,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 109074,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 110395,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 110395,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 110960,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 110960,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 111497,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 111497,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 112961,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112961,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 114855,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 114855,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 115438,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 109074,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 110003,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 110003,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 109139,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 110003,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 111123,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 111123,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 112716,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 112716,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 113136,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 113136,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 114341,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 102618,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 106278,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "vir",
+    "name": "Virgo",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 57380,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 60129,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 60129,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 61941,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 61941,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 65474,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 65474,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 69427,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 69427,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 69701,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 69701,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 71957,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 65474,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 66249,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 66249,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 68520,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 68520,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 72220,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 66249,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 63090,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 63090,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 63608,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 63090,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 61941,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  },
+  {
+    "id": "vel",
+    "name": "Vela",
+    "lines": [
+      {
+        "star1": {
+          "hipId": 39953,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 42536,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 42536,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 42913,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 42913,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 45941,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 45941,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 48774,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 48774,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 52727,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 52727,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 51986,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 51986,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 50191,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 50191,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 46651,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 46651,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 44816,
+          "ra": 0,
+          "dec": 0
+        }
+      },
+      {
+        "star1": {
+          "hipId": 44816,
+          "ra": 0,
+          "dec": 0
+        },
+        "star2": {
+          "hipId": 39953,
+          "ra": 0,
+          "dec": 0
+        }
+      }
+    ],
+    "centerRA": 0,
+    "centerDec": 0
+  }
+]
+
+
+
