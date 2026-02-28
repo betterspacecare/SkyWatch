@@ -1395,37 +1395,6 @@ export default function Home() {
     return null;
   }
 
-  // Show loading screen only during initial load (before isLoading becomes false)
-  if (state.isLoading && state.loadingProgress < 100) {
-    return (
-      <main style={styles.container}>
-        <div style={styles.loadingScreen}>
-          <div style={styles.loadingLogo}>✨ SkyWatch</div>
-          <div style={styles.loadingTitle}>Loading Stars from Database</div>
-          <div style={styles.progressContainer}>
-            <div style={styles.progressBar}>
-              <div 
-                style={{
-                  ...styles.progressFill,
-                  width: `${state.loadingProgress}%`,
-                }}
-              />
-            </div>
-            <div style={styles.progressText}>
-              {state.loadingProgress}%
-            </div>
-          </div>
-          <div style={styles.loadingHint}>
-            {state.loadingProgress < 30 ? 'Connecting to database...' :
-             state.loadingProgress < 60 ? 'Loading bright stars...' :
-             state.loadingProgress < 90 ? 'Loading faint stars...' :
-             'Almost ready...'}
-          </div>
-        </div>
-      </main>
-    );
-  }
-
   if (state.error) {
     return (
       <main style={styles.container}>
@@ -2381,11 +2350,16 @@ export default function Home() {
         </div>
       )}
 
-      {/* Loading Overlay */}
-      {state.isLoading && (
-        <div style={styles.loadingOverlay}>
-          <div style={styles.spinner} />
-          <div style={styles.loadingText}>Loading...</div>
+      {/* Loading Progress Indicator (non-blocking) */}
+      {state.isLoading && state.loadingProgress < 100 && (
+        <div style={styles.loadingIndicator}>
+          <div style={styles.loadingIndicatorContent}>
+            <div style={styles.miniSpinner} />
+            <span>{state.stars.length.toLocaleString()} stars ({state.loadingProgress}%)</span>
+          </div>
+          <div style={styles.miniProgressBar}>
+            <div style={{ ...styles.miniProgressFill, width: `${state.loadingProgress}%` }} />
+          </div>
         </div>
       )}
 
@@ -3419,5 +3393,49 @@ const styles: Record<string, React.CSSProperties> = {
     borderTop: '2px solid #818cf8',
     borderRadius: '50%',
     animation: 'spin 0.8s linear infinite',
+  },
+  
+  // Non-blocking loading indicator
+  loadingIndicator: {
+    position: 'absolute',
+    bottom: '20px',
+    right: '20px',
+    background: 'rgba(0, 0, 0, 0.7)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    color: 'rgba(255, 255, 255, 0.9)',
+    padding: '10px 16px',
+    borderRadius: '10px',
+    fontSize: '12px',
+    fontWeight: 500,
+    backdropFilter: 'blur(10px)',
+    zIndex: 100,
+    minWidth: '160px',
+  },
+  loadingIndicatorContent: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    marginBottom: '8px',
+  },
+  miniSpinner: {
+    width: '16px',
+    height: '16px',
+    border: '2px solid rgba(255, 255, 255, 0.2)',
+    borderTop: '2px solid #22d3ee',
+    borderRadius: '50%',
+    animation: 'spin 0.8s linear infinite',
+  },
+  miniProgressBar: {
+    width: '100%',
+    height: '4px',
+    background: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: '2px',
+    overflow: 'hidden',
+  },
+  miniProgressFill: {
+    height: '100%',
+    background: 'linear-gradient(90deg, #22d3ee, #6366f1)',
+    borderRadius: '2px',
+    transition: 'width 0.3s ease',
   },
 };
