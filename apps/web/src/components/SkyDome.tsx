@@ -3,7 +3,7 @@
  * 3D sky dome rendering using Three.js and react-three-fiber
  */
 
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Html, Environment } from '@react-three/drei';
 import * as THREE from 'three';
@@ -1471,6 +1471,7 @@ interface ConstellationLinesProps {
   lineOpacity?: number | undefined;
   showNames?: boolean | undefined;
   nameColor?: string | undefined;
+  onConstellationClick?: ((constellation: Constellation) => void) | undefined;
 }
 
 const ConstellationLines: React.FC<ConstellationLinesProps> = ({
@@ -1482,6 +1483,7 @@ const ConstellationLines: React.FC<ConstellationLinesProps> = ({
   lineOpacity = 0.8,
   showNames = true,
   nameColor = '#6699ff',
+  onConstellationClick,
 }) => {
   // Create a map of HIP ID to star for fast lookup
   const starMap = useMemo(() => {
@@ -1620,25 +1622,45 @@ const ConstellationLines: React.FC<ConstellationLinesProps> = ({
       ))}
       
       {/* Render constellation name labels */}
-      {showNames && constellationLabels.map((label) => (
-        <group key={`${label.id}-${lst.toFixed(4)}`} position={label.position}>
-          <Html distanceFactor={80} style={{ pointerEvents: 'none' }} zIndexRange={[0, 30]}>
-            <div style={{
-              color: nameColor,
-              fontSize: '14px',
-              fontWeight: 500,
-              whiteSpace: 'nowrap',
-              textShadow: '0 0 8px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.9)',
-              textTransform: 'uppercase',
-              letterSpacing: '3px',
-              opacity: 0.7,
-              transform: 'translateY(-20px)',
-            }}>
-              {label.name}
-            </div>
-          </Html>
-        </group>
-      ))}
+      {showNames && constellationLabels.map((label) => {
+        const constellation = constellations.find(c => c.id === label.id);
+        return (
+          <group key={`${label.id}-${lst.toFixed(4)}`} position={label.position}>
+            <Html distanceFactor={80} style={{ pointerEvents: onConstellationClick ? 'auto' : 'none' }} zIndexRange={[0, 30]}>
+              <div 
+                onClick={() => constellation && onConstellationClick?.(constellation)}
+                style={{
+                  color: nameColor,
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  whiteSpace: 'nowrap',
+                  textShadow: '0 0 8px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.9)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '3px',
+                  opacity: 0.7,
+                  transform: 'translateY(-20px)',
+                  cursor: onConstellationClick ? 'pointer' : 'default',
+                  padding: '8px 12px',
+                  borderRadius: '6px',
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  if (onConstellationClick) {
+                    e.currentTarget.style.opacity = '1';
+                    e.currentTarget.style.background = 'rgba(100, 149, 237, 0.2)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = '0.7';
+                  e.currentTarget.style.background = 'transparent';
+                }}
+              >
+                {label.name}
+              </div>
+            </Html>
+          </group>
+        );
+      })}
     </group>
   );
 };
@@ -2488,20 +2510,33 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
   onDeepSkyClick,
   onMoonClick,
   onSunClick,
-  onConstellationClick: _onConstellationClick, // Not yet implemented
+  onConstellationClick,
   onCameraChange,
   onCloseHighlight,
 }) => {
   const [fov, setFov] = useState<number>(config.fov);
+  const containerRef = React.useRef<HTMLDivElement>(null);
   
-  // Handle scroll wheel for FOV zoom
-  const handleWheel = useCallback((event: WheelEvent) => {
-    event.preventDefault();
-    setFov(prev => {
-      const delta = event.deltaY * 0.05; // Adjust sensitivity
-      const newFov = Math.max(5, Math.min(120, prev + delta)); // FOV range: 5° to 120°
-      return newFov;
-    });
+  // Handle scroll wheel for FOV zoom - use non-passive listener to allow preventDefault
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      setFov(prev => {
+        const delta = event.deltaY * 0.05; // Adjust sensitivity
+        const newFov = Math.max(5, Math.min(120, prev + delta)); // FOV range: 5° to 120°
+        return newFov;
+      });
+    };
+    
+    // Add with passive: false to allow preventDefault
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+    };
   }, []);
   
   // Separate constellation stars from bright stars and get constellation star IDs
@@ -2587,7 +2622,7 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
   const controlsRef = React.useRef<any>(null);
   
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative' }} onWheel={handleWheel as any}>
+    <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
       <Canvas
         camera={{ position: [0, 0, 0.01], fov: fov, near: 0.01, far: 1000 }}
         style={{ background: '#000011' }}
@@ -2678,6 +2713,7 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
             lineOpacity={constellationConfig?.lineOpacity}
             showNames={constellationConfig?.showNames}
             nameColor={constellationConfig?.nameColor}
+            onConstellationClick={onConstellationClick}
           />
         )}
         

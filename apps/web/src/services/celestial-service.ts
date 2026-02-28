@@ -183,8 +183,14 @@ function getJulianDate(date: Date): number {
  */
 export async function getISSPosition(latitude: number, longitude: number): Promise<SatelliteData | null> {
   try {
-    // Try Where The ISS At API (free, no key required)
-    const response = await fetch('https://api.wheretheiss.at/v1/satellites/25544');
+    // Try Where The ISS At API (free, no key required) with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+    
+    const response = await fetch('https://api.wheretheiss.at/v1/satellites/25544', {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
     
     if (!response.ok) {
       throw new Error('ISS API failed');
@@ -217,180 +223,7 @@ export async function getISSPosition(latitude: number, longitude: number): Promi
       longitude: issLon,
     };
   } catch (error) {
-    console.warn('Failed to fetch ISS position:', error);
-    return null;
-  }
-}
-
-/**
- * Fetch satellite position from Where The ISS At API (supports multiple satellites)
- */
-async function fetchSatelliteFromAPI(
-  noradId: number, 
-  name: string, 
-  latitude: number, 
-  longitude: number
-): Promise<SatelliteData | null> {
-  try {
-    const response = await fetch(`https://api.wheretheiss.at/v1/satellites/${noradId}`);
-    
-    if (!response.ok) {
-      return null;
-    }
-    
-    const data = await response.json();
-    
-    const satLat = data.latitude;
-    const satLon = data.longitude;
-    const satAlt = data.altitude; // km
-    
-    const { altitude, azimuth } = calculateSatellitePosition(
-      latitude, longitude, 0,
-      satLat, satLon, satAlt
-    );
-    
-    return {
-      id: noradId,
-      name,
-      altitude,
-      azimuth,
-      ra: 0,
-      dec: 0,
-      height: satAlt,
-      velocity: data.velocity || 0,
-      isVisible: altitude > 10,
-      latitude: satLat,
-      longitude: satLon,
-    };
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Fetch multiple satellites using TLE data from CelesTrak
- * This provides more satellites than the Where The ISS At API
- */
-async function fetchSatellitesFromCelesTrak(
-  latitude: number, 
-  longitude: number
-): Promise<SatelliteData[]> {
-  const satellites: SatelliteData[] = [];
-  
-  try {
-    // Fetch visual satellites TLE data
-    const response = await fetch('https://celestrak.org/NORAD/elements/gp.php?GROUP=visual&FORMAT=json');
-    
-    if (!response.ok) {
-      throw new Error('CelesTrak API failed');
-    }
-    
-    const tleData = await response.json();
-    
-    // Process up to 20 brightest/most visible satellites
-    const processedCount = Math.min(tleData.length, 20);
-    
-    for (let i = 0; i < processedCount; i++) {
-      const sat = tleData[i];
-      if (!sat) continue;
-      
-      // Parse TLE and calculate position
-      // This is a simplified calculation - real TLE propagation would use SGP4
-      const satData = parseTLEAndCalculatePosition(sat, latitude, longitude);
-      if (satData && satData.altitude > -10) { // Include satellites slightly below horizon
-        satellites.push(satData);
-      }
-    }
-  } catch (error) {
-    console.warn('Failed to fetch from CelesTrak:', error);
-  }
-  
-  return satellites;
-}
-
-/**
- * Parse TLE JSON data and calculate approximate position
- * Note: This is a simplified calculation. For accurate positions, use SGP4 propagation.
- */
-function parseTLEAndCalculatePosition(
-  tleJson: any,
-  obsLat: number,
-  obsLon: number
-): SatelliteData | null {
-  try {
-    const noradId = tleJson.NORAD_CAT_ID;
-    const name = tleJson.OBJECT_NAME;
-    const inclination = tleJson.INCLINATION; // degrees
-    const meanMotion = tleJson.MEAN_MOTION; // revs per day
-    const meanAnomaly = tleJson.MEAN_ANOMALY; // degrees
-    const argOfPericenter = tleJson.ARG_OF_PERICENTER; // degrees
-    const raan = tleJson.RA_OF_ASC_NODE; // degrees
-    const epoch = new Date(tleJson.EPOCH);
-    
-    // Calculate orbital period in minutes
-    const periodMinutes = 1440 / meanMotion;
-    
-    // Calculate semi-major axis using Kepler's third law
-    // a^3 = (GM * T^2) / (4 * pi^2)
-    // For Earth: GM = 398600.4418 km^3/s^2
-    const GM = 398600.4418;
-    const periodSeconds = periodMinutes * 60;
-    const semiMajorAxis = Math.pow((GM * periodSeconds * periodSeconds) / (4 * Math.PI * Math.PI), 1/3);
-    
-    // Calculate altitude (approximate - assumes circular orbit)
-    const earthRadius = 6371; // km
-    const height = semiMajorAxis - earthRadius;
-    
-    // Calculate current position (simplified - assumes circular orbit)
-    const now = new Date();
-    const timeSinceEpoch = (now.getTime() - epoch.getTime()) / 1000; // seconds
-    const orbitsCompleted = timeSinceEpoch / periodSeconds;
-    const currentMeanAnomaly = (meanAnomaly + orbitsCompleted * 360) % 360;
-    
-    // Convert orbital elements to lat/lon (simplified)
-    const incRad = inclination * Math.PI / 180;
-    const argRad = argOfPericenter * Math.PI / 180;
-    const maRad = currentMeanAnomaly * Math.PI / 180;
-    
-    // True anomaly (for circular orbit, true anomaly ≈ mean anomaly)
-    const trueAnomaly = maRad;
-    
-    // Argument of latitude
-    const u = argRad + trueAnomaly;
-    
-    // Calculate satellite latitude
-    const satLat = Math.asin(Math.sin(incRad) * Math.sin(u)) * 180 / Math.PI;
-    
-    // Calculate satellite longitude (accounting for Earth's rotation)
-    const earthRotationRate = 360.98564736629 / 86400; // degrees per second
-    const gmst = (280.46061837 + earthRotationRate * timeSinceEpoch) % 360;
-    const satLon = (Math.atan2(Math.cos(incRad) * Math.sin(u), Math.cos(u)) * 180 / Math.PI + raan - gmst + 360) % 360;
-    const normalizedSatLon = satLon > 180 ? satLon - 360 : satLon;
-    
-    // Calculate observer-relative position
-    const { altitude, azimuth } = calculateSatellitePosition(
-      obsLat, obsLon, 0,
-      satLat, normalizedSatLon, height
-    );
-    
-    // Estimate visibility based on altitude and sun position
-    // Satellites are typically visible when above horizon and in Earth's shadow
-    const isVisible = altitude > 15 && height > 200 && height < 2000;
-    
-    return {
-      id: noradId,
-      name: name || `SAT-${noradId}`,
-      altitude,
-      azimuth,
-      ra: 0,
-      dec: 0,
-      height,
-      velocity: 2 * Math.PI * semiMajorAxis / periodSeconds, // km/s
-      isVisible,
-      latitude: satLat,
-      longitude: normalizedSatLon,
-    };
-  } catch (error) {
+    // Silently fail - ISS tracking is optional
     return null;
   }
 }
@@ -446,57 +279,313 @@ function calculateSatellitePosition(
 }
 
 /**
- * Fetch multiple satellites - combines ISS API with CelesTrak data
+ * Fetch visible satellites - uses ISS API only (CelesTrak has CORS/timeout issues)
  */
 export async function getVisibleSatellites(latitude: number, longitude: number): Promise<SatelliteData[]> {
   const satellites: SatelliteData[] = [];
-  const seenIds = new Set<number>();
   
-  // First, try to get ISS from the reliable Where The ISS At API
+  // Get ISS from the reliable Where The ISS At API
   const iss = await getISSPosition(latitude, longitude);
   if (iss) {
     satellites.push(iss);
-    seenIds.add(iss.id);
   }
   
-  // Try to fetch additional satellites from CelesTrak
-  try {
-    const celestrakSatellites = await fetchSatellitesFromCelesTrak(latitude, longitude);
-    for (const sat of celestrakSatellites) {
-      if (!seenIds.has(sat.id)) {
-        satellites.push(sat);
-        seenIds.add(sat.id);
-      }
-    }
-  } catch (error) {
-    console.warn('CelesTrak fetch failed:', error);
-  }
+  // Note: CelesTrak API has persistent CORS/timeout issues from browsers
+  // For more satellites, would need a backend proxy or N2YO API (requires key)
   
-  // If CelesTrak failed, try fetching known satellites from Where The ISS At API
-  if (satellites.length < 3) {
-    const additionalSatellites = [
-      { id: 43013, name: 'Tiangong (CSS)' }, // Chinese Space Station
-      { id: 20580, name: 'Hubble Space Telescope' },
-    ];
+  return satellites;
+}
+
+
+/**
+ * Meteor Shower Data
+ */
+export interface MeteorShowerData {
+  id: string;
+  name: string;
+  peakDate: string;
+  startDate: string;
+  endDate: string;
+  zhr: number; // Zenithal Hourly Rate
+  radiantRa: number;
+  radiantDec: number;
+  radiantAlt?: number;
+  radiantAz?: number;
+  velocity: number; // km/s
+  parentBody: string;
+  isActive: boolean;
+  description: string;
+}
+
+// Major meteor showers data (static - these are predictable annual events)
+const METEOR_SHOWERS: Omit<MeteorShowerData, 'isActive' | 'radiantAlt' | 'radiantAz'>[] = [
+  {
+    id: 'quadrantids',
+    name: 'Quadrantids',
+    peakDate: '01-03',
+    startDate: '12-28',
+    endDate: '01-12',
+    zhr: 120,
+    radiantRa: 15.33, // hours
+    radiantDec: 49.5,
+    velocity: 41,
+    parentBody: 'Asteroid 2003 EH1',
+    description: 'One of the best annual showers with bright meteors'
+  },
+  {
+    id: 'lyrids',
+    name: 'Lyrids',
+    peakDate: '04-22',
+    startDate: '04-16',
+    endDate: '04-25',
+    zhr: 18,
+    radiantRa: 18.07,
+    radiantDec: 34,
+    velocity: 49,
+    parentBody: 'Comet C/1861 G1 Thatcher',
+    description: 'Ancient shower observed for 2700 years'
+  },
+  {
+    id: 'eta-aquariids',
+    name: 'Eta Aquariids',
+    peakDate: '05-06',
+    startDate: '04-19',
+    endDate: '05-28',
+    zhr: 50,
+    radiantRa: 22.33,
+    radiantDec: -1,
+    velocity: 66,
+    parentBody: 'Comet 1P/Halley',
+    description: 'Best viewed from Southern Hemisphere'
+  },
+  {
+    id: 'delta-aquariids',
+    name: 'Delta Aquariids',
+    peakDate: '07-30',
+    startDate: '07-12',
+    endDate: '08-23',
+    zhr: 20,
+    radiantRa: 22.67,
+    radiantDec: -16,
+    velocity: 41,
+    parentBody: 'Comet 96P/Machholz',
+    description: 'Steady shower best seen from southern latitudes'
+  },
+  {
+    id: 'perseids',
+    name: 'Perseids',
+    peakDate: '08-12',
+    startDate: '07-17',
+    endDate: '08-24',
+    zhr: 100,
+    radiantRa: 3.07,
+    radiantDec: 58,
+    velocity: 59,
+    parentBody: 'Comet 109P/Swift-Tuttle',
+    description: 'Most popular shower with bright, fast meteors'
+  },
+  {
+    id: 'orionids',
+    name: 'Orionids',
+    peakDate: '10-21',
+    startDate: '10-02',
+    endDate: '11-07',
+    zhr: 20,
+    radiantRa: 6.33,
+    radiantDec: 16,
+    velocity: 66,
+    parentBody: 'Comet 1P/Halley',
+    description: 'Fast meteors from Halley\'s Comet debris'
+  },
+  {
+    id: 'leonids',
+    name: 'Leonids',
+    peakDate: '11-17',
+    startDate: '11-06',
+    endDate: '11-30',
+    zhr: 15,
+    radiantRa: 10.13,
+    radiantDec: 22,
+    velocity: 71,
+    parentBody: 'Comet 55P/Tempel-Tuttle',
+    description: 'Can produce meteor storms every 33 years'
+  },
+  {
+    id: 'geminids',
+    name: 'Geminids',
+    peakDate: '12-14',
+    startDate: '12-04',
+    endDate: '12-17',
+    zhr: 150,
+    radiantRa: 7.47,
+    radiantDec: 33,
+    velocity: 35,
+    parentBody: 'Asteroid 3200 Phaethon',
+    description: 'Best annual shower with slow, bright meteors'
+  },
+  {
+    id: 'ursids',
+    name: 'Ursids',
+    peakDate: '12-22',
+    startDate: '12-17',
+    endDate: '12-26',
+    zhr: 10,
+    radiantRa: 14.47,
+    radiantDec: 76,
+    velocity: 33,
+    parentBody: 'Comet 8P/Tuttle',
+    description: 'Modest shower near winter solstice'
+  }
+];
+
+/**
+ * Get active and upcoming meteor showers
+ */
+export function getMeteorShowers(latitude: number, longitude: number, date: Date = new Date()): MeteorShowerData[] {
+  const currentMonth = date.getMonth() + 1;
+  const currentDay = date.getDate();
+  const currentMMDD = `${String(currentMonth).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}`;
+  
+  // Calculate LST for radiant position
+  const lst = getLocalSiderealTime(date, longitude);
+  const latRad = (latitude * Math.PI) / 180;
+  
+  return METEOR_SHOWERS.map(shower => {
+    // Parse dates (handle year wrap for showers spanning Dec-Jan)
+    let startMMDD = shower.startDate;
+    let endMMDD = shower.endDate;
     
-    for (const sat of additionalSatellites) {
-      if (!seenIds.has(sat.id)) {
-        const satData = await fetchSatelliteFromAPI(sat.id, sat.name, latitude, longitude);
-        if (satData) {
-          satellites.push(satData);
-          seenIds.add(sat.id);
-        }
-      }
+    // Check if shower is active
+    let isActive = false;
+    if (startMMDD > endMMDD) {
+      // Shower spans year boundary (e.g., Quadrantids: Dec 28 - Jan 12)
+      isActive = currentMMDD >= startMMDD || currentMMDD <= endMMDD;
+    } else {
+      isActive = currentMMDD >= startMMDD && currentMMDD <= endMMDD;
     }
-  }
-  
-  // Sort by altitude (highest first) and return top 15
-  satellites.sort((a, b) => b.altitude - a.altitude);
-  
-  console.log(`🛰️ Fetched ${satellites.length} satellites`);
-  satellites.slice(0, 5).forEach(sat => {
-    console.log(`  - ${sat.name}: alt=${sat.altitude.toFixed(1)}°, az=${sat.azimuth.toFixed(1)}°, height=${sat.height.toFixed(0)}km, visible=${sat.isVisible}`);
+    
+    // Calculate radiant altitude and azimuth
+    const haHours = lst - shower.radiantRa;
+    const haDegrees = haHours * 15;
+    const haRadians = (haDegrees * Math.PI) / 180;
+    const decRad = (shower.radiantDec * Math.PI) / 180;
+    
+    const sinAlt = Math.sin(decRad) * Math.sin(latRad) + 
+                   Math.cos(decRad) * Math.cos(latRad) * Math.cos(haRadians);
+    const radiantAlt = Math.asin(Math.max(-1, Math.min(1, sinAlt))) * 180 / Math.PI;
+    
+    const cosAlt = Math.cos(radiantAlt * Math.PI / 180);
+    let radiantAz = 0;
+    if (Math.abs(cosAlt) > 1e-10) {
+      const cosAz = (Math.sin(decRad) - sinAlt * Math.sin(latRad)) / (cosAlt * Math.cos(latRad));
+      let azRad = Math.acos(Math.max(-1, Math.min(1, cosAz)));
+      if (Math.sin(haRadians) > 0) azRad = 2 * Math.PI - azRad;
+      radiantAz = azRad * 180 / Math.PI;
+    }
+    
+    return {
+      ...shower,
+      isActive,
+      radiantAlt,
+      radiantAz,
+    };
+  }).sort((a, b) => {
+    // Sort: active first, then by peak date
+    if (a.isActive && !b.isActive) return -1;
+    if (!a.isActive && b.isActive) return 1;
+    return a.peakDate.localeCompare(b.peakDate);
   });
-  
-  return satellites.slice(0, 15);
+}
+
+/**
+ * Get currently active meteor showers only
+ */
+export function getActiveMeteorShowers(latitude: number, longitude: number, date: Date = new Date()): MeteorShowerData[] {
+  return getMeteorShowers(latitude, longitude, date).filter(s => s.isActive);
+}
+
+/**
+ * Satellite pass prediction data
+ */
+export interface SatellitePass {
+  satellite: string;
+  startTime: Date;
+  startAz: number;
+  startAlt: number;
+  maxTime: Date;
+  maxAz: number;
+  maxAlt: number;
+  endTime: Date;
+  endAz: number;
+  endAlt: number;
+  magnitude: number;
+  duration: number; // seconds
+}
+
+/**
+ * Get upcoming ISS passes for a location
+ * Uses Open Notify API (free, no key required)
+ */
+export async function getISSPasses(latitude: number, longitude: number, count: number = 5): Promise<SatellitePass[]> {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    
+    const response = await fetch(
+      `http://api.open-notify.org/iss-pass.json?lat=${latitude}&lon=${longitude}&n=${count}`,
+      { signal: controller.signal }
+    );
+    clearTimeout(timeoutId);
+    
+    if (!response.ok) return [];
+    
+    const data = await response.json();
+    
+    if (data.message !== 'success' || !data.response) return [];
+    
+    return data.response.map((pass: any) => ({
+      satellite: 'ISS',
+      startTime: new Date(pass.risetime * 1000),
+      startAz: 0, // API doesn't provide detailed azimuth
+      startAlt: 10,
+      maxTime: new Date((pass.risetime + pass.duration / 2) * 1000),
+      maxAz: 180,
+      maxAlt: 45, // Approximate
+      endTime: new Date((pass.risetime + pass.duration) * 1000),
+      endAz: 360,
+      endAlt: 10,
+      magnitude: -3.5, // ISS typical magnitude
+      duration: pass.duration,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Get number of people currently in space
+ */
+export async function getPeopleInSpace(): Promise<{ number: number; people: { name: string; craft: string }[] } | null> {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    
+    const response = await fetch('http://api.open-notify.org/astros.json', {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    
+    if (!response.ok) return null;
+    
+    const data = await response.json();
+    
+    if (data.message !== 'success') return null;
+    
+    return {
+      number: data.number,
+      people: data.people,
+    };
+  } catch {
+    return null;
+  }
 }

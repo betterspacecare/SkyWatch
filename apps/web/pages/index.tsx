@@ -22,7 +22,7 @@ import {
   MeteorShowerPosition,
   calculateLST,
 } from '@virtual-window/astronomy-engine';
-import { getSunPosition, getMoonPosition, getISSPosition, getVisibleSatellites } from '../src/services/celestial-service';
+import { getSunPosition, getMoonPosition, getISSPosition, getVisibleSatellites, getActiveMeteorShowers, getISSPasses, getPeopleInSpace, MeteorShowerData, SatellitePass } from '../src/services/celestial-service';
 import { WebGeolocationService, LocationStatus } from '../src/services/geolocation-service';
 import { isWebGLAvailable } from '../src/components/SkyView2D';
 import { fetchConstellationsWithStars } from '../src/services/astronomy-api';
@@ -125,6 +125,10 @@ interface AppState {
   }>;
   highlightedObjectId: string | null;
   cameraTarget: { azimuth: number; altitude: number } | null;
+  // Meteor showers and satellite passes
+  activeMeteorShowers: MeteorShowerData[];
+  upcomingIssPasses: SatellitePass[];
+  peopleInSpace: { number: number; people: { name: string; craft: string }[] } | null;
 }
 
 const initialState: AppState = {
@@ -196,6 +200,10 @@ const initialState: AppState = {
   objectSearchResults: [],
   highlightedObjectId: null,
   cameraTarget: null,
+  // Meteor showers and satellite passes
+  activeMeteorShowers: [],
+  upcomingIssPasses: [],
+  peopleInSpace: null,
 };
 
 export default function Home() {
@@ -370,6 +378,46 @@ export default function Home() {
     
     return () => clearInterval(satelliteInterval);
   }, [state.observer, state.showSatellites]);
+
+  // Fetch meteor showers and ISS passes when location is available
+  useEffect(() => {
+    if (!state.observer) return;
+    
+    const fetchAstronomyData = async () => {
+      try {
+        // Get active meteor showers
+        const showers = getActiveMeteorShowers(state.observer!.latitude, state.observer!.longitude);
+        console.log(`🌠 Active meteor showers: ${showers.length}`);
+        showers.forEach(s => console.log(`  - ${s.name}: ZHR=${s.zhr}, radiant alt=${s.radiantAlt?.toFixed(1)}°`));
+        
+        // Get upcoming ISS passes
+        const passes = await getISSPasses(state.observer!.latitude, state.observer!.longitude, 5);
+        console.log(`🛰️ Upcoming ISS passes: ${passes.length}`);
+        passes.forEach(p => console.log(`  - ${p.startTime.toLocaleString()}, duration=${p.duration}s`));
+        
+        // Get people in space
+        const people = await getPeopleInSpace();
+        if (people) {
+          console.log(`👨‍🚀 People in space: ${people.number}`);
+        }
+        
+        setState(prev => ({
+          ...prev,
+          activeMeteorShowers: showers,
+          upcomingIssPasses: passes,
+          peopleInSpace: people,
+        }));
+      } catch (error) {
+        console.warn('Failed to fetch astronomy data:', error);
+      }
+    };
+    
+    fetchAstronomyData();
+    
+    // Refresh every 30 minutes
+    const interval = setInterval(fetchAstronomyData, 30 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [state.observer]);
 
   // Check auth status
   useEffect(() => {
@@ -834,6 +882,18 @@ export default function Home() {
         ra: sun.ra,
         dec: sun.dec,
         status: sun.status,
+      },
+    }));
+  }, []);
+
+  // Handle constellation click
+  const handleConstellationClick = useCallback((constellation: Constellation) => {
+    setState(prev => ({
+      ...prev,
+      selectedObject: {
+        type: 'constellation',
+        id: constellation.id,
+        name: constellation.name,
       },
     }));
   }, []);
@@ -1718,6 +1778,7 @@ export default function Home() {
             onDeepSkyClick={handleDeepSkyClick}
             onMoonClick={handleMoonClick}
             onSunClick={handleSunClick}
+            onConstellationClick={handleConstellationClick}
             onCameraChange={handleCameraChange}
           />
         ) : (
@@ -1727,8 +1788,27 @@ export default function Home() {
             config={skyConfig}
             viewAzimuth={state.viewAzimuth}
             viewAltitude={state.viewAltitude}
+            constellations={state.showConstellations ? state.constellations : []}
+            moonPosition={state.showMoon ? state.moonPosition : null}
+            sunPosition={state.showSun ? state.sunPosition : null}
+            {...(state.showDeepSky && state.deepSkyPositions.size > 0 ? { deepSkyPositions: state.deepSkyPositions } : {})}
+            {...(state.showSatellites && state.satellitePositions.size > 0 ? { satellitePositions: state.satellitePositions } : {})}
+            showConstellations={state.showConstellations}
+            showMoon={state.showMoon}
+            showSun={state.showSun}
+            showDeepSky={state.showDeepSky}
+            showSatellites={state.showSatellites}
+            showHorizon={true}
+            showAltitudeGrid={state.showAltitudeGrid}
+            showAzimuthGrid={state.showAzimuthGrid}
+            lst={state.lst}
+            observerLatitude={state.observer?.latitude ?? 0}
             onStarClick={handleStarClick}
             onPlanetClick={handlePlanetClick}
+            onMoonClick={handleMoonClick}
+            onSunClick={handleSunClick}
+            onDeepSkyClick={handleDeepSkyClick}
+            onConstellationClick={handleConstellationClick}
           />
         )}
       </div>

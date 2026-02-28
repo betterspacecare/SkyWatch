@@ -1,11 +1,13 @@
 /**
  * Object Detail Panel Component
- * Shows details about clicked celestial objects and allows saving observations/favorites
+ * Shows details about clicked celestial objects with Info tabs and observation logging
  */
 
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { saveObservation, addToFavorites, isFavorited, uploadObservationPhoto } from '../services/supabase-service';
+import { getCelestialInfoWithFallback, CelestialInfo } from '../services/celestial-info-service';
+import { getOrGenerateCelestialInfo } from '../services/celestial-ai-service';
 import {
   Moon,
   Sun1,
@@ -20,9 +22,15 @@ import {
   Lock,
   Trash,
   Magicpen,
+  Book1,
+  Notepad2,
+  InfoCircle,
+  Microscope,
+  Story,
+  MagicStar,
+  Cpu,
 } from 'iconsax-react';
 
-// Categories matching the database constraint
 const OBSERVATION_CATEGORIES = [
   { id: 'Moon', label: 'Moon', Icon: Moon, points: 5 },
   { id: 'Planet', label: 'Planet', Icon: Global, points: 10 },
@@ -33,6 +41,8 @@ const OBSERVATION_CATEGORIES = [
 ] as const;
 
 type ObservationCategory = typeof OBSERVATION_CATEGORIES[number]['id'];
+type TabType = 'info' | 'observe';
+type InfoSection = 'science' | 'mythology' | 'astrology' | 'tips';
 
 interface ObjectDetailPanelProps {
   object: {
@@ -52,16 +62,12 @@ interface ObjectDetailPanelProps {
   onClose: () => void;
 }
 
-// Map object types to default categories
 function getDefaultCategory(objectType: string, deepSkyType?: string): ObservationCategory {
   switch (objectType) {
-    case 'moon':
-      return 'Moon';
+    case 'moon': return 'Moon';
     case 'planet':
-    case 'sun':
-      return 'Planet';
-    case 'constellation':
-      return 'Constellation';
+    case 'sun': return 'Planet';
+    case 'constellation': return 'Constellation';
     case 'deepsky':
     case 'messier':
       if (deepSkyType) {
@@ -70,28 +76,19 @@ function getDefaultCategory(objectType: string, deepSkyType?: string): Observati
         if (deepSkyType.toLowerCase().includes('cluster')) return 'Cluster';
       }
       return 'Nebula';
-    case 'star':
-    default:
-      return 'Constellation';
+    default: return 'Constellation';
   }
 }
 
-// Get header icon based on object type
 function getHeaderIcon(type: string) {
   switch (type) {
-    case 'moon':
-      return <Moon size={40} color="#e8e8e0" variant="Bulk" />;
-    case 'sun':
-      return <Sun1 size={40} color="#ffcc00" variant="Bulk" />;
-    case 'planet':
-      return <Global size={40} color="#ffdd44" variant="Bulk" />;
+    case 'moon': return <Moon size={40} color="#e8e8e0" variant="Bulk" />;
+    case 'sun': return <Sun1 size={40} color="#ffcc00" variant="Bulk" />;
+    case 'planet': return <Global size={40} color="#ffdd44" variant="Bulk" />;
     case 'deepsky':
-    case 'messier':
-      return <Magicpen size={40} color="#a855f7" variant="Bulk" />;
-    case 'constellation':
-      return <Star1 size={40} color="#6699ff" variant="Bulk" />;
-    default:
-      return <Star size={40} color="#ffffff" variant="Bulk" />;
+    case 'messier': return <Magicpen size={40} color="#a855f7" variant="Bulk" />;
+    case 'constellation': return <Star1 size={40} color="#6699ff" variant="Bulk" />;
+    default: return <Star size={40} color="#ffffff" variant="Bulk" />;
   }
 }
 
@@ -104,14 +101,19 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
   const [selectedCategory, setSelectedCategory] = useState<ObservationCategory>(
     getDefaultCategory(object.type, object.objectType)
   );
-  const [observationDate, setObservationDate] = useState(
-    new Date().toISOString().split('T')[0]
-  );
+  const [observationDate, setObservationDate] = useState(new Date().toISOString().split('T')[0]);
   const [locationName, setLocationName] = useState('');
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // New state for tabs and info
+  const [activeTab, setActiveTab] = useState<TabType>('info');
+  const [activeInfoSection, setActiveInfoSection] = useState<InfoSection>('science');
+  const [celestialInfo, setCelestialInfo] = useState<CelestialInfo | null>(null);
+  const [loadingInfo, setLoadingInfo] = useState(true);
+  const [generatingInfo, setGeneratingInfo] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -121,6 +123,47 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
       }
     });
   }, [object.type, object.id]);
+
+  // Fetch celestial info - first try DB/fallback, then AI if needed
+  useEffect(() => {
+    let cancelled = false;
+    
+    async function fetchInfo() {
+      setLoadingInfo(true);
+      setGeneratingInfo(false);
+      
+      // First try database and hardcoded fallback
+      const info = await getCelestialInfoWithFallback(object.type, object.id);
+      
+      if (cancelled) return;
+      
+      if (info) {
+        setCelestialInfo(info);
+        setLoadingInfo(false);
+        return;
+      }
+      
+      // No info found - try AI generation
+      setLoadingInfo(false);
+      setGeneratingInfo(true);
+      
+      try {
+        const aiInfo = await getOrGenerateCelestialInfo(object.type, object.id, object.name);
+        if (!cancelled && aiInfo) {
+          setCelestialInfo(aiInfo);
+        }
+      } catch (error) {
+        console.error('Error generating info:', error);
+      } finally {
+        if (!cancelled) {
+          setGeneratingInfo(false);
+        }
+      }
+    }
+    
+    fetchInfo();
+    return () => { cancelled = true; };
+  }, [object.type, object.id, object.name]);
 
   const selectedCategoryData = OBSERVATION_CATEGORIES.find(c => c.id === selectedCategory);
   const pointsToEarn = selectedCategoryData?.points || 10;
@@ -147,9 +190,7 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
       URL.revokeObjectURL(photoPreview);
       setPhotoPreview(null);
     }
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleSaveObservation = async () => {
@@ -157,7 +198,6 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
       setMessage({ text: 'Please sign in to save observations', type: 'error' });
       return;
     }
-
     setSaving(true);
     try {
       let photoUrl: string | undefined;
@@ -165,9 +205,8 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
         setUploadingPhoto(true);
         const uploadedUrl = await uploadObservationPhoto(selectedPhoto, user.id);
         setUploadingPhoto(false);
-        photoUrl = uploadedUrl ?? undefined; // Convert null to undefined
+        photoUrl = uploadedUrl ?? undefined;
       }
-
       const dateToSave = observationDate ? new Date(observationDate) : new Date();
       await saveObservation({
         category: selectedCategory,
@@ -178,11 +217,7 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
         points_awarded: pointsToEarn,
         photo_url: photoUrl,
       });
-      
-      // Close popup after successful save
-      setTimeout(() => {
-        onClose();
-      }, 500);
+      setTimeout(() => onClose(), 500);
     } catch (error) {
       console.error('Failed to save observation:', error);
       setMessage({ text: 'Failed to save observation', type: 'error' });
@@ -197,7 +232,6 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
       setMessage({ text: 'Please sign in to add favorites', type: 'error' });
       return;
     }
-
     try {
       if (!favorited) {
         await addToFavorites(object.type, object.id, object.name);
@@ -210,6 +244,175 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
     }
   };
 
+  // Render info section content
+  const renderInfoSection = () => {
+    if (loadingInfo) {
+      return <div style={styles.loadingInfo}>Loading information...</div>;
+    }
+    
+    if (generatingInfo) {
+      return (
+        <div style={styles.generatingInfo}>
+          <Cpu size={32} color="#a855f7" variant="Bulk" style={{ animation: 'pulse 1.5s infinite' }} />
+          <p>Generating information with AI...</p>
+          <p style={{ fontSize: '12px', opacity: 0.6 }}>This will be saved for future visitors.</p>
+        </div>
+      );
+    }
+    
+    if (!celestialInfo) {
+      return (
+        <div style={styles.noInfo}>
+          <InfoCircle size={32} color="rgba(255,255,255,0.3)" variant="Bulk" />
+          <p>No detailed information available for this object yet.</p>
+          <p style={{ fontSize: '12px', opacity: 0.6 }}>Configure Gemini API to enable AI-generated content.</p>
+        </div>
+      );
+    }
+
+    switch (activeInfoSection) {
+      case 'science':
+        return (
+          <div style={styles.infoContent}>
+            {celestialInfo.science_summary && (
+              <p style={styles.infoSummary}>{celestialInfo.science_summary}</p>
+            )}
+            {celestialInfo.distance && (
+              <div style={styles.infoDetail}>
+                <span style={styles.infoDetailLabel}>Distance:</span>
+                <span style={styles.infoDetailValue}>{celestialInfo.distance}</span>
+              </div>
+            )}
+            {celestialInfo.science_facts && celestialInfo.science_facts.length > 0 && (
+              <div style={styles.factsList}>
+                <h4 style={styles.factsTitle}>Scientific Facts</h4>
+                {celestialInfo.science_facts.map((fact, i) => (
+                  <div key={i} style={styles.factItem}>
+                    <span style={styles.factBullet}>•</span>
+                    <span>{fact}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {celestialInfo.notable_stars && celestialInfo.notable_stars.length > 0 && (
+              <div style={styles.notableSection}>
+                <h4 style={styles.factsTitle}>Notable Stars</h4>
+                {celestialInfo.notable_stars.map((star, i) => (
+                  <div key={i} style={styles.notableItem}>
+                    <span style={styles.notableName}>{star.name}</span>
+                    <span style={styles.notableDesc}>{star.description}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      case 'mythology':
+        return (
+          <div style={styles.infoContent}>
+            {celestialInfo.mythology_summary && (
+              <p style={styles.infoSummary}>{celestialInfo.mythology_summary}</p>
+            )}
+            {celestialInfo.origin_culture && (
+              <div style={styles.infoDetail}>
+                <span style={styles.infoDetailLabel}>Origin:</span>
+                <span style={styles.infoDetailValue}>{celestialInfo.origin_culture}</span>
+              </div>
+            )}
+            {celestialInfo.indian_mythology && (
+              <div style={styles.indianMythology}>
+                <h4 style={styles.factsTitle}>🙏 Indian Mythology</h4>
+                <p style={styles.infoSummary}>{celestialInfo.indian_mythology}</p>
+              </div>
+            )}
+            {celestialInfo.mythology_facts && celestialInfo.mythology_facts.length > 0 && (
+              <div style={styles.factsList}>
+                <h4 style={styles.factsTitle}>Mythology & Legends</h4>
+                {celestialInfo.mythology_facts.map((fact, i) => (
+                  <div key={i} style={styles.factItem}>
+                    <span style={styles.factBullet}>•</span>
+                    <span>{fact}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      case 'astrology':
+        return (
+          <div style={styles.infoContent}>
+            <div style={styles.astrologyDisclaimer}>
+              <InfoCircle size={16} color="#fbbf24" variant="Bulk" />
+              <span>Astrology is not scientifically validated. This section is for cultural reference only.</span>
+            </div>
+            {celestialInfo.zodiac_sign && (
+              <div style={styles.infoDetail}>
+                <span style={styles.infoDetailLabel}>Zodiac Sign:</span>
+                <span style={styles.infoDetailValue}>{celestialInfo.zodiac_sign}</span>
+              </div>
+            )}
+            {celestialInfo.astrology_summary && (
+              <p style={styles.infoSummary}>{celestialInfo.astrology_summary}</p>
+            )}
+            {celestialInfo.astrology_facts && celestialInfo.astrology_facts.length > 0 && (
+              <div style={styles.factsList}>
+                {celestialInfo.astrology_facts.map((fact, i) => (
+                  <div key={i} style={styles.factItem}>
+                    <span style={styles.factBullet}>•</span>
+                    <span>{fact}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {!celestialInfo.astrology_summary && (!celestialInfo.astrology_facts || celestialInfo.astrology_facts.length === 0) && (
+              <p style={styles.noSectionInfo}>No astrological information available.</p>
+            )}
+          </div>
+        );
+      case 'tips':
+        return (
+          <div style={styles.infoContent}>
+            {celestialInfo.best_viewing_season && (
+              <div style={styles.infoDetail}>
+                <span style={styles.infoDetailLabel}>Best Season:</span>
+                <span style={styles.infoDetailValue}>{celestialInfo.best_viewing_season}</span>
+              </div>
+            )}
+            {celestialInfo.best_viewing_conditions && (
+              <div style={styles.infoDetail}>
+                <span style={styles.infoDetailLabel}>Conditions:</span>
+                <span style={styles.infoDetailValue}>{celestialInfo.best_viewing_conditions}</span>
+              </div>
+            )}
+            {celestialInfo.observation_tips && celestialInfo.observation_tips.length > 0 && (
+              <div style={styles.factsList}>
+                <h4 style={styles.factsTitle}>Observation Tips</h4>
+                {celestialInfo.observation_tips.map((tip, i) => (
+                  <div key={i} style={styles.factItem}>
+                    <span style={styles.factBullet}>💡</span>
+                    <span>{tip}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {celestialInfo.notable_deepsky && celestialInfo.notable_deepsky.length > 0 && (
+              <div style={styles.notableSection}>
+                <h4 style={styles.factsTitle}>Deep Sky Objects to Find</h4>
+                {celestialInfo.notable_deepsky.map((obj, i) => (
+                  <div key={i} style={styles.notableItem}>
+                    <span style={styles.notableName}>{obj.id} - {obj.name}</span>
+                    <span style={styles.notableDesc}>{obj.type}: {obj.description}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div style={styles.overlay} onClick={onClose}>
       <div style={styles.panel} onClick={(e) => e.stopPropagation()}>
@@ -218,219 +421,211 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
         </button>
         
         <div style={styles.header}>
-          <div style={styles.headerIcon}>
-            {getHeaderIcon(object.type)}
-          </div>
+          <div style={styles.headerIcon}>{getHeaderIcon(object.type)}</div>
           <div>
             <h2 style={styles.title}>{object.name}</h2>
             {object.type === 'star' && object.id !== object.name && (
-              <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginBottom: '2px' }}>
-                {object.id}
-              </div>
+              <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginBottom: '2px' }}>{object.id}</div>
             )}
             <span style={styles.type}>{object.type.toUpperCase()}</span>
           </div>
         </div>
 
-        {/* Object Details */}
-        <div style={styles.details}>
-          {object.magnitude !== undefined && (
-            <div style={styles.detailRow}>
-              <span style={styles.detailLabel}>Magnitude</span>
-              <span style={styles.detailValue}>{object.magnitude.toFixed(2)}</span>
-            </div>
-          )}
-          {object.ra !== undefined && (
-            <div style={styles.detailRow}>
-              <span style={styles.detailLabel}>Right Ascension</span>
-              <span style={styles.detailValue}>{object.ra.toFixed(4)}h</span>
-            </div>
-          )}
-          {object.dec !== undefined && (
-            <div style={styles.detailRow}>
-              <span style={styles.detailLabel}>Declination</span>
-              <span style={styles.detailValue}>{object.dec.toFixed(4)}°</span>
-            </div>
-          )}
-          {object.spectralType && (
-            <div style={styles.detailRow}>
-              <span style={styles.detailLabel}>Spectral Type</span>
-              <span style={styles.detailValue}>{object.spectralType}</span>
-            </div>
-          )}
-          {object.phaseName && (
-            <div style={styles.detailRow}>
-              <span style={styles.detailLabel}>Phase</span>
-              <span style={styles.detailValue}>{object.phaseName}</span>
-            </div>
-          )}
-          {object.illumination !== undefined && (
-            <div style={styles.detailRow}>
-              <span style={styles.detailLabel}>Illumination</span>
-              <span style={styles.detailValue}>{object.illumination.toFixed(1)}%</span>
-            </div>
-          )}
-          {object.objectType && (
-            <div style={styles.detailRow}>
-              <span style={styles.detailLabel}>Object Type</span>
-              <span style={styles.detailValue}>{object.objectType}</span>
-            </div>
-          )}
-          {object.status && (
-            <div style={styles.detailRow}>
-              <span style={styles.detailLabel}>Status</span>
-              <span style={styles.detailValue}>{object.status.charAt(0).toUpperCase() + object.status.slice(1)}</span>
-            </div>
-          )}
+        {/* Tab Navigation */}
+        <div style={styles.tabNav}>
+          <button
+            style={{ ...styles.tabBtn, ...(activeTab === 'info' ? styles.tabBtnActive : {}) }}
+            onClick={() => setActiveTab('info')}
+          >
+            <Book1 size={18} color={activeTab === 'info' ? '#a855f7' : 'rgba(255,255,255,0.5)'} variant="Bulk" />
+            <span>Info</span>
+          </button>
+          <button
+            style={{ ...styles.tabBtn, ...(activeTab === 'observe' ? styles.tabBtnActive : {}) }}
+            onClick={() => setActiveTab('observe')}
+          >
+            <Notepad2 size={18} color={activeTab === 'observe' ? '#a855f7' : 'rgba(255,255,255,0.5)'} variant="Bulk" />
+            <span>Log Observation</span>
+          </button>
         </div>
 
-        {user ? (
+        {activeTab === 'info' ? (
           <>
-            <div style={styles.section}>
-              <h3 style={styles.sectionTitle}>Log Observation</h3>
-              
-              <div style={styles.categoryLabel}>Category *</div>
-              <div style={styles.categoryGrid}>
-                {OBSERVATION_CATEGORIES.map((cat) => {
-                  const IconComponent = cat.Icon;
-                  return (
-                    <button
-                      key={cat.id}
-                      onClick={() => setSelectedCategory(cat.id)}
-                      style={{
-                        ...styles.categoryBtn,
-                        ...(selectedCategory === cat.id ? styles.categoryBtnActive : {}),
-                      }}
-                    >
-                      <IconComponent 
-                        size={24} 
-                        color={selectedCategory === cat.id ? '#a855f7' : 'rgba(255,255,255,0.5)'} 
-                        variant="Bulk" 
-                      />
-                      <span style={styles.categoryName}>{cat.label}</span>
-                      <span style={styles.categoryPoints}>+{cat.points}pts</span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div style={styles.formRow}>
-                <div style={styles.formGroup}>
-                  <label style={styles.formLabel}>
-                    <Calendar size={14} color="rgba(255,255,255,0.7)" variant="Bulk" style={{ marginRight: 6 }} />
-                    Observation Date *
-                  </label>
-                  <input
-                    type="date"
-                    value={observationDate}
-                    onChange={(e) => setObservationDate(e.target.value)}
-                    style={styles.dateInput}
-                  />
+            {/* Info Section Tabs */}
+            <div style={styles.infoSectionNav}>
+              <button
+                style={{ ...styles.infoSectionBtn, ...(activeInfoSection === 'science' ? styles.infoSectionBtnActive : {}) }}
+                onClick={() => setActiveInfoSection('science')}
+              >
+                <Microscope size={14} color={activeInfoSection === 'science' ? '#60a5fa' : 'rgba(255,255,255,0.5)'} variant="Bulk" />
+                Science
+              </button>
+              <button
+                style={{ ...styles.infoSectionBtn, ...(activeInfoSection === 'mythology' ? styles.infoSectionBtnActive : {}) }}
+                onClick={() => setActiveInfoSection('mythology')}
+              >
+                <Story size={14} color={activeInfoSection === 'mythology' ? '#f472b6' : 'rgba(255,255,255,0.5)'} variant="Bulk" />
+                Mythology
+              </button>
+              <button
+                style={{ ...styles.infoSectionBtn, ...(activeInfoSection === 'astrology' ? styles.infoSectionBtnActive : {}) }}
+                onClick={() => setActiveInfoSection('astrology')}
+              >
+                <MagicStar size={14} color={activeInfoSection === 'astrology' ? '#fbbf24' : 'rgba(255,255,255,0.5)'} variant="Bulk" />
+                Astrology
+              </button>
+              <button
+                style={{ ...styles.infoSectionBtn, ...(activeInfoSection === 'tips' ? styles.infoSectionBtnActive : {}) }}
+                onClick={() => setActiveInfoSection('tips')}
+              >
+                <Star1 size={14} color={activeInfoSection === 'tips' ? '#34d399' : 'rgba(255,255,255,0.5)'} variant="Bulk" />
+                Tips
+              </button>
+            </div>
+            {renderInfoSection()}
+            
+            {/* Quick action buttons */}
+            <div style={styles.quickActions}>
+              <button onClick={() => setActiveTab('observe')} style={styles.quickActionBtn}>
+                <Notepad2 size={18} color="#a855f7" variant="Bulk" />
+                Log This Observation
+              </button>
+              <button onClick={handleToggleFavorite} style={{ ...styles.quickActionBtn, ...(favorited ? styles.quickActionBtnActive : {}) }}>
+                <Star size={18} color={favorited ? '#ffc107' : 'rgba(255,255,255,0.7)'} variant={favorited ? 'Bulk' : 'Linear'} />
+                {favorited ? 'Favorited' : 'Add to Favorites'}
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Object Details */}
+            <div style={styles.details}>
+              {object.magnitude !== undefined && (
+                <div style={styles.detailRow}>
+                  <span style={styles.detailLabel}>Magnitude</span>
+                  <span style={styles.detailValue}>{object.magnitude.toFixed(2)}</span>
                 </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.formLabel}>
-                    <Location size={14} color="rgba(255,255,255,0.7)" variant="Bulk" style={{ marginRight: 6 }} />
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Backyard, Observatory"
-                    value={locationName}
-                    onChange={(e) => setLocationName(e.target.value)}
-                    style={styles.textInput}
-                  />
+              )}
+              {object.ra !== undefined && (
+                <div style={styles.detailRow}>
+                  <span style={styles.detailLabel}>Right Ascension</span>
+                  <span style={styles.detailValue}>{object.ra.toFixed(4)}h</span>
                 </div>
-              </div>
-
-              <label style={styles.formLabel}>Notes</label>
-              <textarea
-                placeholder="Describe what you observed, equipment used, sky conditions..."
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                style={styles.textarea}
-                rows={3}
-              />
-
-              <label style={styles.formLabel}>
-                <Camera size={14} color="rgba(255,255,255,0.7)" variant="Bulk" style={{ marginRight: 6 }} />
-                Photo (Optional)
-              </label>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoSelect}
-                style={{ display: 'none' }}
-              />
-              {photoPreview ? (
-                <div style={styles.photoPreviewContainer}>
-                  <img src={photoPreview} alt="Preview" style={styles.photoPreview} />
-                  <button 
-                    onClick={handleRemovePhoto} 
-                    style={styles.removePhotoBtn}
-                    type="button"
-                  >
-                    <Trash size={16} color="#ffffff" variant="Bulk" />
-                  </button>
+              )}
+              {object.dec !== undefined && (
+                <div style={styles.detailRow}>
+                  <span style={styles.detailLabel}>Declination</span>
+                  <span style={styles.detailValue}>{object.dec.toFixed(4)}°</span>
                 </div>
-              ) : (
-                <div 
-                  style={styles.photoUploadArea}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <Camera size={36} color="rgba(255,255,255,0.4)" variant="Bulk" />
-                  <div style={styles.photoUploadText}>Click to upload photo</div>
-                  <div style={styles.photoUploadHint}>Max 5MB, JPG/PNG</div>
+              )}
+              {object.spectralType && (
+                <div style={styles.detailRow}>
+                  <span style={styles.detailLabel}>Spectral Type</span>
+                  <span style={styles.detailValue}>{object.spectralType}</span>
+                </div>
+              )}
+              {object.phaseName && (
+                <div style={styles.detailRow}>
+                  <span style={styles.detailLabel}>Phase</span>
+                  <span style={styles.detailValue}>{object.phaseName}</span>
+                </div>
+              )}
+              {object.illumination !== undefined && (
+                <div style={styles.detailRow}>
+                  <span style={styles.detailLabel}>Illumination</span>
+                  <span style={styles.detailValue}>{object.illumination.toFixed(1)}%</span>
                 </div>
               )}
             </div>
 
-            <div style={styles.footer}>
-              <div style={styles.pointsIndicator}>
-                <Star size={32} color="#ffd700" variant="Bulk" />
-                <div>
-                  <div style={styles.pointsLabel}>Points to earn</div>
-                  <div style={styles.pointsValue}>+{pointsToEarn}</div>
-                </div>
-              </div>
-              <button 
-                onClick={handleSaveObservation} 
-                style={styles.saveBtn}
-                disabled={saving || uploadingPhoto}
-              >
-                {uploadingPhoto ? (
-                  <>Uploading...</>
-                ) : saving ? (
-                  <>Saving...</>
-                ) : (
-                  <>
-                    <TickCircle size={18} color="#ffffff" variant="Bulk" style={{ marginRight: 8 }} />
-                    Log Observation
-                  </>
-                )}
-              </button>
-            </div>
+            {user ? (
+              <>
+                <div style={styles.section}>
+                  <div style={styles.categoryLabel}>Category *</div>
+                  <div style={styles.categoryGrid}>
+                    {OBSERVATION_CATEGORIES.map((cat) => {
+                      const IconComponent = cat.Icon;
+                      return (
+                        <button
+                          key={cat.id}
+                          onClick={() => setSelectedCategory(cat.id)}
+                          style={{ ...styles.categoryBtn, ...(selectedCategory === cat.id ? styles.categoryBtnActive : {}) }}
+                        >
+                          <IconComponent size={24} color={selectedCategory === cat.id ? '#a855f7' : 'rgba(255,255,255,0.5)'} variant="Bulk" />
+                          <span style={styles.categoryName}>{cat.label}</span>
+                          <span style={styles.categoryPoints}>+{cat.points}pts</span>
+                        </button>
+                      );
+                    })}
+                  </div>
 
-            <button 
-              onClick={handleToggleFavorite} 
-              style={{...styles.favoriteBtn, ...(favorited ? styles.favoriteBtnActive : {})}}
-            >
-              <Star size={18} color={favorited ? '#ffc107' : 'rgba(255,255,255,0.8)'} variant={favorited ? 'Bulk' : 'Linear'} style={{ marginRight: 8 }} />
-              {favorited ? 'Favorited' : 'Add to Favorites'}
-            </button>
+                  <div style={styles.formRow}>
+                    <div style={styles.formGroup}>
+                      <label style={styles.formLabel}>
+                        <Calendar size={14} color="rgba(255,255,255,0.7)" variant="Bulk" style={{ marginRight: 6 }} />
+                        Date *
+                      </label>
+                      <input type="date" value={observationDate} onChange={(e) => setObservationDate(e.target.value)} style={styles.dateInput} />
+                    </div>
+                    <div style={styles.formGroup}>
+                      <label style={styles.formLabel}>
+                        <Location size={14} color="rgba(255,255,255,0.7)" variant="Bulk" style={{ marginRight: 6 }} />
+                        Location
+                      </label>
+                      <input type="text" placeholder="e.g. Backyard" value={locationName} onChange={(e) => setLocationName(e.target.value)} style={styles.textInput} />
+                    </div>
+                  </div>
+
+                  <label style={styles.formLabel}>Notes</label>
+                  <textarea placeholder="Describe what you observed..." value={notes} onChange={(e) => setNotes(e.target.value)} style={styles.textarea} rows={3} />
+
+                  <label style={styles.formLabel}>
+                    <Camera size={14} color="rgba(255,255,255,0.7)" variant="Bulk" style={{ marginRight: 6 }} />
+                    Photo (Optional)
+                  </label>
+                  <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoSelect} style={{ display: 'none' }} />
+                  {photoPreview ? (
+                    <div style={styles.photoPreviewContainer}>
+                      <img src={photoPreview} alt="Preview" style={styles.photoPreview} />
+                      <button onClick={handleRemovePhoto} style={styles.removePhotoBtn} type="button">
+                        <Trash size={16} color="#ffffff" variant="Bulk" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div style={styles.photoUploadArea} onClick={() => fileInputRef.current?.click()}>
+                      <Camera size={36} color="rgba(255,255,255,0.4)" variant="Bulk" />
+                      <div style={styles.photoUploadText}>Click to upload photo</div>
+                      <div style={styles.photoUploadHint}>Max 5MB, JPG/PNG</div>
+                    </div>
+                  )}
+                </div>
+
+                <div style={styles.footer}>
+                  <div style={styles.pointsIndicator}>
+                    <Star size={32} color="#ffd700" variant="Bulk" />
+                    <div>
+                      <div style={styles.pointsLabel}>Points to earn</div>
+                      <div style={styles.pointsValue}>+{pointsToEarn}</div>
+                    </div>
+                  </div>
+                  <button onClick={handleSaveObservation} style={styles.saveBtn} disabled={saving || uploadingPhoto}>
+                    {uploadingPhoto ? 'Uploading...' : saving ? 'Saving...' : (
+                      <><TickCircle size={18} color="#ffffff" variant="Bulk" style={{ marginRight: 8 }} />Log Observation</>
+                    )}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div style={styles.signInPrompt}>
+                <Lock size={40} color="rgba(255,255,255,0.4)" variant="Bulk" />
+                <div>Sign in to log observations and earn points</div>
+              </div>
+            )}
           </>
-        ) : (
-          <div style={styles.signInPrompt}>
-            <Lock size={40} color="rgba(255,255,255,0.4)" variant="Bulk" />
-            <div>Sign in to log observations and earn points</div>
-          </div>
         )}
 
         {message && (
-          <div style={{
-            ...styles.message,
-            ...(message.type === 'error' ? styles.messageError : {}),
-          }}>
+          <div style={{ ...styles.message, ...(message.type === 'error' ? styles.messageError : {}) }}>
             {message.text}
           </div>
         )}
@@ -439,323 +634,160 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
   );
 }
 
-
 const styles: Record<string, React.CSSProperties> = {
   overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'rgba(0, 0, 0, 0.7)',
-    backdropFilter: 'blur(10px)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 10000,
+    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+    background: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(10px)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000,
   },
   panel: {
     background: 'linear-gradient(180deg, rgba(15, 10, 30, 0.98) 0%, rgba(5, 5, 15, 0.98) 100%)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '20px',
-    padding: '24px',
-    width: '90%',
-    maxWidth: '480px',
-    maxHeight: '85vh',
-    overflow: 'auto',
-    position: 'relative',
+    border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '20px', padding: '24px',
+    width: '90%', maxWidth: '520px', maxHeight: '85vh', overflow: 'auto', position: 'relative',
     boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
   },
   closeBtn: {
-    position: 'absolute',
-    top: '16px',
-    right: '16px',
-    background: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-    padding: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'absolute', top: '16px', right: '16px', background: 'transparent',
+    border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-    marginBottom: '20px',
-  },
-  headerIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: '22px',
-    fontWeight: 600,
-    color: '#ffffff',
-    marginBottom: '4px',
-  },
-  type: {
-    fontSize: '11px',
-    fontWeight: 600,
-    color: 'rgba(255, 255, 255, 0.5)',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  details: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-    marginBottom: '24px',
-    padding: '16px',
-    background: 'rgba(255, 255, 255, 0.03)',
-    borderRadius: '12px',
-    border: '1px solid rgba(255, 255, 255, 0.06)',
-  },
-  detailRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  detailLabel: {
-    fontSize: '13px',
-    color: 'rgba(255, 255, 255, 0.5)',
-  },
-  detailValue: {
-    fontSize: '14px',
-    fontWeight: 500,
-    color: '#ffffff',
-  },
-  section: {
-    marginBottom: '20px',
-  },
-  sectionTitle: {
-    fontSize: '16px',
-    fontWeight: 600,
-    color: '#ffffff',
-    marginBottom: '16px',
-  },
-  categoryLabel: {
-    fontSize: '12px',
-    fontWeight: 500,
-    color: 'rgba(255, 255, 255, 0.7)',
-    marginBottom: '10px',
-  },
-  categoryGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
-    gap: '8px',
-    marginBottom: '16px',
-  },
-  categoryBtn: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '6px',
-    padding: '14px 8px',
-    background: 'rgba(255, 255, 255, 0.03)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    borderRadius: '12px',
-    cursor: 'pointer',
+  header: { display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' },
+  headerIcon: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  title: { fontSize: '22px', fontWeight: 600, color: '#ffffff', marginBottom: '4px' },
+  type: { fontSize: '11px', fontWeight: 600, color: 'rgba(255, 255, 255, 0.5)', textTransform: 'uppercase', letterSpacing: '1px' },
+  
+  // Tab navigation
+  tabNav: { display: 'flex', gap: '8px', marginBottom: '16px' },
+  tabBtn: {
+    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+    padding: '12px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '12px', cursor: 'pointer', color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px', fontWeight: 500,
     transition: 'all 0.2s ease',
-    color: 'rgba(255, 255, 255, 0.7)',
   },
-  categoryBtnActive: {
-    background: 'rgba(168, 85, 247, 0.15)',
-    border: '1px solid rgba(168, 85, 247, 0.4)',
-    color: '#ffffff',
+  tabBtnActive: {
+    background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.4)', color: '#ffffff',
   },
-  categoryName: {
-    fontSize: '12px',
-    fontWeight: 500,
+  
+  // Info section navigation
+  infoSectionNav: { display: 'flex', gap: '6px', marginBottom: '16px', flexWrap: 'wrap' as const },
+  infoSectionBtn: {
+    display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px',
+    background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.06)',
+    borderRadius: '8px', cursor: 'pointer', color: 'rgba(255, 255, 255, 0.6)', fontSize: '12px', fontWeight: 500,
+    transition: 'all 0.2s ease',
   },
-  categoryPoints: {
-    fontSize: '10px',
-    opacity: 0.7,
+  infoSectionBtnActive: { background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#ffffff' },
+  
+  // Info content
+  infoContent: { marginBottom: '16px' },
+  infoSummary: { fontSize: '14px', lineHeight: 1.6, color: 'rgba(255, 255, 255, 0.85)', marginBottom: '16px' },
+  infoDetail: { display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', color: '#ffffff' },
+  infoDetailLabel: { fontSize: '13px', color: 'rgba(255, 255, 255, 0.5)' },
+  infoDetailValue: { fontSize: '13px', color: '#ffffff', textAlign: 'right' as const, maxWidth: '60%' },
+  factsList: { marginTop: '16px' },
+  factsTitle: { fontSize: '14px', fontWeight: 600, color: '#ffffff', marginBottom: '12px' },
+  factItem: { display: 'flex', gap: '10px', marginBottom: '10px', fontSize: '13px', lineHeight: 1.5, color: 'rgba(255, 255, 255, 0.8)' },
+  factBullet: { color: '#a855f7', flexShrink: 0 },
+  notableSection: { marginTop: '20px' },
+  indianMythology: { 
+    marginTop: '16px', padding: '12px', 
+    background: 'rgba(255, 153, 51, 0.1)', 
+    border: '1px solid rgba(255, 153, 51, 0.2)', 
+    borderRadius: '10px' 
   },
-  formRow: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '12px',
-    marginBottom: '12px',
+  notableItem: { display: 'flex', flexDirection: 'column' as const, gap: '4px', padding: '10px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '8px', marginBottom: '8px' },
+  notableName: { fontSize: '13px', fontWeight: 600, color: '#ffffff' },
+  notableDesc: { fontSize: '12px', color: 'rgba(255, 255, 255, 0.6)' },
+  loadingInfo: { padding: '40px 20px', textAlign: 'center' as const, color: 'rgba(255, 255, 255, 0.5)' },
+  generatingInfo: { 
+    padding: '40px 20px', textAlign: 'center' as const, color: 'rgba(255, 255, 255, 0.7)', 
+    display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: '12px',
+    background: 'rgba(168, 85, 247, 0.1)', borderRadius: '12px', border: '1px solid rgba(168, 85, 247, 0.2)',
   },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
+  noInfo: { padding: '40px 20px', textAlign: 'center' as const, color: 'rgba(255, 255, 255, 0.5)', display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: '12px' },
+  noSectionInfo: { fontSize: '13px', color: 'rgba(255, 255, 255, 0.4)', fontStyle: 'italic' as const },
+  astrologyDisclaimer: {
+    display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', marginBottom: '16px',
+    background: 'rgba(251, 191, 36, 0.1)', border: '1px solid rgba(251, 191, 36, 0.2)', borderRadius: '8px',
+    fontSize: '11px', color: 'rgba(251, 191, 36, 0.9)',
   },
-  formLabel: {
-    fontSize: '12px',
-    fontWeight: 500,
-    color: 'rgba(255, 255, 255, 0.7)',
-    marginBottom: '4px',
-    display: 'flex',
-    alignItems: 'center',
+  
+  // Quick actions
+  quickActions: { display: 'flex', gap: '10px', marginTop: '16px' },
+  quickActionBtn: {
+    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+    padding: '12px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '12px', cursor: 'pointer', color: 'rgba(255, 255, 255, 0.8)', fontSize: '12px', fontWeight: 500,
   },
+  quickActionBtnActive: { background: 'rgba(255, 193, 7, 0.15)', border: '1px solid rgba(255, 193, 7, 0.3)', color: '#ffc107' },
+
+  // Existing styles
+  details: {
+    display: 'flex', flexDirection: 'column' as const, gap: '10px', marginBottom: '20px', padding: '16px',
+    background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.06)',
+  },
+  detailRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  detailLabel: { fontSize: '13px', color: 'rgba(255, 255, 255, 0.5)' },
+  detailValue: { fontSize: '14px', fontWeight: 500, color: '#ffffff' },
+  section: { marginBottom: '20px' },
+  categoryLabel: { fontSize: '12px', fontWeight: 500, color: 'rgba(255, 255, 255, 0.7)', marginBottom: '10px' },
+  categoryGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '16px' },
+  categoryBtn: {
+    display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: '6px', padding: '14px 8px',
+    background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px',
+    cursor: 'pointer', transition: 'all 0.2s ease', color: 'rgba(255, 255, 255, 0.7)',
+  },
+  categoryBtnActive: { background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.4)', color: '#ffffff' },
+  categoryName: { fontSize: '12px', fontWeight: 500 },
+  categoryPoints: { fontSize: '10px', opacity: 0.7 },
+  formRow: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' },
+  formGroup: { display: 'flex', flexDirection: 'column' as const, gap: '6px' },
+  formLabel: { fontSize: '12px', fontWeight: 500, color: 'rgba(255, 255, 255, 0.7)', marginBottom: '4px', display: 'flex', alignItems: 'center' },
   dateInput: {
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '10px',
-    padding: '10px 12px',
-    color: '#ffffff',
-    fontSize: '13px',
-    fontFamily: 'inherit',
-    outline: 'none',
+    background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '10px',
+    padding: '10px 12px', color: '#ffffff', fontSize: '13px', fontFamily: 'inherit', outline: 'none',
   },
   textInput: {
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '10px',
-    padding: '10px 12px',
-    color: '#ffffff',
-    fontSize: '13px',
-    fontFamily: 'inherit',
-    outline: 'none',
+    background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '10px',
+    padding: '10px 12px', color: '#ffffff', fontSize: '13px', fontFamily: 'inherit', outline: 'none',
   },
   textarea: {
-    width: '100%',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '10px',
-    padding: '12px',
-    color: '#ffffff',
-    fontSize: '13px',
-    fontFamily: 'inherit',
-    resize: 'vertical',
-    outline: 'none',
-    marginBottom: '12px',
+    width: '100%', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '10px', padding: '12px', color: '#ffffff', fontSize: '13px', fontFamily: 'inherit',
+    resize: 'vertical' as const, outline: 'none', marginBottom: '12px',
   },
   footer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '16px',
-    background: 'rgba(255, 255, 255, 0.03)',
-    borderRadius: '12px',
-    marginBottom: '12px',
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px',
+    background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', marginBottom: '12px',
   },
-  pointsIndicator: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-  },
-  pointsLabel: {
-    fontSize: '11px',
-    color: 'rgba(255, 255, 255, 0.6)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-  },
-  pointsValue: {
-    fontSize: '18px',
-    fontWeight: 700,
-    color: '#ffffff',
-  },
+  pointsIndicator: { display: 'flex', alignItems: 'center', gap: '10px' },
+  pointsLabel: { fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase' as const, letterSpacing: '0.5px' },
+  pointsValue: { fontSize: '18px', fontWeight: 700, color: '#ffffff' },
   saveBtn: {
-    background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)',
-    border: 'none',
-    borderRadius: '12px',
-    padding: '14px 24px',
-    color: '#ffffff',
-    fontSize: '14px',
-    fontWeight: 600,
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  favoriteBtn: {
-    width: '100%',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '12px',
-    padding: '14px',
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: '14px',
-    fontWeight: 600,
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  favoriteBtnActive: {
-    background: 'rgba(255, 193, 7, 0.15)',
-    border: '1px solid rgba(255, 193, 7, 0.3)',
-    color: '#ffc107',
+    background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)', border: 'none', borderRadius: '12px',
+    padding: '14px 24px', color: '#ffffff', fontSize: '14px', fontWeight: 600, cursor: 'pointer',
+    transition: 'all 0.2s ease', display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
   signInPrompt: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '12px',
-    padding: '32px 20px',
-    color: 'rgba(255, 255, 255, 0.5)',
-    fontSize: '14px',
-    textAlign: 'center',
+    display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: '12px',
+    padding: '32px 20px', color: 'rgba(255, 255, 255, 0.5)', fontSize: '14px', textAlign: 'center' as const,
   },
   message: {
-    marginTop: '16px',
-    padding: '12px',
-    background: 'rgba(81, 207, 102, 0.15)',
-    border: '1px solid rgba(81, 207, 102, 0.3)',
-    borderRadius: '10px',
-    color: '#51cf66',
-    fontSize: '13px',
-    textAlign: 'center',
+    marginTop: '16px', padding: '12px', background: 'rgba(81, 207, 102, 0.15)',
+    border: '1px solid rgba(81, 207, 102, 0.3)', borderRadius: '10px', color: '#51cf66', fontSize: '13px', textAlign: 'center' as const,
   },
-  messageError: {
-    background: 'rgba(255, 107, 107, 0.15)',
-    border: '1px solid rgba(255, 107, 107, 0.3)',
-    color: '#ff6b6b',
-  },
+  messageError: { background: 'rgba(255, 107, 107, 0.15)', border: '1px solid rgba(255, 107, 107, 0.3)', color: '#ff6b6b' },
   photoUploadArea: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
-    padding: '24px',
-    background: 'rgba(255, 255, 255, 0.03)',
-    border: '2px dashed rgba(255, 255, 255, 0.15)',
-    borderRadius: '12px',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    marginBottom: '16px',
+    display: 'flex', flexDirection: 'column' as const, alignItems: 'center', justifyContent: 'center', gap: '8px',
+    padding: '24px', background: 'rgba(255, 255, 255, 0.03)', border: '2px dashed rgba(255, 255, 255, 0.15)',
+    borderRadius: '12px', cursor: 'pointer', transition: 'all 0.2s ease', marginBottom: '16px',
   },
-  photoUploadText: {
-    fontSize: '13px',
-    color: 'rgba(255, 255, 255, 0.7)',
-    fontWeight: 500,
-  },
-  photoUploadHint: {
-    fontSize: '11px',
-    color: 'rgba(255, 255, 255, 0.4)',
-  },
-  photoPreviewContainer: {
-    position: 'relative',
-    marginBottom: '16px',
-    borderRadius: '12px',
-    overflow: 'hidden',
-  },
-  photoPreview: {
-    width: '100%',
-    maxHeight: '200px',
-    objectFit: 'cover',
-    borderRadius: '12px',
-  },
+  photoUploadText: { fontSize: '13px', color: 'rgba(255, 255, 255, 0.7)', fontWeight: 500 },
+  photoUploadHint: { fontSize: '11px', color: 'rgba(255, 255, 255, 0.4)' },
+  photoPreviewContainer: { position: 'relative' as const, marginBottom: '16px', borderRadius: '12px', overflow: 'hidden' },
+  photoPreview: { width: '100%', maxHeight: '200px', objectFit: 'cover' as const, borderRadius: '12px' },
   removePhotoBtn: {
-    position: 'absolute',
-    top: '8px',
-    right: '8px',
-    width: '32px',
-    height: '32px',
-    background: 'rgba(0, 0, 0, 0.7)',
-    border: 'none',
-    borderRadius: '50%',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'absolute' as const, top: '8px', right: '8px', width: '32px', height: '32px',
+    background: 'rgba(0, 0, 0, 0.7)', border: 'none', borderRadius: '50%', cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
 };
