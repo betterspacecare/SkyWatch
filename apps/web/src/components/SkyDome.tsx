@@ -2214,7 +2214,7 @@ const CoordinateGrid: React.FC<CoordinateGridProps> = ({
           <lineBasicMaterial 
             color={azimuthColor} 
             transparent 
-            opacity={azimuths[index] % 90 === 0 ? opacity * 1.5 : opacity} 
+            opacity={(azimuths[index] ?? 0) % 90 === 0 ? opacity * 1.5 : opacity} 
             linewidth={1}
           />
         </line>
@@ -2595,19 +2595,21 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
         <CameraController 
           onCameraChange={handleCameraChange} 
           fov={fov} 
-          targetAzimuth={cameraTarget?.azimuth}
-          targetAltitude={cameraTarget?.altitude}
+          targetAzimuth={cameraTarget?.azimuth ?? null}
+          targetAltitude={cameraTarget?.altitude ?? null}
           controlsRef={controlsRef}
         />
         
         {/* Atmosphere and ground effect */}
-        <AtmosphereGround 
-          sunAltitude={sunPosition?.altitude ?? -10} 
-          sunAzimuth={sunPosition?.azimuth ?? 180}
-          groundTexture={groundTexture}
-          showAtmosphere={showAtmosphere}
-          showGround={showGround}
-        />
+        {(showAtmosphere || showGround) && (
+          <AtmosphereGround 
+            sunAltitude={sunPosition?.altitude ?? -10} 
+            sunAzimuth={sunPosition?.azimuth ?? 180}
+            {...(groundTexture ? { groundTexture } : {})}
+            showAtmosphere={showAtmosphere}
+            showGround={showGround}
+          />
+        )}
         
         {/* Render horizon line with cardinal directions */}
         {horizonPoints && horizonPoints.length > 0 && (
@@ -2620,11 +2622,11 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
         {/* Render coordinate grid (Alt-Az) */}
         {(gridConfig?.showAltitude || gridConfig?.showAzimuth) && (
           <CoordinateGrid
-            showAltitude={gridConfig.showAltitude}
-            showAzimuth={gridConfig.showAzimuth}
-            altitudeColor={gridConfig.altitudeColor}
-            azimuthColor={gridConfig.azimuthColor}
-            opacity={gridConfig.opacity}
+            showAltitude={gridConfig.showAltitude ?? false}
+            showAzimuth={gridConfig.showAzimuth ?? false}
+            altitudeColor={gridConfig.altitudeColor ?? '#4a5568'}
+            azimuthColor={gridConfig.azimuthColor ?? '#4a5568'}
+            opacity={gridConfig.opacity ?? 0.3}
           />
         )}
         
@@ -2634,8 +2636,8 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
             enabled={gridConfig.showEquatorial}
             lst={lst}
             observerLatitude={observerLatitude}
-            color={gridConfig.equatorialColor}
-            opacity={gridConfig.opacity}
+            color={gridConfig.equatorialColor ?? '#22d3ee'}
+            opacity={gridConfig.opacity ?? 0.3}
           />
         )}
         
@@ -2728,7 +2730,7 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
         )}
         
         {/* Highlight marker for search results */}
-        {highlightedObjectId && (
+        {highlightedObjectId && onCloseHighlight && (
           <HighlightMarker
             objectId={highlightedObjectId}
             stars={stars}
