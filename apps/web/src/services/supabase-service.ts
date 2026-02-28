@@ -77,8 +77,6 @@ export async function fetchBrightestStars(
   const allStars: Star[] = [];
   let offset = 0;
   
-  console.log(`📡 Fetching up to ${limit} stars from Supabase...`);
-  
   while (offset < limit) {
     const currentBatchSize = Math.min(batchSize, limit - offset);
     
@@ -109,8 +107,6 @@ export async function fetchBrightestStars(
     allStars.push(...stars);
     offset += data.length;
     
-    console.log(`✅ Fetched ${allStars.length}/${limit} stars...`);
-    
     // Call progress callback with current stars
     if (onProgress) {
       onProgress([...allStars], limit);
@@ -122,7 +118,6 @@ export async function fetchBrightestStars(
     }
   }
   
-  console.log(`🌟 Total stars fetched: ${allStars.length}`);
   return allStars;
 }
 
@@ -294,7 +289,6 @@ export async function addToFavorites(
   if (error) {
     // Handle duplicate key error gracefully
     if (error.code === '23505') {
-      console.log('Item already favorited');
       return null;
     }
     console.error('Error adding to favorites:', error);

@@ -387,19 +387,12 @@ export default function Home() {
       try {
         // Get active meteor showers
         const showers = getActiveMeteorShowers(state.observer!.latitude, state.observer!.longitude);
-        console.log(`🌠 Active meteor showers: ${showers.length}`);
-        showers.forEach(s => console.log(`  - ${s.name}: ZHR=${s.zhr}, radiant alt=${s.radiantAlt?.toFixed(1)}°`));
         
         // Get upcoming ISS passes
         const passes = await getISSPasses(state.observer!.latitude, state.observer!.longitude, 5);
-        console.log(`🛰️ Upcoming ISS passes: ${passes.length}`);
-        passes.forEach(p => console.log(`  - ${p.startTime.toLocaleString()}, duration=${p.duration}s`));
         
         // Get people in space
         const people = await getPeopleInSpace();
-        if (people) {
-          console.log(`👨‍🚀 People in space: ${people.number}`);
-        }
         
         setState(prev => ({
           ...prev,
@@ -408,7 +401,7 @@ export default function Home() {
           peopleInSpace: people,
         }));
       } catch (error) {
-        console.warn('Failed to fetch astronomy data:', error);
+        // Silently fail - astronomy data is supplementary
       }
     };
     
@@ -475,7 +468,6 @@ export default function Home() {
         let constellations: Constellation[];
         
         try {
-          console.log('🌌 Loading stars from Supabase database...');
           const { loadStars } = await import('../src/services/star-loader');
           
           // Load stars from Supabase with progress callback
@@ -493,18 +485,11 @@ export default function Home() {
             }
           });
           
-          console.log(`✅ Loaded ${stars.length} stars from Supabase`);
-          
           // Load constellations from API
-          console.log('🌌 Fetching constellations from Astronomy API...');
           const result = await fetchConstellationsWithStars();
           constellations = result.constellations;
           
-          console.log(`✅ Loaded ${constellations.length} constellations from API`);
-          console.log(`📊 Total: ${stars.length} stars + ${constellations.length} constellations`);
-          
         } catch (error) {
-          console.warn('⚠️  Supabase fetch failed, falling back to local JSON:', error);
           // Fallback to local JSON
           const response = await fetch('/data/bright-stars.json');
           const data = await response.json();
@@ -524,8 +509,6 @@ export default function Home() {
           } catch {
             constellations = [];
           }
-          
-          console.log(`✅ Loaded ${stars.length} stars from local JSON (fallback)`);
         }
         
         // Fetch celestial bodies (sun, moon, planets) from Astronomy API
@@ -534,7 +517,6 @@ export default function Home() {
         let sunPosition: SunPosition | null = null;
         
         try {
-          console.log('🌍 Fetching celestial bodies from Astronomy API...');
           const { fetchBodiesFromAstronomyAPI } = await import('../src/services/astronomy-api');
           const now = new Date();
           const bodies = await fetchBodiesFromAstronomyAPI(coords, now);
@@ -572,12 +554,7 @@ export default function Home() {
             safetyWarning: sunData.safetyWarning,
             isBelowHorizon: sunData.isBelowHorizon,
           };
-          
-          console.log(`✅ Loaded ${planets.length} planets from API`);
-          console.log(`🌙 Moon position (suncalc): alt=${moonPosition.altitude.toFixed(1)}°, az=${moonPosition.azimuth.toFixed(1)}°, phase=${moonPosition.phaseName}`);
-          console.log(`☀️ Sun position (suncalc): alt=${sunPosition.altitude.toFixed(1)}°, az=${sunPosition.azimuth.toFixed(1)}°, status=${sunPosition.status}`);
         } catch (bodiesError) {
-          console.warn('⚠️  Bodies API fetch failed, using suncalc for moon/sun:', bodiesError);
           // Fallback to local calculators for planets
           const planetCalc = createPlanetCalculator();
           planets = planetCalc.calculatePlanetPositions(new Date(), coords);
@@ -606,9 +583,6 @@ export default function Home() {
             safetyWarning: sunData.safetyWarning,
             isBelowHorizon: sunData.isBelowHorizon,
           };
-          
-          console.log(`🌙 Moon position (suncalc fallback): alt=${moonPosition.altitude.toFixed(1)}°, az=${moonPosition.azimuth.toFixed(1)}°`);
-          console.log(`☀️ Sun position (suncalc fallback): alt=${sunPosition.altitude.toFixed(1)}°, az=${sunPosition.azimuth.toFixed(1)}°`);
         }
 
         // Initialize horizon line
@@ -625,10 +599,7 @@ export default function Home() {
         await satelliteTrackerRef.current.loadDefaultISS();
         
         // Also fetch ISS from Where The ISS At API as backup
-        const issFromApi = await getISSPosition(coords.latitude, coords.longitude);
-        if (issFromApi) {
-          console.log(`🛰️ ISS from API: alt=${issFromApi.altitude.toFixed(1)}°, az=${issFromApi.azimuth.toFixed(1)}°, height=${issFromApi.height.toFixed(0)}km`);
-        }
+        await getISSPosition(coords.latitude, coords.longitude);
 
         // Initialize meteor shower catalog
         meteorShowerCatalogRef.current = createMeteorShowerCatalog();
@@ -640,40 +611,14 @@ export default function Home() {
         // Convert deep sky array to Map
         const deepSkyArray = deepSkyCatalogRef.current.getVisibleObjects(coords, lst);
         const deepSkyPositions = new Map<string, DeepSkyPosition>();
-        let visibleCount = 0;
         for (const pos of deepSkyArray) {
           deepSkyPositions.set(pos.object.id, pos);
-          if (pos.isVisible) visibleCount++;
-          
-          // Debug M42 specifically
-          if (pos.object.id === 'M42') {
-            console.log('🔍 M42 (Orion Nebula) details:', {
-              ra: pos.object.ra,
-              dec: pos.object.dec,
-              azimuth: pos.azimuth.toFixed(2),
-              altitude: pos.altitude.toFixed(2),
-              magnitude: pos.object.magnitude,
-              isVisible: pos.isVisible,
-              isAboveHorizon: pos.altitude >= 0,
-            });
-          }
         }
-        
-        console.log(`🌌 Messier objects: ${deepSkyArray.length} total, ${visibleCount} visible above horizon`);
         
         // Calculate satellite positions only if we have sun position
         const satellitePositions = sunPosition 
           ? satelliteTrackerRef.current.calculateAll(now, coords, sunPosition)
           : new Map<string, SatellitePosition | SatelliteTrackerError>();
-        
-        console.log(`🛰️ Satellites: ${satellitePositions.size} tracked`);
-        satellitePositions.forEach((pos, id) => {
-          if ('altitude' in pos) {
-            console.log(`  - ${id}: alt=${pos.altitude.toFixed(1)}°, az=${pos.azimuth.toFixed(1)}°, visible=${pos.isVisible}`);
-          } else {
-            console.log(`  - ${id}: error - ${pos.type}`);
-          }
-        });
         
         // Convert meteor shower array to Map
         const meteorArray = meteorShowerCatalogRef.current.getRadiantPositions(now, coords, lst);
@@ -712,7 +657,6 @@ export default function Home() {
         const updateInterval = setInterval(async () => {
           try {
             setState(prev => ({ ...prev, isUpdating: true }));
-            console.log('🔄 Updating celestial body positions...');
             const { fetchBodiesFromAstronomyAPI } = await import('../src/services/astronomy-api');
             const now = new Date();
             const bodies = await fetchBodiesFromAstronomyAPI(coords, now);
@@ -754,7 +698,7 @@ export default function Home() {
             // Fetch ISS position
             const issData = await getISSPosition(coords.latitude, coords.longitude);
             if (issData) {
-              console.log(`🛰️ ISS position: alt=${issData.altitude.toFixed(1)}°, az=${issData.azimuth.toFixed(1)}°, visible=${issData.isVisible}`);
+              // ISS position fetched successfully
             }
             
             setState(prev => ({
@@ -770,10 +714,7 @@ export default function Home() {
             if (skyCalculatorRef.current) {
               skyCalculatorRef.current.setPlanets(updatedPlanets);
             }
-            
-            console.log('✅ Celestial body positions updated');
           } catch (error) {
-            console.warn('⚠️  Failed to update celestial bodies:', error);
             setState(prev => ({ ...prev, isUpdating: false }));
           }
         }, 5 * 60 * 1000); // Update every 5 minutes
@@ -926,7 +867,6 @@ export default function Home() {
     
     try {
       setState(prev => ({ ...prev, isUpdating: true }));
-      console.log('🔄 Manual refresh: Updating celestial body positions...');
       const { fetchBodiesFromAstronomyAPI } = await import('../src/services/astronomy-api');
       const now = new Date();
       const bodies = await fetchBodiesFromAstronomyAPI(state.observer, now);
@@ -966,10 +906,7 @@ export default function Home() {
       };
       
       // Fetch ISS position
-      const issData = await getISSPosition(state.observer.latitude, state.observer.longitude);
-      if (issData) {
-        console.log(`🛰️ ISS position: alt=${issData.altitude.toFixed(1)}°, az=${issData.azimuth.toFixed(1)}°, visible=${issData.isVisible}`);
-      }
+      await getISSPosition(state.observer.latitude, state.observer.longitude);
       
       setState(prev => ({
         ...prev,
@@ -984,10 +921,7 @@ export default function Home() {
       if (skyCalculatorRef.current) {
         skyCalculatorRef.current.setPlanets(updatedPlanets);
       }
-      
-      console.log('✅ Manual refresh: Celestial body positions updated');
     } catch (error) {
-      console.warn('⚠️  Manual refresh failed:', error);
       setState(prev => ({ ...prev, isUpdating: false }));
     }
   }, [state.observer, state.isUpdating]);

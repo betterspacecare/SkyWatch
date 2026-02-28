@@ -22,8 +22,6 @@ interface StarLoaderConfig {
 export async function loadStars(config: StarLoaderConfig = { strategy: 'local' }): Promise<Star[]> {
   const { strategy, maxStars = 50000, onProgress } = config;
 
-  console.log(`🌟 Loading stars using ${strategy} strategy...`);
-
   try {
     switch (strategy) {
       case 'supabase':
@@ -37,9 +35,7 @@ export async function loadStars(config: StarLoaderConfig = { strategy: 'local' }
         return await loadFromLocal();
     }
   } catch (error) {
-    console.error('❌ Failed to load stars:', error);
     // Always fallback to local
-    console.log('⚠️  Falling back to local JSON...');
     return await loadFromLocal();
   }
 }
@@ -48,8 +44,6 @@ export async function loadStars(config: StarLoaderConfig = { strategy: 'local' }
  * Load stars from local JSON file
  */
 async function loadFromLocal(): Promise<Star[]> {
-  console.log('📂 Loading stars from local JSON...');
-  
   const response = await fetch('/data/bright-stars.json');
   if (!response.ok) {
     throw new Error('Failed to fetch local stars');
@@ -65,7 +59,6 @@ async function loadFromLocal(): Promise<Star[]> {
     spectralType: s.spectralType,
   }));
   
-  console.log(`✅ Loaded ${stars.length} stars from local JSON`);
   return stars;
 }
 
@@ -76,15 +69,12 @@ async function loadFromSupabase(
   maxStars: number, 
   onProgress?: (stars: Star[], total: number) => void
 ): Promise<Star[]> {
-  console.log('☁️  Loading stars from Supabase...');
-  
   const stars = await fetchBrightestStars(maxStars, onProgress);
   
   if (stars.length === 0) {
     throw new Error('No stars returned from Supabase');
   }
   
-  console.log(`✅ Loaded ${stars.length} stars from Supabase`);
   return stars;
 }
 
@@ -95,15 +85,11 @@ async function loadHybrid(
   maxStars: number,
   onProgress?: (stars: Star[], total: number) => void
 ): Promise<Star[]> {
-  console.log('🔄 Using hybrid loading strategy...');
-  
   // Try Supabase first (for latest data)
   try {
     const supabaseStars = await loadFromSupabase(maxStars, onProgress);
-    console.log('✅ Hybrid: Using Supabase stars (latest data)');
     return supabaseStars;
   } catch (error) {
-    console.warn('⚠️  Hybrid: Supabase failed, using local JSON');
     return await loadFromLocal();
   }
 }

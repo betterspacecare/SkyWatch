@@ -17,12 +17,20 @@ const ASTRONOMY_API_CONFIG = {
 };
 
 /**
- * Creates Basic Auth header for Astronomy API
+ * Check if Astronomy API is configured
  */
-function getAstronomyAPIAuthHeader(): string {
+function isAstronomyAPIConfigured(): boolean {
+  return !!(ASTRONOMY_API_CONFIG.applicationId && ASTRONOMY_API_CONFIG.applicationSecret);
+}
+
+/**
+ * Creates Basic Auth header for Astronomy API
+ * Returns null if credentials are not configured
+ */
+function getAstronomyAPIAuthHeader(): string | null {
   const { applicationId, applicationSecret } = ASTRONOMY_API_CONFIG;
   if (!applicationId || !applicationSecret) {
-    throw new Error('Astronomy API credentials not configured');
+    return null;
   }
   const credentials = `${applicationId}:${applicationSecret}`;
   const encoded = typeof window !== 'undefined' 
@@ -38,6 +46,8 @@ function getAstronomyAPIAuthHeader(): string {
 export async function fetchStarFromAstronomyAPI(hipId: number): Promise<{ ra: number; dec: number; name?: string } | null> {
   try {
     const authHeader = getAstronomyAPIAuthHeader();
+    if (!authHeader) return null;
+    
     const searchTerm = `HIP ${hipId}`;
     
     const url = `${ASTRONOMY_API_CONFIG.baseUrl}/search?term=${encodeURIComponent(searchTerm)}&match=exact&limit=1`;
@@ -86,8 +96,6 @@ export async function fetchConstellationsWithStars(): Promise<{
   stars: Star[];
 }> {
   try {
-    console.log('📚 Loading constellation structure and star databases...');
-    
     // Load constellation structure
     const constellationsResponse = await fetch('/data/constellations.json');
     if (!constellationsResponse.ok) {
@@ -108,12 +116,6 @@ export async function fetchConstellationsWithStars(): Promise<{
       console.warn('⚠️  Failed to fetch bright stars database, using constellation stars only');
     }
     const brightStarsDatabase = brightStarsResponse.ok ? await brightStarsResponse.json() : null;
-    
-    console.log(`✅ Loaded ${rawConstellations.length} constellations`);
-    console.log(`✅ Loaded ${constellationStarDatabase.totalStars} constellation stars`);
-    if (brightStarsDatabase) {
-      console.log(`✅ Loaded ${brightStarsDatabase.totalStars} bright stars (magnitude <= ${brightStarsDatabase.maxMagnitude})`);
-    }
     
     // Build star map from constellation stars
     const starCoords = new Map<number, { ra: number; dec: number; mag: number; name: string }>();
@@ -152,7 +154,6 @@ export async function fetchConstellationsWithStars(): Promise<{
         });
         addedCount++;
       }
-      console.log(`✅ Added ${addedCount} additional bright stars (${stars.length} total)`);
     }
     
     // Build constellations using star coordinates
@@ -180,12 +181,9 @@ export async function fetchConstellationsWithStars(): Promise<{
       centerDec: c.centerDec
     }));
     
-    console.log(`✅ Built ${constellations.length} constellations with ${stars.length} stars`);
-    
     return { constellations, stars };
     
   } catch (error) {
-    console.error('❌ Error loading constellation data:', error);
     return { constellations: [], stars: [] };
   }
 }
@@ -198,7 +196,6 @@ export async function fetchConstellation(id: string): Promise<Constellation | nu
     const { constellations } = await fetchConstellationsWithStars();
     return constellations.find((c: Constellation) => c.id === id.toLowerCase()) || null;
   } catch (error) {
-    console.error('Error fetching constellation:', error);
     return null;
   }
 }
@@ -211,13 +208,14 @@ export async function fetchStars(options?: {
   maxMagnitude?: number;
   hipIds?: number[];
 }): Promise<Star[]> {
-  const useAstronomyAPI = ASTRONOMY_API_CONFIG.applicationId && ASTRONOMY_API_CONFIG.applicationSecret;
+  const useAstronomyAPI = isAstronomyAPIConfigured();
   
   // Try Astronomy API first for general star queries
   if (useAstronomyAPI && !options?.hipIds) {
     try {
-      console.log(`🌌 [Astronomy API] Searching for bright stars (magnitude <= ${options?.maxMagnitude || 6})...`);
       const authHeader = getAstronomyAPIAuthHeader();
+      if (!authHeader) return [];
+      
       const stars: Star[] = [];
       
       // Search for bright stars using the search endpoint
@@ -277,7 +275,7 @@ export async function fetchStars(options?: {
               }
             }
           } catch (error) {
-            console.warn(`⚠️  Failed to fetch ${starName}:`, error);
+            // Continue silently
           }
           return null;
         });
@@ -286,25 +284,23 @@ export async function fetchStars(options?: {
         const validStars = batchResults.filter((s): s is Star => s !== null);
         stars.push(...validStars);
         
-        console.log(`📦 Fetched batch ${Math.floor(i / batchSize) + 1}: ${stars.length} stars so far`);
-        
         // Rate limiting between batches
         await new Promise(resolve => setTimeout(resolve, 200));
       }
       
-      console.log(`✅ [Astronomy API] Fetched ${stars.length} bright stars`);
       return stars;
       
     } catch (error) {
-      console.warn('⚠️  [Astronomy API] Fetch failed, falling back to local catalog:', error);
+      // Fall through to next option
     }
   }
   
   if (useAstronomyAPI && options?.hipIds && options.hipIds.length > 0) {
     // Use Astronomy API for specific HIP IDs
     try {
-      console.log(`🌌 [Astronomy API] Fetching ${options.hipIds.length} stars by HIP ID...`);
       const authHeader = getAstronomyAPIAuthHeader();
+      if (!authHeader) return [];
+      
       const stars: Star[] = [];
       
       // Fetch in batches to respect rate limits
@@ -349,24 +345,20 @@ export async function fetchStars(options?: {
             // Rate limiting
             await new Promise(resolve => setTimeout(resolve, 100));
           } catch (error) {
-            console.warn(`⚠️  Failed to fetch HIP ${hipId}:`, error);
+            // Continue silently
           }
         }
-        
-        console.log(`📦 Fetched batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(options.hipIds.length / batchSize)} (${stars.length} stars so far)`);
       }
       
-      console.log(`✅ [Astronomy API] Fetched ${stars.length} stars`);
       return stars;
       
     } catch (error) {
-      console.warn('⚠️  [Astronomy API] Fetch failed, falling back to local catalog:', error);
+      // Fall through to fallback
     }
   }
   
   // Use local catalog as fallback - but it's currently not available
   // Return empty array instead of failing
-  console.warn('⚠️  Local catalog not available, returning empty array');
   return [];
 }
 /**
@@ -381,9 +373,13 @@ export async function fetchBodiesFromAstronomyAPI(
   moon: { ra: number; dec: number; magnitude: number; phase: number; distance: number } | null;
   planets: Array<{ name: string; ra: number; dec: number; magnitude: number; distance: number }>;
 }> {
+  const authHeader = getAstronomyAPIAuthHeader();
+  if (!authHeader) {
+    // Return empty result when API is not configured - caller will use fallback
+    throw new Error('Astronomy API not configured');
+  }
+  
   try {
-    const authHeader = getAstronomyAPIAuthHeader();
-    
     // Format date and time separately as the API requires
     // from_date/to_date: YYYY-MM-DD format
     // time: HH:MM:SS format
@@ -397,9 +393,6 @@ export async function fetchBodiesFromAstronomyAPI(
     const dateStr = `${year}-${month}-${day}`;
     const timeStr = `${hours}:${minutes}:${seconds}`;
     
-    console.log('🌍 [Astronomy API] Fetching celestial bodies...');
-    console.log('📅 Date:', dateStr, 'Time:', timeStr);
-    
     // Build query parameters - API expects specific format
     const params = new URLSearchParams({
       latitude: observer.latitude.toString(),
@@ -412,8 +405,6 @@ export async function fetchBodiesFromAstronomyAPI(
     
     const url = `${ASTRONOMY_API_CONFIG.baseUrl}/bodies/positions?${params}`;
     
-    console.log('📍 Request URL:', url);
-    
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -424,7 +415,6 @@ export async function fetchBodiesFromAstronomyAPI(
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('❌ [Astronomy API] Error response:', errorText);
       throw new Error(`API request failed: ${response.status} ${response.statusText}`);
     }
 
@@ -467,12 +457,9 @@ export async function fetchBodiesFromAstronomyAPI(
       }
     }
     
-    console.log(`✅ [Astronomy API] Fetched ${planets.length} planets, sun: ${sun ? 'yes' : 'no'}, moon: ${moon ? 'yes' : 'no'}`);
-    
     return { sun, moon, planets };
     
   } catch (error) {
-    console.error('❌ [Astronomy API] Failed to fetch bodies:', error);
     throw error;
   }
 }
@@ -484,8 +471,7 @@ export async function preloadStarCatalog(): Promise<void> {
   try {
     const catalog = createDefaultStarCatalog();
     await catalog.initialize();
-    console.log('Star catalog preloaded successfully');
   } catch (error) {
-    console.error('Error preloading star catalog:', error);
+    // Silently fail - catalog preload is optional
   }
 }

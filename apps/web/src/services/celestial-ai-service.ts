@@ -60,19 +60,14 @@ async function generateWithGemini(prompt: string): Promise<string | null> {
         const data: GeminiResponse = await response.json();
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
         if (text) {
-          console.log(`✅ Gemini generation successful with model: ${model}`);
           return text;
         }
-      } else if (response.status !== 404) {
-        // Log non-404 errors (404 just means model not available)
-        console.warn(`Gemini ${model} error:`, response.status);
       }
     } catch (error) {
       // Continue to next model
     }
   }
   
-  console.error('All Gemini models failed');
   return null;
 }
 
@@ -261,7 +256,6 @@ function parseGeminiResponse(
       notable_deepsky: Array.isArray(data.notable_deepsky) ? data.notable_deepsky : [],
     };
   } catch (error) {
-    console.error('Error parsing Gemini response:', error);
     return null;
   }
 }
@@ -282,12 +276,10 @@ async function saveToDB(info: Partial<CelestialInfo>): Promise<boolean> {
       });
 
     if (error) {
-      console.error('Error saving to database:', error);
       return false;
     }
     return true;
   } catch (error) {
-    console.error('Error in saveToDB:', error);
     return false;
   }
 }
@@ -326,33 +318,25 @@ export async function getOrGenerateCelestialInfo(
   // First, check database
   const existingInfo = await checkDBForInfo(objectType, objectId);
   if (existingInfo) {
-    console.log(`Found cached info for ${objectName}`);
     return existingInfo;
   }
 
   // Not in database, generate with AI
-  console.log(`Generating info for ${objectName} using Gemini...`);
-  
   const prompt = buildPrompt(objectType, objectName, objectId);
   const response = await generateWithGemini(prompt);
   
   if (!response) {
-    console.warn(`Failed to generate info for ${objectName}`);
     return null;
   }
 
   // Parse the response
   const parsedInfo = parseGeminiResponse(response, objectType, objectId, objectName);
   if (!parsedInfo) {
-    console.warn(`Failed to parse generated info for ${objectName}`);
     return null;
   }
 
   // Save to database for future use
-  const saved = await saveToDB(parsedInfo);
-  if (saved) {
-    console.log(`Saved generated info for ${objectName} to database`);
-  }
+  await saveToDB(parsedInfo);
 
   return parsedInfo as CelestialInfo;
 }
