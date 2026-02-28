@@ -5,7 +5,7 @@
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Html, Environment, Sky } from '@react-three/drei';
+import { OrbitControls, Html, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import { 
   Star, 
