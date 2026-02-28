@@ -28,6 +28,7 @@ import { isWebGLAvailable } from '../src/components/SkyView2D';
 import { fetchConstellationsWithStars } from '../src/services/astronomy-api';
 import { supabase } from '../src/lib/supabase';
 import type { User } from '@supabase/supabase-js';
+import { Building, Star1, Calendar, Clock, ArrowLeft2, ArrowRight2, Refresh, User as UserIcon, Lock1, Pause, Play, Global, Refresh2, Location, SearchNormal1, Gps, InfoCircle, Moon, Sun, Discover, Radar, Magicpen, Grid1, Eye, Text } from 'iconsax-react';
 
 // Dynamic imports for Three.js components (client-side only)
 const SkyDome = dynamic(() => import('../src/components/SkyDome'), { ssr: false });
@@ -62,6 +63,17 @@ interface AppState {
   showSatellites: boolean;
   showMeteorShowers: boolean;
   showAllDeepSky: boolean; // Show all Messier objects regardless of horizon
+  showStarLabels: boolean;
+  showPlanets: boolean;
+  showMoon: boolean;
+  showSun: boolean;
+  showAltitudeGrid: boolean;
+  showAzimuthGrid: boolean;
+  showEquatorialGrid: boolean;
+  showAtmosphere: boolean;
+  showGround: boolean;
+  // Light pollution (Bortle scale 1-9)
+  lightPollution: number;
   // Zoom level for progressive star loading
   zoomLevel: number; // 1 = default, 2 = 2x zoom, etc.
   maxMagnitude: number; // Maximum star magnitude to display
@@ -90,6 +102,29 @@ interface AppState {
   totalStarsToLoad: number;
   // Local Sidereal Time for real-time sky rotation
   lst: number;
+  // Time travel state
+  showTimeSelector: boolean;
+  selectedDate: Date;
+  // Location selector state
+  showLocationSelector: boolean;
+  locationSearchQuery: string;
+  locationSearchResults: Array<{ name: string; lat: number; lon: number }>;
+  isSearchingLocation: boolean;
+  // Credits modal
+  showCredits: boolean;
+  // Object search state
+  showObjectSearch: boolean;
+  objectSearchQuery: string;
+  objectSearchResults: Array<{
+    type: 'star' | 'planet' | 'constellation' | 'deepsky' | 'satellite' | 'moon' | 'sun';
+    id: string;
+    name: string;
+    ra?: number;
+    dec?: number;
+    magnitude?: number;
+  }>;
+  highlightedObjectId: string | null;
+  cameraTarget: { azimuth: number; altitude: number } | null;
 }
 
 const initialState: AppState = {
@@ -119,6 +154,17 @@ const initialState: AppState = {
   showSatellites: true,
   showMeteorShowers: true,
   showAllDeepSky: false, // Only show objects above horizon by default
+  showStarLabels: true,
+  showPlanets: true,
+  showMoon: true,
+  showSun: true,
+  showAltitudeGrid: false,
+  showAzimuthGrid: false,
+  showEquatorialGrid: false,
+  showAtmosphere: true,
+  showGround: true,
+  // Light pollution - default to Bortle 5 (suburban sky)
+  lightPollution: 5,
   // Zoom settings
   zoomLevel: 1,
   maxMagnitude: 6, // Start with bright stars only
@@ -134,6 +180,22 @@ const initialState: AppState = {
   totalStarsToLoad: 45000,
   // Local Sidereal Time
   lst: 0,
+  // Time travel state
+  showTimeSelector: false,
+  selectedDate: new Date(),
+  // Location selector state
+  showLocationSelector: false,
+  locationSearchQuery: '',
+  locationSearchResults: [],
+  isSearchingLocation: false,
+  // Credits modal
+  showCredits: false,
+  // Object search state
+  showObjectSearch: false,
+  objectSearchQuery: '',
+  objectSearchResults: [],
+  highlightedObjectId: null,
+  cameraTarget: null,
 };
 
 export default function Home() {
@@ -776,6 +838,16 @@ export default function Home() {
     }));
   }, []);
 
+  // Handle camera orientation change
+  const handleCameraChange = useCallback((orientation: { azimuth: number; altitude: number; fov: number }) => {
+    setState(prev => ({
+      ...prev,
+      viewAzimuth: orientation.azimuth,
+      viewAltitude: orientation.altitude,
+      fov: orientation.fov,
+    }));
+  }, []);
+
   // Toggle real-time mode
   const toggleRealTime = useCallback(() => {
     if (skyCalculatorRef.current) {
@@ -886,80 +958,436 @@ export default function Home() {
     setState(prev => ({ ...prev, showMeteorShowers: !prev.showMeteorShowers }));
   }, []);
 
-  // Zoom controls with progressive star loading from Astronomy API
-  const zoomIn = useCallback(async () => {
-    const newZoomLevel = Math.min(state.zoomLevel + 0.5, 5); // Max 5x zoom
-    const newMaxMagnitude = Math.min(6 + (newZoomLevel - 1) * 2, 12); // Increase magnitude limit as we zoom
-    
-    console.log(`🔍 Zooming in: level ${newZoomLevel}, magnitude ${newMaxMagnitude}`);
-    
-    setState(prev => ({ ...prev, zoomLevel: newZoomLevel, maxMagnitude: newMaxMagnitude, isLoading: true }));
-    
-    // Keep existing stars and add more from Astronomy API
-    try {
-      // Calculate how many additional stars we need
-      const currentStarCount = state.stars.length;
-      const targetStarCount = Math.floor(74 + (newZoomLevel - 1) * 200); // Progressive loading
-      
-      if (currentStarCount >= targetStarCount) {
-        console.log(`✅ Already have ${currentStarCount} stars, no need to fetch more`);
-        setState(prev => ({ ...prev, isLoading: false }));
-        return;
+  const toggleStarLabels = useCallback(() => {
+    setState(prev => ({ ...prev, showStarLabels: !prev.showStarLabels }));
+  }, []);
+
+  const togglePlanets = useCallback(() => {
+    setState(prev => ({ ...prev, showPlanets: !prev.showPlanets }));
+  }, []);
+
+  const toggleMoon = useCallback(() => {
+    setState(prev => ({ ...prev, showMoon: !prev.showMoon }));
+  }, []);
+
+  const toggleSun = useCallback(() => {
+    setState(prev => ({ ...prev, showSun: !prev.showSun }));
+  }, []);
+
+  const toggleAltitudeGrid = useCallback(() => {
+    setState(prev => ({ ...prev, showAltitudeGrid: !prev.showAltitudeGrid }));
+  }, []);
+
+  const toggleAzimuthGrid = useCallback(() => {
+    setState(prev => ({ ...prev, showAzimuthGrid: !prev.showAzimuthGrid }));
+  }, []);
+
+  const toggleEquatorialGrid = useCallback(() => {
+    setState(prev => ({ ...prev, showEquatorialGrid: !prev.showEquatorialGrid }));
+  }, []);
+
+  const toggleAtmosphere = useCallback(() => {
+    setState(prev => ({ ...prev, showAtmosphere: !prev.showAtmosphere }));
+  }, []);
+
+  const toggleGround = useCallback(() => {
+    setState(prev => ({ ...prev, showGround: !prev.showGround }));
+  }, []);
+
+  // Time selector controls
+  const toggleTimeSelector = useCallback(() => {
+    setState(prev => ({ ...prev, showTimeSelector: !prev.showTimeSelector }));
+  }, []);
+
+  const setSelectedTime = useCallback((date: Date) => {
+    setState(prev => ({ ...prev, selectedDate: date, isRealTime: false }));
+    // Update sky calculator with new time
+    if (skyCalculatorRef.current) {
+      skyCalculatorRef.current.setTime(date);
+    }
+  }, []);
+
+  const adjustTime = useCallback((hours: number) => {
+    setState(prev => {
+      const newDate = new Date(prev.selectedDate.getTime() + hours * 60 * 60 * 1000);
+      if (skyCalculatorRef.current) {
+        skyCalculatorRef.current.setTime(newDate);
+      }
+      return { ...prev, selectedDate: newDate, isRealTime: false };
+    });
+  }, []);
+
+  const adjustDate = useCallback((days: number) => {
+    setState(prev => {
+      const newDate = new Date(prev.selectedDate.getTime() + days * 24 * 60 * 60 * 1000);
+      if (skyCalculatorRef.current) {
+        skyCalculatorRef.current.setTime(newDate);
+      }
+      return { ...prev, selectedDate: newDate, isRealTime: false };
+    });
+  }, []);
+
+  const resetToNow = useCallback(() => {
+    const now = new Date();
+    setState(prev => ({ ...prev, selectedDate: now, isRealTime: true }));
+    if (skyCalculatorRef.current) {
+      skyCalculatorRef.current.setRealTime();
+    }
+  }, []);
+
+  // Location selector controls
+  const toggleLocationSelector = useCallback(() => {
+    setState(prev => ({ ...prev, showLocationSelector: !prev.showLocationSelector }));
+  }, []);
+
+  const toggleCredits = useCallback(() => {
+    setState(prev => ({ ...prev, showCredits: !prev.showCredits }));
+  }, []);
+
+  const toggleObjectSearch = useCallback(() => {
+    setState(prev => ({ 
+      ...prev, 
+      showObjectSearch: !prev.showObjectSearch,
+      objectSearchQuery: '',
+      objectSearchResults: [],
+    }));
+  }, []);
+
+  // Search for celestial objects
+  const searchObjects = useCallback((query: string) => {
+    setState(prev => {
+      if (!query.trim()) {
+        return { ...prev, objectSearchQuery: query, objectSearchResults: [] };
       }
       
-      console.log(`📡 Fetching additional stars from Astronomy API (current: ${currentStarCount}, target: ${targetStarCount})...`);
+      const lowerQuery = query.toLowerCase();
+      const results: AppState['objectSearchResults'] = [];
+      const maxResults = 15;
       
-      // Fetch more stars from Astronomy API
-      const { fetchStars } = await import('../src/services/astronomy-api');
-      const additionalStars = await fetchStars({
-        maxMagnitude: newMaxMagnitude,
-        limit: targetStarCount - currentStarCount,
+      // Search planets
+      for (const planet of prev.planets) {
+        if (planet.name.toLowerCase().includes(lowerQuery)) {
+          results.push({
+            type: 'planet',
+            id: planet.id,
+            name: planet.name,
+            ra: planet.ra,
+            dec: planet.dec,
+            magnitude: planet.magnitude,
+          });
+        }
+      }
+      
+      // Search Moon
+      if (prev.moonPosition && 'moon'.includes(lowerQuery)) {
+        results.push({
+          type: 'moon',
+          id: 'moon',
+          name: 'Moon',
+          ra: prev.moonPosition.ra,
+          dec: prev.moonPosition.dec,
+        });
+      }
+      
+      // Search Sun
+      if (prev.sunPosition && 'sun'.includes(lowerQuery)) {
+        results.push({
+          type: 'sun',
+          id: 'sun',
+          name: 'Sun',
+          ra: prev.sunPosition.ra,
+          dec: prev.sunPosition.dec,
+        });
+      }
+      
+      // Search constellations
+      for (const constellation of prev.constellations) {
+        if (constellation.name.toLowerCase().includes(lowerQuery) || 
+            constellation.id.toLowerCase().includes(lowerQuery)) {
+          // Get center position from first line
+          const firstLine = constellation.lines[0];
+          if (firstLine) {
+            results.push({
+              type: 'constellation',
+              id: constellation.id,
+              name: constellation.name,
+              ra: firstLine.star1.ra,
+              dec: firstLine.star1.dec,
+            });
+          }
+        }
+        if (results.length >= maxResults) break;
+      }
+      
+      // Search deep sky objects (Messier)
+      prev.deepSkyPositions.forEach((pos, id) => {
+        if (results.length >= maxResults) return;
+        const name = pos.object.name || '';
+        if (id.toLowerCase().includes(lowerQuery) || 
+            name.toLowerCase().includes(lowerQuery)) {
+          results.push({
+            type: 'deepsky',
+            id: pos.object.id,
+            name: pos.object.name ? `${pos.object.id} - ${pos.object.name}` : pos.object.id,
+            ra: pos.object.ra,
+            dec: pos.object.dec,
+            magnitude: pos.object.magnitude,
+          });
+        }
       });
       
-      // Merge with existing stars (avoid duplicates)
-      const starMap = new Map<string, Star>();
-      state.stars.forEach(star => starMap.set(star.id, star));
-      additionalStars.forEach(star => starMap.set(star.id, star));
+      // Search satellites
+      prev.satellitePositions.forEach((pos, id) => {
+        if (results.length >= maxResults) return;
+        if ('name' in pos && pos.name.toLowerCase().includes(lowerQuery)) {
+          results.push({
+            type: 'satellite',
+            id: id,
+            name: pos.name,
+          });
+        }
+      });
       
-      const mergedStars = Array.from(starMap.values());
+      // Search bright stars (named stars only for performance)
+      for (const star of prev.stars) {
+        if (results.length >= maxResults) break;
+        if (star.name && star.name.toLowerCase().includes(lowerQuery)) {
+          results.push({
+            type: 'star',
+            id: star.id,
+            name: star.name,
+            ra: star.ra,
+            dec: star.dec,
+            magnitude: star.magnitude,
+          });
+        }
+      }
       
-      setState(prev => ({ ...prev, stars: mergedStars, isLoading: false }));
-      console.log(`✅ Now showing ${mergedStars.length} stars (added ${mergedStars.length - currentStarCount} new stars)`);
-    } catch (error) {
-      console.error('Failed to load more stars:', error);
-      setState(prev => ({ ...prev, isLoading: false }));
+      return { ...prev, objectSearchQuery: query, objectSearchResults: results };
+    });
+  }, []);
+
+  // Helper function to convert RA/Dec to Alt/Az
+  const raDecToAltAz = useCallback((ra: number, dec: number, lst: number, latitude: number) => {
+    // Calculate Hour Angle
+    const haHours = lst - ra;
+    const haDegrees = haHours * 15;
+    const haRadians = (haDegrees * Math.PI) / 180;
+    
+    const decRad = (dec * Math.PI) / 180;
+    const latRad = (latitude * Math.PI) / 180;
+    
+    // Calculate altitude
+    const sinAlt = Math.sin(decRad) * Math.sin(latRad) +
+                   Math.cos(decRad) * Math.cos(latRad) * Math.cos(haRadians);
+    const altitude = Math.asin(Math.max(-1, Math.min(1, sinAlt))) * 180 / Math.PI;
+    
+    // Calculate azimuth
+    const cosAlt = Math.cos(altitude * Math.PI / 180);
+    const cosLat = Math.cos(latRad);
+    
+    let azimuth = 0;
+    if (Math.abs(cosAlt) >= 1e-10 && Math.abs(cosLat) >= 1e-10) {
+      const cosAz = (Math.sin(decRad) - sinAlt * Math.sin(latRad)) / (cosAlt * cosLat);
+      let azRad = Math.acos(Math.max(-1, Math.min(1, cosAz)));
+      if (Math.sin(haRadians) > 0) {
+        azRad = 2 * Math.PI - azRad;
+      }
+      azimuth = azRad * 180 / Math.PI;
     }
-  }, [state.zoomLevel, state.stars]);
+    
+    // Normalize azimuth to [0, 360)
+    azimuth = ((azimuth % 360) + 360) % 360;
+    
+    // Mirror the azimuth to match the 3D scene coordinate system (same as celestialToHorizontal3D)
+    azimuth = (360 - azimuth) % 360;
+    
+    return { altitude, azimuth };
+  }, []);
 
-  const zoomOut = useCallback(async () => {
-    const newZoomLevel = Math.max(state.zoomLevel - 0.5, 1); // Min 1x zoom
-    const newMaxMagnitude = Math.min(6 + (newZoomLevel - 1) * 2, 12);
+  // Select and highlight an object from search
+  const selectSearchResult = useCallback((result: AppState['objectSearchResults'][0]) => {
+    setState(prev => {
+      let position: { azimuth: number; altitude: number } | null = null;
+      
+      // Calculate position based on object type
+      if (result.ra !== undefined && result.dec !== undefined && prev.observer) {
+        // raDecToAltAz already applies the mirror
+        position = raDecToAltAz(result.ra, result.dec, prev.lst, prev.observer.latitude);
+      } else if (result.type === 'moon' && prev.moonPosition) {
+        // Moon position is in real coordinates, apply mirror to match 3D scene
+        position = { 
+          azimuth: (360 - prev.moonPosition.azimuth) % 360, 
+          altitude: prev.moonPosition.altitude 
+        };
+      } else if (result.type === 'sun' && prev.sunPosition) {
+        // Sun position is in real coordinates, apply mirror to match 3D scene
+        position = { 
+          azimuth: (360 - prev.sunPosition.azimuth) % 360, 
+          altitude: prev.sunPosition.altitude 
+        };
+      } else if (result.type === 'satellite') {
+        const sat = prev.satellitePositions.get(result.id);
+        if (sat && 'altitude' in sat) {
+          // Satellite position is in real coordinates, apply mirror to match 3D scene
+          position = { 
+            azimuth: (360 - sat.azimuth) % 360, 
+            altitude: sat.altitude 
+          };
+        }
+      } else if (result.type === 'deepsky') {
+        const dso = prev.deepSkyPositions.get(result.id);
+        if (dso) {
+          // Deep sky position is in real coordinates, apply mirror to match 3D scene
+          position = { 
+            azimuth: (360 - dso.azimuth) % 360, 
+            altitude: dso.altitude 
+          };
+        }
+      }
+      
+      return {
+        ...prev,
+        highlightedObjectId: result.id,
+        cameraTarget: position,
+        showObjectSearch: false,
+        objectSearchQuery: '',
+        objectSearchResults: [],
+      };
+    });
     
-    console.log(`🔍 Zooming out: level ${newZoomLevel}, magnitude ${newMaxMagnitude}`);
-    
-    setState(prev => ({ ...prev, zoomLevel: newZoomLevel, maxMagnitude: newMaxMagnitude }));
-    
-    // Filter existing stars by magnitude (keep constellation stars)
-    const filteredStars = state.stars.filter(star => star.magnitude <= newMaxMagnitude);
-    setState(prev => ({ ...prev, stars: filteredStars }));
-    console.log(`✅ Showing ${filteredStars.length} stars for zoom level ${newZoomLevel}`);
-  }, [state.zoomLevel, state.stars]);
+    // Clear camera target after animation completes (but keep highlight)
+    setTimeout(() => {
+      setState(prev => ({ ...prev, cameraTarget: null }));
+    }, 2000);
+  }, [raDecToAltAz]);
 
-  const resetZoom = useCallback(async () => {
-    console.log('🔍 Resetting zoom to 1x');
+  // Clear highlight when user clicks close button
+  const clearHighlight = useCallback(() => {
+    setState(prev => ({ ...prev, highlightedObjectId: null, cameraTarget: null }));
+  }, []);
+
+  const searchLocation = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setState(prev => ({ ...prev, locationSearchResults: [] }));
+      return;
+    }
     
-    setState(prev => ({ ...prev, zoomLevel: 1, maxMagnitude: 6 }));
+    setState(prev => ({ ...prev, isSearchingLocation: true }));
     
-    // Reset to initial constellation stars only
-    const filteredStars = state.stars.filter(star => star.magnitude <= 6);
-    setState(prev => ({ ...prev, stars: filteredStars }));
-    console.log(`✅ Reset to ${filteredStars.length} stars`);
-  }, [state.stars]);
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`
+      );
+      const data = await response.json();
+      
+      const results = data.map((item: any) => ({
+        name: item.display_name,
+        lat: parseFloat(item.lat),
+        lon: parseFloat(item.lon),
+      }));
+      
+      setState(prev => ({ ...prev, locationSearchResults: results, isSearchingLocation: false }));
+    } catch (error) {
+      console.warn('Location search failed:', error);
+      setState(prev => ({ ...prev, isSearchingLocation: false }));
+    }
+  }, []);
+
+  const selectLocation = useCallback(async (lat: number, lon: number, name?: string) => {
+    const newObserver = { latitude: lat, longitude: lon, altitude: 0 };
+    
+    // Fetch location name if not provided
+    let locationName: string | null = name || null;
+    if (!locationName) {
+      locationName = await fetchLocationName(newObserver);
+    } else if (name) {
+      // Shorten the name if it's too long
+      const parts = name.split(',').slice(0, 3);
+      locationName = parts.join(',');
+    }
+    
+    setState(prev => ({
+      ...prev,
+      observer: newObserver,
+      locationName,
+      showLocationSelector: false,
+      locationSearchQuery: '',
+      locationSearchResults: [],
+    }));
+    
+    // Update sky calculator with new location
+    if (skyCalculatorRef.current) {
+      skyCalculatorRef.current.setObserver(newObserver);
+    }
+  }, [fetchLocationName]);
+
+  const useCurrentLocation = useCallback(async () => {
+    if (geolocationRef.current) {
+      try {
+        const coords = await geolocationRef.current.requestLocation();
+        const locationName = await fetchLocationName(coords);
+        setState(prev => ({
+          ...prev,
+          observer: coords,
+          locationName,
+          locationStatus: 'granted',
+          showLocationSelector: false,
+        }));
+        
+        if (skyCalculatorRef.current) {
+          skyCalculatorRef.current.setObserver(coords);
+        }
+      } catch (error) {
+        console.warn('Failed to get current location:', error);
+      }
+    }
+  }, [fetchLocationName]);
+
+  // Handle light pollution change - maps Bortle scale to limiting magnitude
+  const handleLightPollutionChange = useCallback((value: number) => {
+    setState(prev => ({ ...prev, lightPollution: value }));
+  }, []);
+
+  // Get limiting magnitude based on Bortle scale
+  const getLimitingMagnitude = (bortle: number): number => {
+    // Bortle scale to naked-eye limiting magnitude mapping
+    const bortleToMag: Record<number, number> = {
+      1: 7.6,  // Excellent dark sky
+      2: 7.1,  // Typical dark site
+      3: 6.6,  // Rural sky
+      4: 6.2,  // Rural/suburban transition
+      5: 5.6,  // Suburban sky
+      6: 5.1,  // Bright suburban
+      7: 4.6,  // Suburban/urban transition
+      8: 4.1,  // City sky
+      9: 3.5,  // Inner-city sky
+    };
+    return bortleToMag[bortle] ?? 5.6;
+  };
+
+  // Get Bortle scale description
+  const getBortleDescription = (bortle: number): string => {
+    const descriptions: Record<number, string> = {
+      1: 'Excellent Dark Sky',
+      2: 'Typical Dark Site',
+      3: 'Rural Sky',
+      4: 'Rural/Suburban',
+      5: 'Suburban Sky',
+      6: 'Bright Suburban',
+      7: 'Suburban/Urban',
+      8: 'City Sky',
+      9: 'Inner-City Sky',
+    };
+    return descriptions[bortle] ?? 'Suburban Sky';
+  };
+
+  const limitingMagnitude = getLimitingMagnitude(state.lightPollution);
 
   const skyConfig = {
     fov: state.fov,
-    maxMagnitude: state.fov < 45 ? 6.0 : 5.0,
-    showLabels: true,
+    maxMagnitude: limitingMagnitude,
+    showLabels: state.showStarLabels,
     labelMagnitudeThreshold: 2.0,
   };
 
@@ -1040,6 +1468,16 @@ export default function Home() {
             100% { transform: rotate(360deg); }
           }
           
+          @keyframes pulse {
+            0%, 100% { opacity: 1; transform: translateY(0); }
+            50% { opacity: 0.5; transform: translateY(-5px); }
+          }
+          
+          @keyframes pulseRing {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+          }
+          
           button:hover:not(:disabled) {
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
@@ -1047,6 +1485,225 @@ export default function Home() {
           
           button:active:not(:disabled) {
             transform: translateY(0);
+          }
+          
+          /* Light pollution vertical slider */
+          .light-pollution-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+          }
+          
+          .light-pollution-slider::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            border-radius: 2px;
+          }
+          
+          .light-pollution-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            cursor: grab;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(99, 102, 241, 0.5);
+            margin-top: -6px;
+          }
+          
+          .light-pollution-slider::-webkit-slider-thumb:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+          }
+          
+          .light-pollution-slider::-moz-range-track {
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            border-radius: 2px;
+          }
+          
+          .light-pollution-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            cursor: grab;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(99, 102, 241, 0.5);
+          }
+          
+          .light-pollution-slider::-moz-range-thumb:active {
+            cursor: grabbing;
+          }
+          
+          .light-pollution-slider:focus {
+            outline: none;
+          }
+          
+          /* Mobile Responsive Styles */
+          @media (max-width: 768px) {
+            /* Top Bar */
+            .top-bar {
+              padding: 0 12px !important;
+              height: 50px !important;
+            }
+            
+            .logo {
+              font-size: 16px !important;
+            }
+            
+            .top-controls {
+              gap: 6px !important;
+            }
+            
+            .icon-button {
+              width: 36px !important;
+              height: 36px !important;
+            }
+            
+            /* Left Sidebar - make it smaller */
+            .left-sidebar {
+              left: 12px !important;
+              padding: 10px 8px !important;
+              min-width: 130px !important;
+              gap: 4px !important;
+            }
+            
+            .sidebar-title {
+              font-size: 9px !important;
+              margin-bottom: 4px !important;
+            }
+            
+            /* Right Sidebar - Light Pollution */
+            .right-sidebar {
+              right: 12px !important;
+              padding: 8px !important;
+              width: 55px !important;
+            }
+            
+            /* Bottom Bar */
+            .bottom-bar {
+              height: 55px !important;
+              gap: 8px !important;
+              padding: 0 12px !important;
+            }
+            
+            .info-group-button {
+              padding: 6px 10px !important;
+              gap: 8px !important;
+            }
+            
+            .info-value {
+              font-size: 12px !important;
+              max-width: 120px !important;
+            }
+            
+            .info-sub-value {
+              font-size: 9px !important;
+            }
+            
+            .info-divider {
+              height: 24px !important;
+            }
+            
+            /* Time/Location Selector Panels */
+            .selector-panel {
+              width: 90% !important;
+              max-width: 320px !important;
+              bottom: 65px !important;
+              padding: 12px !important;
+            }
+            
+            /* Credits */
+            .credits-button {
+              bottom: 65px !important;
+              left: 12px !important;
+              padding: 6px 10px !important;
+              font-size: 10px !important;
+            }
+            
+            /* Credits Modal */
+            .credits-modal {
+              width: 92% !important;
+              max-height: 70vh !important;
+            }
+          }
+          
+          @media (max-width: 480px) {
+            /* Extra small screens */
+            .top-bar {
+              height: 45px !important;
+              padding: 0 10px !important;
+            }
+            
+            .logo {
+              font-size: 14px !important;
+            }
+            
+            .icon-button {
+              width: 32px !important;
+              height: 32px !important;
+            }
+            
+            /* Hide left sidebar on very small screens, show as overlay */
+            .left-sidebar {
+              display: none !important;
+            }
+            
+            /* Right sidebar smaller */
+            .right-sidebar {
+              right: 8px !important;
+              width: 45px !important;
+              padding: 6px !important;
+            }
+            
+            .bottom-bar {
+              height: 50px !important;
+              gap: 6px !important;
+              padding: 0 8px !important;
+            }
+            
+            .info-group-button {
+              padding: 5px 8px !important;
+              gap: 6px !important;
+            }
+            
+            .info-value {
+              font-size: 11px !important;
+              max-width: 90px !important;
+            }
+            
+            .info-sub-value {
+              display: none !important;
+            }
+            
+            .powered-by {
+              display: none !important;
+            }
+            
+            .credits-button {
+              bottom: 58px !important;
+            }
+            
+            .credits-text {
+              display: none !important;
+            }
+            
+            .selector-panel {
+              width: 95% !important;
+              bottom: 58px !important;
+              padding: 10px !important;
+            }
+            
+            .credits-modal {
+              width: 95% !important;
+              max-height: 75vh !important;
+            }
           }
         `}</style>
       </Head>
@@ -1056,12 +1713,12 @@ export default function Home() {
         {state.useWebGL ? (
           <SkyDome
             stars={state.stars}
-            planets={state.planets}
+            planets={state.showPlanets ? state.planets : []}
             config={skyConfig}
             horizonPoints={state.horizonPoints}
             horizonConfig={{ color: '#4a5568', opacity: 0.6 }}
-            moonPosition={state.moonPosition}
-            sunPosition={state.sunPosition}
+            moonPosition={state.showMoon ? state.moonPosition : null}
+            sunPosition={state.showSun ? state.sunPosition : null}
             constellations={state.showConstellations ? state.constellations : []}
             constellationConfig={{ enabled: state.showConstellations, showNames: true }}
             deepSkyPositions={state.showDeepSky ? state.deepSkyPositions : new Map()}
@@ -1070,18 +1727,34 @@ export default function Home() {
             satelliteConfig={{ enabled: state.showSatellites, showLabels: true }}
             meteorShowerRadiants={state.showMeteorShowers ? state.meteorShowerRadiants : new Map()}
             meteorShowerConfig={{ enabled: state.showMeteorShowers, showLabels: true, showInactive: false }}
+            gridConfig={{ 
+              showAltitude: state.showAltitudeGrid, 
+              showAzimuth: state.showAzimuthGrid, 
+              showEquatorial: state.showEquatorialGrid,
+              altitudeColor: '#00ffff',  // Cyan for altitude lines
+              azimuthColor: '#ffaa00',   // Orange for azimuth lines
+              opacity: 0.5 
+            }}
+            // Ground panorama texture - place your equirectangular image (sky removed) in public folder
+            groundTexture="/ground-panorama.png"
+            showAtmosphere={state.showAtmosphere}
+            showGround={state.showGround}
             lst={state.lst}
             observerLatitude={state.observer?.latitude ?? 0}
+            highlightedObjectId={state.highlightedObjectId}
+            cameraTarget={state.cameraTarget}
+            onCloseHighlight={clearHighlight}
             onStarClick={handleStarClick}
             onPlanetClick={handlePlanetClick}
             onDeepSkyClick={handleDeepSkyClick}
             onMoonClick={handleMoonClick}
             onSunClick={handleSunClick}
+            onCameraChange={handleCameraChange}
           />
         ) : (
           <SkyView2D
             stars={state.stars}
-            planets={state.planets}
+            planets={state.showPlanets ? state.planets : []}
             config={skyConfig}
             viewAzimuth={state.viewAzimuth}
             viewAltitude={state.viewAltitude}
@@ -1092,128 +1765,621 @@ export default function Home() {
       </div>
 
       {/* Top Bar */}
-      <div style={styles.topBar}>
-        <div style={styles.logo}>SkyWatch</div>
-        <div style={styles.topControls}>
+      <div style={styles.topBar} className="top-bar">
+        <div style={styles.logo} className="logo">SkyWatch</div>
+        <div style={styles.topControls} className="top-controls">
+          <button 
+            onClick={toggleObjectSearch} 
+            style={{...styles.iconButton, ...(state.showObjectSearch ? styles.iconButtonActive : {})}} 
+            className="icon-button"
+            title="Search Objects"
+          >
+            <SearchNormal1 size={20} color="currentColor" variant={state.showObjectSearch ? "Bold" : "Linear"} />
+          </button>
           <button 
             onClick={() => setState(prev => ({ ...prev, showAuthPanel: true }))} 
             style={{...styles.iconButton, ...(state.user ? styles.iconButtonActive : {})}} 
+            className="icon-button"
             title={state.user ? 'Account' : 'Sign In'}
           >
-            {state.user ? '👤' : '🔓'}
+            {state.user ? (
+              <UserIcon size={20} color="currentColor" variant="Bold" />
+            ) : (
+              <Lock1 size={20} color="currentColor" variant="Outline" />
+            )}
           </button>
           <button 
             onClick={refreshCelestialBodies} 
             style={{...styles.iconButton, ...(state.isUpdating ? styles.iconButtonUpdating : {})}} 
+            className="icon-button"
             title="Refresh celestial positions"
             disabled={state.isUpdating}
           >
-            {state.isUpdating ? '⟳' : '🔄'}
+            <Refresh2 size={20} color="currentColor" variant="Linear" style={state.isUpdating ? { animation: 'spin 1s linear infinite' } : {}} />
           </button>
-          <button onClick={toggleRealTime} style={styles.iconButton} title={state.isRealTime ? 'Pause' : 'Resume'}>
-            {state.isRealTime ? '⏸' : '▶'}
+          <button onClick={toggleRealTime} style={styles.iconButton} className="icon-button" title={state.isRealTime ? 'Pause' : 'Resume'}>
+            {state.isRealTime ? (
+              <Pause size={20} color="currentColor" variant="Bold" />
+            ) : (
+              <Play size={20} color="currentColor" variant="Bold" />
+            )}
           </button>
-          <button onClick={toggleRenderMode} style={styles.iconButton} title={state.useWebGL ? '3D Mode' : '2D Mode'}>
-            {state.useWebGL ? '🌐' : '📐'}
+          <button onClick={toggleRenderMode} style={styles.iconButton} className="icon-button" title={state.useWebGL ? '3D Mode' : '2D Mode'}>
+            <Global size={20} color="currentColor" variant={state.useWebGL ? "Bold" : "Linear"} />
           </button>
         </div>
       </div>
 
       {/* Left Sidebar - Layer Controls */}
-      <div style={styles.leftSidebar}>
-        <div style={styles.sidebarTitle}>Layers</div>
-        <button 
-          onClick={toggleConstellations} 
-          style={{...styles.layerButton, ...(state.showConstellations ? styles.layerButtonActive : {})}}
-        >
-          <span style={styles.layerIcon}>⭐</span>
-          <span style={styles.layerLabel}>Constellations</span>
-        </button>
-        <button 
-          onClick={toggleDeepSky} 
-          style={{...styles.layerButton, ...(state.showDeepSky ? styles.layerButtonActive : {})}}
-        >
-          <span style={styles.layerIcon}>🌀</span>
-          <span style={styles.layerLabel}>Deep Sky</span>
-        </button>
-        {state.showDeepSky && (
+      <div style={styles.leftSidebar} className="left-sidebar">
+        <div style={styles.sidebarTitle} className="sidebar-title">
+          <Eye size={12} color="currentColor" variant="Bold" />
+          <span>Layers</span>
+        </div>
+        
+        {/* Celestial Objects Section */}
+        <div style={styles.layerSection}>
+          <div style={styles.layerSectionTitle}>Celestial</div>
+          
           <button 
-            onClick={toggleAllDeepSky} 
-            style={{...styles.layerSubButton, ...(state.showAllDeepSky ? styles.layerButtonActive : {})}}
+            onClick={toggleConstellations} 
+            style={{...styles.layerButton, ...(state.showConstellations ? styles.layerButtonActive : {})}}
+            className="layer-button"
           >
-            <span style={styles.layerIcon}>🌐</span>
-            <span style={styles.layerLabel}>Show All (110)</span>
+            <Star1 size={16} color={state.showConstellations ? "#818cf8" : "rgba(255,255,255,0.5)"} variant={state.showConstellations ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Constellations</span>
+            <div style={{...styles.layerToggle, ...(state.showConstellations ? styles.layerToggleOn : {})}} />
           </button>
-        )}
-        <button 
-          onClick={toggleSatellites} 
-          style={{...styles.layerButton, ...(state.showSatellites ? styles.layerButtonActive : {})}}
-        >
-          <span style={styles.layerIcon}>🛰️</span>
-          <span style={styles.layerLabel}>Satellites</span>
-        </button>
-        <button 
-          onClick={toggleMeteorShowers} 
-          style={{...styles.layerButton, ...(state.showMeteorShowers ? styles.layerButtonActive : {})}}
-        >
-          <span style={styles.layerIcon}>☄️</span>
-          <span style={styles.layerLabel}>Meteors</span>
-        </button>
+          
+          <button 
+            onClick={togglePlanets} 
+            style={{...styles.layerButton, ...(state.showPlanets ? styles.layerButtonActive : {})}}
+            className="layer-button"
+          >
+            <Global size={16} color={state.showPlanets ? "#f59e0b" : "rgba(255,255,255,0.5)"} variant={state.showPlanets ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Planets</span>
+            <div style={{...styles.layerToggle, ...(state.showPlanets ? styles.layerToggleOn : {})}} />
+          </button>
+          
+          <button 
+            onClick={toggleMoon} 
+            style={{...styles.layerButton, ...(state.showMoon ? styles.layerButtonActive : {})}}
+            className="layer-button"
+          >
+            <Moon size={16} color={state.showMoon ? "#e2e8f0" : "rgba(255,255,255,0.5)"} variant={state.showMoon ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Moon</span>
+            <div style={{...styles.layerToggle, ...(state.showMoon ? styles.layerToggleOn : {})}} />
+          </button>
+          
+          <button 
+            onClick={toggleSun} 
+            style={{...styles.layerButton, ...(state.showSun ? styles.layerButtonActive : {})}}
+            className="layer-button"
+          >
+            <Sun size={16} color={state.showSun ? "#fbbf24" : "rgba(255,255,255,0.5)"} variant={state.showSun ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Sun</span>
+            <div style={{...styles.layerToggle, ...(state.showSun ? styles.layerToggleOn : {})}} />
+          </button>
+        </div>
+        
+        {/* Deep Sky Section */}
+        <div style={styles.layerSection}>
+          <div style={styles.layerSectionTitle}>Deep Sky</div>
+          
+          <button 
+            onClick={toggleDeepSky} 
+            style={{...styles.layerButton, ...(state.showDeepSky ? styles.layerButtonActive : {})}}
+            className="layer-button"
+          >
+            <Discover size={16} color={state.showDeepSky ? "#a78bfa" : "rgba(255,255,255,0.5)"} variant={state.showDeepSky ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Messier Objects</span>
+            <div style={{...styles.layerToggle, ...(state.showDeepSky ? styles.layerToggleOn : {})}} />
+          </button>
+          
+          {state.showDeepSky && (
+            <button 
+              onClick={toggleAllDeepSky} 
+              style={{...styles.layerSubButton, ...(state.showAllDeepSky ? styles.layerButtonActive : {})}}
+              className="layer-button"
+            >
+              <span style={styles.layerSubIcon}>{state.showAllDeepSky ? '●' : '○'}</span>
+              <span style={styles.layerLabel}>Show below horizon</span>
+            </button>
+          )}
+        </div>
+        
+        {/* Tracking Section */}
+        <div style={styles.layerSection}>
+          <div style={styles.layerSectionTitle}>Tracking</div>
+          
+          <button 
+            onClick={toggleSatellites} 
+            style={{...styles.layerButton, ...(state.showSatellites ? styles.layerButtonActive : {})}}
+            className="layer-button"
+          >
+            <Radar size={16} color={state.showSatellites ? "#22c55e" : "rgba(255,255,255,0.5)"} variant={state.showSatellites ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Satellites</span>
+            <div style={{...styles.layerToggle, ...(state.showSatellites ? styles.layerToggleOn : {})}} />
+          </button>
+          
+          <button 
+            onClick={toggleMeteorShowers} 
+            style={{...styles.layerButton, ...(state.showMeteorShowers ? styles.layerButtonActive : {})}}
+            className="layer-button"
+          >
+            <Magicpen size={16} color={state.showMeteorShowers ? "#f472b6" : "rgba(255,255,255,0.5)"} variant={state.showMeteorShowers ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Meteor Showers</span>
+            <div style={{...styles.layerToggle, ...(state.showMeteorShowers ? styles.layerToggleOn : {})}} />
+          </button>
+        </div>
+        
+        {/* Display Section */}
+        <div style={styles.layerSection}>
+          <div style={styles.layerSectionTitle}>Display</div>
+          
+          <button 
+            onClick={toggleStarLabels} 
+            style={{...styles.layerButton, ...(state.showStarLabels ? styles.layerButtonActive : {})}}
+            className="layer-button"
+          >
+            <Text size={16} color={state.showStarLabels ? "#60a5fa" : "rgba(255,255,255,0.5)"} variant={state.showStarLabels ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Star Labels</span>
+            <div style={{...styles.layerToggle, ...(state.showStarLabels ? styles.layerToggleOn : {})}} />
+          </button>
+          
+          <button 
+            onClick={toggleAltitudeGrid} 
+            style={{...styles.layerButton, ...(state.showAltitudeGrid ? styles.layerButtonActive : {})}}
+            className="layer-button"
+          >
+            <Grid1 size={16} color={state.showAltitudeGrid ? "#94a3b8" : "rgba(255,255,255,0.5)"} variant={state.showAltitudeGrid ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Altitude Grid</span>
+            <div style={{...styles.layerToggle, ...(state.showAltitudeGrid ? styles.layerToggleOn : {})}} />
+          </button>
+          
+          <button 
+            onClick={toggleAzimuthGrid} 
+            style={{...styles.layerButton, ...(state.showAzimuthGrid ? styles.layerButtonActive : {})}}
+            className="layer-button"
+          >
+            <Grid1 size={16} color={state.showAzimuthGrid ? "#94a3b8" : "rgba(255,255,255,0.5)"} variant={state.showAzimuthGrid ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Azimuth Grid</span>
+            <div style={{...styles.layerToggle, ...(state.showAzimuthGrid ? styles.layerToggleOn : {})}} />
+          </button>
+          
+          <button 
+            onClick={toggleEquatorialGrid} 
+            style={{...styles.layerButton, ...(state.showEquatorialGrid ? styles.layerButtonActive : {})}}
+            className="layer-button"
+          >
+            <Global size={16} color={state.showEquatorialGrid ? "#22d3ee" : "rgba(255,255,255,0.5)"} variant={state.showEquatorialGrid ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Equatorial Grid</span>
+            <div style={{...styles.layerToggle, ...(state.showEquatorialGrid ? styles.layerToggleOn : {})}} />
+          </button>
+          <button 
+            onClick={toggleAtmosphere} 
+            style={{...styles.layerButton, ...(state.showAtmosphere ? styles.layerButtonActive : {})}}
+            className="layer-button"
+          >
+            <Sun size={16} color={state.showAtmosphere ? "#22d3ee" : "rgba(255,255,255,0.5)"} variant={state.showAtmosphere ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Atmosphere</span>
+            <div style={{...styles.layerToggle, ...(state.showAtmosphere ? styles.layerToggleOn : {})}} />
+          </button>
+          <button 
+            onClick={toggleGround} 
+            style={{...styles.layerButton, ...(state.showGround ? styles.layerButtonActive : {})}}
+            className="layer-button"
+          >
+            <Discover size={16} color={state.showGround ? "#22d3ee" : "rgba(255,255,255,0.5)"} variant={state.showGround ? "Bold" : "Linear"} />
+            <span style={styles.layerLabel}>Ground</span>
+            <div style={{...styles.layerToggle, ...(state.showGround ? styles.layerToggleOn : {})}} />
+          </button>
+        </div>
       </div>
 
+      {/* Right Sidebar - Light Pollution */}
+      <div style={styles.rightSidebar} className="right-sidebar">
+        {/* Vertical Slider */}
+        <div style={styles.verticalSliderWrapper}>
+          {/* City icon at top (high pollution) */}
+          <div style={styles.sliderIconTop}>
+            <Building size={16} color="rgba(255,255,255,0.4)" variant="Bold" />
+          </div>
+          
+          {/* Slider track with native range input */}
+          <div style={styles.verticalSliderContainer}>
+            <div style={styles.verticalSliderTrack}>
+              {/* Fill from bottom */}
+              <div 
+                style={{
+                  ...styles.verticalSliderFill,
+                  height: `${((9 - state.lightPollution) / 8) * 100}%`,
+                }}
+              />
+            </div>
+            {/* Native range input - rotated */}
+            <input
+              type="range"
+              min="1"
+              max="9"
+              step="1"
+              value={10 - state.lightPollution}
+              onChange={(e) => handleLightPollutionChange(10 - parseInt(e.target.value))}
+              className="light-pollution-slider"
+              style={styles.verticalRangeInput}
+            />
+          </div>
+          
+          {/* Stars icon at bottom (dark sky) */}
+          <div style={styles.sliderIconBottom}>
+            <Star1 size={16} color="rgba(255,255,255,0.4)" variant="Bold" />
+          </div>
+        </div>
+        
+        {/* Bortle info */}
+        <div style={styles.bortleInfo}>
+          <div style={styles.bortleValue}>{state.lightPollution}</div>
+          <div style={styles.bortleDesc}>{getBortleDescription(state.lightPollution)}</div>
+        </div>
+      </div>
+
+      {/* Object Search Panel */}
+      {state.showObjectSearch && (
+        <div style={styles.objectSearchPanel} className="selector-panel object-search">
+          <div style={styles.objectSearchHeader}>
+            <SearchNormal1 size={18} color="#6366f1" variant="Bold" />
+            <input
+              type="text"
+              placeholder="Search stars, planets, constellations..."
+              value={state.objectSearchQuery}
+              onChange={(e) => searchObjects(e.target.value)}
+              style={styles.objectSearchInput}
+              autoFocus
+            />
+            <button onClick={toggleObjectSearch} style={styles.closeSearchButton}>×</button>
+          </div>
+          
+          {state.objectSearchResults.length > 0 && (
+            <div style={styles.objectSearchResults}>
+              {state.objectSearchResults.map((result, index) => (
+                <button
+                  key={`${result.type}-${result.id}-${index}`}
+                  onClick={() => selectSearchResult(result)}
+                  style={styles.objectSearchResultItem}
+                >
+                  <span style={styles.objectTypeIcon}>
+                    {result.type === 'star' && '⭐'}
+                    {result.type === 'planet' && '🪐'}
+                    {result.type === 'constellation' && '✨'}
+                    {result.type === 'deepsky' && '🌌'}
+                    {result.type === 'satellite' && '🛰️'}
+                    {result.type === 'moon' && '🌙'}
+                    {result.type === 'sun' && '☀️'}
+                  </span>
+                  <div style={styles.objectResultInfo}>
+                    <span style={styles.objectResultName}>{result.name}</span>
+                    <span style={styles.objectResultType}>
+                      {result.type.charAt(0).toUpperCase() + result.type.slice(1)}
+                      {result.magnitude !== undefined && ` • mag ${result.magnitude.toFixed(1)}`}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+          
+          {state.objectSearchQuery && state.objectSearchResults.length === 0 && (
+            <div style={styles.noResults}>No objects found</div>
+          )}
+        </div>
+      )}
+
+      {/* Time Selector Panel */}
+      {state.showTimeSelector && (
+        <div style={styles.timeSelectorPanel} className="selector-panel time-selector">
+          <div style={styles.timeSelectorHeader}>
+            <div style={styles.timeSelectorTitle}>
+              <Calendar size={16} color="#6366f1" variant="Bold" />
+              <span>Time Travel</span>
+            </div>
+            <button onClick={resetToNow} style={styles.resetButton} title="Reset to Now">
+              <Refresh size={16} color="currentColor" />
+              <span>Now</span>
+            </button>
+          </div>
+          
+          {/* Date Controls */}
+          <div style={styles.timeControlGroup}>
+            <span style={styles.timeControlLabel}>Date</span>
+            <div style={styles.timeControlRow}>
+              <button onClick={() => adjustDate(-1)} style={styles.timeAdjustButton}>
+                <ArrowLeft2 size={16} color="currentColor" />
+              </button>
+              <input
+                type="date"
+                value={state.selectedDate.toISOString().split('T')[0]}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    const newDate = new Date(e.target.value + 'T' + state.selectedDate.toTimeString().slice(0, 8));
+                    setSelectedTime(newDate);
+                  }
+                }}
+                style={styles.dateInput}
+              />
+              <button onClick={() => adjustDate(1)} style={styles.timeAdjustButton}>
+                <ArrowRight2 size={16} color="currentColor" />
+              </button>
+            </div>
+          </div>
+          
+          {/* Time Controls */}
+          <div style={styles.timeControlGroup}>
+            <span style={styles.timeControlLabel}>Time</span>
+            <div style={styles.timeControlRow}>
+              <button onClick={() => adjustTime(-1)} style={styles.timeAdjustButton}>
+                <ArrowLeft2 size={16} color="currentColor" />
+              </button>
+              <input
+                type="time"
+                value={`${String(state.selectedDate.getHours()).padStart(2, '0')}:${String(state.selectedDate.getMinutes()).padStart(2, '0')}`}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    const timeParts = e.target.value.split(':');
+                    const hours = timeParts[0] || '0';
+                    const minutes = timeParts[1] || '0';
+                    const newDate = new Date(state.selectedDate);
+                    newDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));
+                    setSelectedTime(newDate);
+                  }
+                }}
+                style={styles.timeInput}
+              />
+              <button onClick={() => adjustTime(1)} style={styles.timeAdjustButton}>
+                <ArrowRight2 size={16} color="currentColor" />
+              </button>
+            </div>
+          </div>
+          
+          {/* Quick Jump Buttons */}
+          <div style={styles.quickJumpRow}>
+            <button onClick={() => adjustTime(-6)} style={styles.quickJumpButton}>-6h</button>
+            <button onClick={() => adjustTime(-1)} style={styles.quickJumpButton}>-1h</button>
+            <button onClick={() => adjustTime(1)} style={styles.quickJumpButton}>+1h</button>
+            <button onClick={() => adjustTime(6)} style={styles.quickJumpButton}>+6h</button>
+          </div>
+          
+          {/* Status */}
+          <div style={styles.timeStatus}>
+            {state.isRealTime ? (
+              <span style={styles.timeStatusLive}>● Live</span>
+            ) : (
+              <span style={styles.timeStatusCustom}>
+                <Clock size={12} color="currentColor" />
+                {state.selectedDate.toLocaleDateString()} {state.selectedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Location Selector Panel */}
+      {state.showLocationSelector && (
+        <div style={styles.locationSelectorPanel} className="selector-panel location-selector">
+          {/* Search Input with GPS button */}
+          <div style={styles.locationSearchRow}>
+            <div style={styles.locationSearchContainer}>
+              <SearchNormal1 size={16} color="rgba(255,255,255,0.4)" />
+              <input
+                type="text"
+                placeholder="Search city or place..."
+                value={state.locationSearchQuery}
+                onChange={(e) => {
+                  setState(prev => ({ ...prev, locationSearchQuery: e.target.value }));
+                  searchLocation(e.target.value);
+                }}
+                style={styles.locationSearchInput}
+              />
+            </div>
+            <button onClick={useCurrentLocation} style={styles.gpsButton} title="Use current GPS location">
+              <Gps size={18} color="currentColor" />
+            </button>
+          </div>
+          
+          {/* Search Results */}
+          {state.locationSearchResults.length > 0 && (
+            <div style={styles.locationResults}>
+              {state.locationSearchResults.map((result, index) => (
+                <button
+                  key={index}
+                  onClick={() => selectLocation(result.lat, result.lon, result.name)}
+                  style={styles.locationResultItem}
+                >
+                  <Location size={14} color="rgba(255,255,255,0.5)" />
+                  <span style={styles.locationResultText}>{result.name}</span>
+                </button>
+              ))}
+            </div>
+          )}
+          
+          {/* Manual Coordinates - inline */}
+          <div style={styles.coordsInputRow}>
+            <input
+              type="number"
+              placeholder="Latitude"
+              step="0.0001"
+              id="lat-input"
+              style={styles.coordInput}
+            />
+            <input
+              type="number"
+              placeholder="Longitude"
+              step="0.0001"
+              id="lon-input"
+              style={styles.coordInput}
+            />
+            <button 
+              onClick={() => {
+                const latInput = document.getElementById('lat-input') as HTMLInputElement;
+                const lonInput = document.getElementById('lon-input') as HTMLInputElement;
+                const lat = parseFloat(latInput?.value || '0');
+                const lon = parseFloat(lonInput?.value || '0');
+                if (!isNaN(lat) && !isNaN(lon) && lat !== 0 && lon !== 0) {
+                  selectLocation(lat, lon);
+                }
+              }}
+              style={styles.goButton}
+            >
+              Go
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Bottom Bar - Info */}
-      <div style={styles.bottomBar}>
-        <div style={styles.infoGroup}>
-          <span style={styles.infoLabel}>Current Time</span>
-          <span style={styles.infoValue}>
-            {displayTime.toLocaleTimeString([], { 
-              hour: '2-digit', 
-              minute: '2-digit', 
-              second: '2-digit',
-              hour12: false 
-            })}
-          </span>
-          <span style={styles.infoSubValue}>
-            {displayTime.toLocaleDateString([], { 
-              month: 'short', 
-              day: 'numeric', 
-              year: 'numeric' 
-            })}
-          </span>
-        </div>
-        <div style={styles.infoDivider} />
-        <div style={styles.infoGroup}>
-          <span style={styles.infoLabel}>Location</span>
-          <span style={styles.infoValue}>
-            {state.locationName || (state.observer 
-              ? `${state.observer.latitude.toFixed(4)}°, ${state.observer.longitude.toFixed(4)}°`
-              : 'Unknown')}
-          </span>
-          <span style={styles.infoSubValue}>
-            {state.observer && !state.locationName
-              ? `Lat: ${state.observer.latitude.toFixed(4)}°, Lon: ${state.observer.longitude.toFixed(4)}°`
-              : state.locationStatus === 'granted' ? '📍 GPS' : state.locationStatus === 'default' ? '🌍 Default' : '⏳ Loading...'}
-          </span>
-        </div>
-        <div style={styles.infoDivider} />
-        <div style={styles.infoGroup}>
-          <span style={styles.infoLabel}>Last Update</span>
-          <span style={styles.infoValue}>
-            {state.lastUpdateTime 
-              ? new Date(state.lastUpdateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-              : 'Never'}
-          </span>
-          <span style={styles.infoSubValue}>
-            {state.isUpdating ? '🔄 Updating...' : '✓ Synced'}
-          </span>
-        </div>
-        <div style={styles.infoDivider} />
+      <div style={styles.bottomBar} className="bottom-bar">
+        {/* Time Group with Toggle */}
+        <button 
+          onClick={toggleTimeSelector} 
+          style={{...styles.infoGroupButton, ...(state.showTimeSelector ? styles.infoGroupButtonActive : {})}}
+          className="info-group-button"
+        >
+          <Clock size={16} color={state.showTimeSelector ? "#818cf8" : "rgba(255,255,255,0.5)"} variant={state.showTimeSelector ? "Bold" : "Linear"} />
+          <div style={styles.infoGroupContent}>
+            <span style={styles.infoValue} className="info-value">
+              {displayTime.toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                hour12: false 
+              })}
+            </span>
+            <span style={styles.infoSubValue} className="info-sub-value">
+              {displayTime.toLocaleDateString([], { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+              })}
+            </span>
+          </div>
+        </button>
+        
+        <div style={styles.infoDivider} className="info-divider" />
+        
+        {/* Location Group with Toggle */}
+        <button 
+          onClick={toggleLocationSelector} 
+          style={{...styles.infoGroupButton, ...(state.showLocationSelector ? styles.infoGroupButtonActive : {})}}
+          className="info-group-button"
+        >
+          <Location size={16} color={state.showLocationSelector ? "#818cf8" : "rgba(255,255,255,0.5)"} variant={state.showLocationSelector ? "Bold" : "Linear"} />
+          <div style={styles.infoGroupContent}>
+            <span style={styles.infoValue} className="info-value">
+              {state.locationName || (state.observer 
+                ? `${state.observer.latitude.toFixed(2)}°, ${state.observer.longitude.toFixed(2)}°`
+                : 'Unknown')}
+            </span>
+            <span style={styles.infoSubValue} className="info-sub-value">
+              {state.locationStatus === 'granted' ? 'GPS' : state.locationStatus === 'default' ? 'Default' : 'Loading...'}
+            </span>
+          </div>
+        </button>
+        
+        <div style={styles.infoDivider} className="info-divider" />
+        
         {/* Powered by Sky Guild */}
-        <a href="https://www.skyguild.club" target="_blank" rel="noopener noreferrer" style={styles.poweredBy}>
+        <a href="https://www.skyguild.club" target="_blank" rel="noopener noreferrer" style={styles.poweredBy} className="powered-by">
           <span style={styles.poweredByText}>Powered by</span>
           <img src="/SkyGuild_Logo.png" alt="Sky Guild" style={styles.poweredByLogo} />
         </a>
       </div>
+
+
+
+      {/* Data Credits - Bottom Left */}
+      <button onClick={toggleCredits} style={styles.creditsButtonFixed} className="credits-button" title="Data Credits">
+        <InfoCircle size={14} color="currentColor" variant="Linear" />
+        <span className="credits-text">Data Credits</span>
+      </button>
+
+      {/* Credits Modal */}
+      {state.showCredits && (
+        <div style={styles.modalOverlay} onClick={toggleCredits}>
+          <div style={styles.creditsModal} className="credits-modal" onClick={(e) => e.stopPropagation()}>
+            <div style={styles.creditsHeader}>
+              <h2 style={styles.creditsTitle}>Data Credits</h2>
+              <button onClick={toggleCredits} style={styles.closeButton}>×</button>
+            </div>
+            
+            <div style={styles.creditsContent}>
+              <div style={styles.creditSection}>
+                <h3 style={styles.creditSectionTitle}>Star Catalog</h3>
+                <p style={styles.creditText}>
+                  Hipparcos Catalogue (ESA, 1997) - 118,218 stars with high-precision positions and magnitudes
+                </p>
+                <a href="https://www.cosmos.esa.int/web/hipparcos" target="_blank" rel="noopener noreferrer" style={styles.creditLink}>
+                  ESA Hipparcos Mission →
+                </a>
+              </div>
+              
+              <div style={styles.creditSection}>
+                <h3 style={styles.creditSectionTitle}>Constellation Data</h3>
+                <p style={styles.creditText}>
+                  IAU Constellation boundaries and star patterns from the International Astronomical Union
+                </p>
+                <a href="https://www.iau.org/public/themes/constellations/" target="_blank" rel="noopener noreferrer" style={styles.creditLink}>
+                  IAU Constellations →
+                </a>
+              </div>
+              
+              <div style={styles.creditSection}>
+                <h3 style={styles.creditSectionTitle}>Deep Sky Objects</h3>
+                <p style={styles.creditText}>
+                  Messier Catalog - 110 deep sky objects including galaxies, nebulae, and star clusters
+                </p>
+                <a href="https://www.messier.seds.org/" target="_blank" rel="noopener noreferrer" style={styles.creditLink}>
+                  SEDS Messier Database →
+                </a>
+              </div>
+              
+              <div style={styles.creditSection}>
+                <h3 style={styles.creditSectionTitle}>Planetary Positions</h3>
+                <p style={styles.creditText}>
+                  Astronomical calculations using VSOP87 theory and SunCalc library for Sun/Moon positions
+                </p>
+                <a href="https://github.com/mourner/suncalc" target="_blank" rel="noopener noreferrer" style={styles.creditLink}>
+                  SunCalc Library →
+                </a>
+              </div>
+              
+              <div style={styles.creditSection}>
+                <h3 style={styles.creditSectionTitle}>Satellite Tracking</h3>
+                <p style={styles.creditText}>
+                  ISS and satellite positions from CelesTrak and Where The ISS At API
+                </p>
+                <a href="https://celestrak.org/" target="_blank" rel="noopener noreferrer" style={styles.creditLink}>
+                  CelesTrak →
+                </a>
+              </div>
+              
+              <div style={styles.creditSection}>
+                <h3 style={styles.creditSectionTitle}>Geocoding</h3>
+                <p style={styles.creditText}>
+                  Location search powered by OpenStreetMap Nominatim
+                </p>
+                <a href="https://nominatim.openstreetmap.org/" target="_blank" rel="noopener noreferrer" style={styles.creditLink}>
+                  OpenStreetMap Nominatim →
+                </a>
+              </div>
+            </div>
+            
+            <div style={styles.creditsFooter}>
+              <p style={styles.creditsFooterText}>
+                Built with ❤️ by Sky Guild
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Loading Overlay */}
       {state.isLoading && (
@@ -1399,71 +2565,566 @@ const styles: Record<string, React.CSSProperties> = {
   // Left Sidebar - Layers
   leftSidebar: {
     position: 'absolute',
-    left: '20px',
+    left: '16px',
     top: '50%',
     transform: 'translateY(-50%)',
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px',
-    background: 'rgba(0, 8, 20, 0.85)',
+    gap: '4px',
+    background: 'rgba(0, 8, 20, 0.9)',
     backdropFilter: 'blur(20px)',
-    padding: '16px 12px',
-    borderRadius: '16px',
+    padding: '12px',
+    borderRadius: '14px',
     border: '1px solid rgba(255, 255, 255, 0.08)',
     zIndex: 50,
-    minWidth: '160px',
+    minWidth: '170px',
+    maxHeight: 'calc(100vh - 180px)',
+    overflowY: 'auto',
   },
   sidebarTitle: {
-    fontSize: '11px',
+    fontSize: '10px',
     fontWeight: 600,
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: 'rgba(255, 255, 255, 0.6)',
     textTransform: 'uppercase',
     letterSpacing: '1px',
-    marginBottom: '8px',
+    marginBottom: '6px',
     paddingLeft: '4px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+  layerSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2px',
+    marginBottom: '8px',
+  },
+  layerSectionTitle: {
+    fontSize: '9px',
+    fontWeight: 600,
+    color: 'rgba(255, 255, 255, 0.35)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+    padding: '4px 8px 2px',
   },
   layerButton: {
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
+    gap: '8px',
     background: 'transparent',
     border: 'none',
-    color: 'rgba(255, 255, 255, 0.6)',
-    padding: '10px 12px',
-    borderRadius: '10px',
+    color: 'rgba(255, 255, 255, 0.7)',
+    padding: '8px 10px',
+    borderRadius: '8px',
     cursor: 'pointer',
-    fontSize: '14px',
-    transition: 'all 0.2s ease',
+    fontSize: '12px',
+    transition: 'all 0.15s ease',
     textAlign: 'left',
   },
   layerSubButton: {
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
+    gap: '8px',
     background: 'transparent',
     border: 'none',
     color: 'rgba(255, 255, 255, 0.5)',
-    padding: '8px 12px 8px 24px',
-    borderRadius: '8px',
+    padding: '6px 10px 6px 28px',
+    borderRadius: '6px',
     cursor: 'pointer',
-    fontSize: '12px',
-    transition: 'all 0.2s ease',
+    fontSize: '11px',
+    transition: 'all 0.15s ease',
     textAlign: 'left',
-    marginLeft: '8px',
+  },
+  layerSubIcon: {
+    fontSize: '8px',
+    color: 'rgba(255, 255, 255, 0.5)',
   },
   layerButtonActive: {
-    background: 'rgba(99, 102, 241, 0.15)',
+    background: 'rgba(255, 255, 255, 0.08)',
     color: '#ffffff',
-    border: '1px solid rgba(99, 102, 241, 0.3)',
   },
   layerIcon: {
-    fontSize: '16px',
-    width: '20px',
+    fontSize: '14px',
+    width: '18px',
     textAlign: 'center',
   },
   layerLabel: {
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: 500,
+    flex: 1,
+  },
+  layerToggle: {
+    width: '28px',
+    height: '16px',
+    borderRadius: '8px',
+    background: 'rgba(255, 255, 255, 0.15)',
+    position: 'relative',
+    transition: 'all 0.2s ease',
+  },
+  layerToggleOn: {
+    background: 'rgba(99, 102, 241, 0.5)',
+  },
+  
+  // Right Sidebar - Light Pollution
+  rightSidebar: {
+    position: 'absolute',
+    right: '16px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '8px',
+    background: 'rgba(0, 8, 20, 0.6)',
+    backdropFilter: 'blur(12px)',
+    padding: '12px 10px',
+    borderRadius: '12px',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
+    zIndex: 50,
+    width: '70px',
+  },
+  verticalSliderWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '6px',
+  },
+  sliderIconTop: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    opacity: 0.6,
+  },
+  sliderIconBottom: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    opacity: 0.6,
+  },
+  verticalSliderContainer: {
+    position: 'relative',
+    width: '32px',
+    height: '100px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  verticalSliderTrack: {
+    position: 'absolute',
+    width: '4px',
+    height: '100px',
+    background: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: '2px',
+    overflow: 'hidden',
+  },
+  verticalSliderFill: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    background: 'rgba(99, 102, 241, 0.6)',
+    borderRadius: '2px',
+    transition: 'height 0.1s ease',
+    pointerEvents: 'none',
+  },
+  verticalRangeInput: {
+    width: '100px',
+    height: '32px',
+    transform: 'rotate(-90deg)',
+    cursor: 'pointer',
+    background: 'transparent',
+    margin: 0,
+    padding: 0,
+  },
+  bortleInfo: {
+    textAlign: 'center',
+  },
+  bortleValue: {
+    fontSize: '14px',
+    fontWeight: 600,
+    color: 'rgba(255, 255, 255, 0.8)',
+  },
+  bortleDesc: {
+    fontSize: '9px',
+    color: 'rgba(255, 255, 255, 0.4)',
+    marginTop: '1px',
+    width: '50px',
+    textAlign: 'center',
+    lineHeight: 1.2,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  lightPollutionStats: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+    width: '100%',
+    paddingTop: '8px',
+    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  statRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+  statLabel: {
+    fontSize: '10px',
+    color: 'rgba(255, 255, 255, 0.5)',
+    flex: 1,
+  },
+  statValue: {
+    fontSize: '12px',
+    fontWeight: 500,
+    color: '#ffffff',
+  },
+  
+  // Object Search Panel
+  objectSearchPanel: {
+    position: 'absolute',
+    top: '70px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    background: 'rgba(0, 8, 20, 0.95)',
+    backdropFilter: 'blur(20px)',
+    borderRadius: '16px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    padding: '12px',
+    zIndex: 120,
+    width: '360px',
+    maxWidth: '90vw',
+  },
+  objectSearchHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  },
+  objectSearchInput: {
+    flex: 1,
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '8px',
+    padding: '10px 12px',
+    color: '#ffffff',
+    fontSize: '14px',
+    outline: 'none',
+  },
+  closeSearchButton: {
+    background: 'transparent',
+    border: 'none',
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontSize: '24px',
+    cursor: 'pointer',
+    padding: '0 4px',
+    lineHeight: 1,
+  },
+  objectSearchResults: {
+    marginTop: '12px',
+    maxHeight: '300px',
+    overflowY: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px',
+  },
+  objectSearchResultItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    background: 'rgba(255, 255, 255, 0.05)',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '10px 12px',
+    cursor: 'pointer',
+    textAlign: 'left',
+    transition: 'background 0.15s ease',
+  },
+  objectTypeIcon: {
+    fontSize: '20px',
+  },
+  objectResultInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2px',
+  },
+  objectResultName: {
+    color: '#ffffff',
+    fontSize: '14px',
+    fontWeight: 500,
+  },
+  objectResultType: {
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontSize: '11px',
+  },
+  noResults: {
+    color: 'rgba(255, 255, 255, 0.4)',
+    fontSize: '13px',
+    textAlign: 'center',
+    padding: '16px',
+  },
+  
+  // Time Selector Panel
+  timeSelectorPanel: {
+    position: 'absolute',
+    bottom: '80px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    background: 'rgba(0, 8, 20, 0.95)',
+    backdropFilter: 'blur(20px)',
+    borderRadius: '16px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    padding: '16px',
+    zIndex: 110,
+    minWidth: '280px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  },
+  timeSelectorHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  timeSelectorTitle: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    fontSize: '14px',
+    fontWeight: 600,
+    color: '#ffffff',
+  },
+  resetButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    background: 'rgba(99, 102, 241, 0.15)',
+    border: '1px solid rgba(99, 102, 241, 0.3)',
+    borderRadius: '8px',
+    padding: '6px 10px',
+    color: '#818cf8',
+    fontSize: '12px',
+    fontWeight: 500,
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  },
+  timeControlGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+  },
+  timeControlLabel: {
+    fontSize: '10px',
+    fontWeight: 600,
+    color: 'rgba(255, 255, 255, 0.5)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+  },
+  timeControlRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  timeAdjustButton: {
+    width: '32px',
+    height: '32px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    borderRadius: '8px',
+    color: '#ffffff',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  },
+  dateInput: {
+    flex: 1,
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    borderRadius: '8px',
+    padding: '8px 12px',
+    color: '#ffffff',
+    fontSize: '13px',
+    fontFamily: 'inherit',
+    outline: 'none',
+    colorScheme: 'dark',
+  },
+  timeInput: {
+    flex: 1,
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    borderRadius: '8px',
+    padding: '8px 12px',
+    color: '#ffffff',
+    fontSize: '13px',
+    fontFamily: 'inherit',
+    outline: 'none',
+    colorScheme: 'dark',
+  },
+  quickJumpRow: {
+    display: 'flex',
+    gap: '8px',
+    justifyContent: 'center',
+  },
+  quickJumpButton: {
+    padding: '6px 12px',
+    background: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '6px',
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: '11px',
+    fontWeight: 500,
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  },
+  timeStatus: {
+    display: 'flex',
+    justifyContent: 'center',
+    paddingTop: '8px',
+    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  timeStatusLive: {
+    color: '#22c55e',
+    fontSize: '12px',
+    fontWeight: 500,
+  },
+  timeStatusCustom: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    color: '#f59e0b',
+    fontSize: '12px',
+    fontWeight: 500,
+  },
+  timeToggleButton: {
+    width: '40px',
+    height: '40px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    borderRadius: '10px',
+    color: '#ffffff',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  },
+  timeToggleButtonActive: {
+    background: 'rgba(99, 102, 241, 0.2)',
+    border: '1px solid rgba(99, 102, 241, 0.4)',
+    color: '#818cf8',
+  },
+  
+  // Location Selector Panel
+  locationSelectorPanel: {
+    position: 'absolute',
+    bottom: '80px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    background: 'rgba(0, 8, 20, 0.95)',
+    backdropFilter: 'blur(20px)',
+    borderRadius: '12px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    padding: '12px',
+    zIndex: 110,
+    width: '340px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+  },
+  locationSearchRow: {
+    display: 'flex',
+    gap: '8px',
+    alignItems: 'center',
+  },
+  gpsButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '40px',
+    height: '40px',
+    background: 'rgba(34, 197, 94, 0.15)',
+    border: '1px solid rgba(34, 197, 94, 0.3)',
+    borderRadius: '8px',
+    color: '#22c55e',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    flexShrink: 0,
+  },
+  locationSearchContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    borderRadius: '8px',
+    padding: '10px 12px',
+    flex: 1,
+  },
+  locationSearchInput: {
+    flex: 1,
+    background: 'transparent',
+    border: 'none',
+    color: '#ffffff',
+    fontSize: '13px',
+    fontFamily: 'inherit',
+    outline: 'none',
+  },
+  locationResults: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px',
+    maxHeight: '150px',
+    overflowY: 'auto',
+  },
+  locationResultItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '8px',
+    background: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '8px',
+    padding: '10px 12px',
+    color: '#ffffff',
+    fontSize: '12px',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    textAlign: 'left',
+  },
+  locationResultText: {
+    flex: 1,
+    lineHeight: 1.3,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+  },
+  coordsInputRow: {
+    display: 'flex',
+    gap: '8px',
+  },
+  coordInput: {
+    flex: 1,
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    borderRadius: '8px',
+    padding: '10px 12px',
+    color: '#ffffff',
+    fontSize: '13px',
+    fontFamily: 'inherit',
+    outline: 'none',
+    minWidth: 0,
+  },
+  goButton: {
+    background: 'rgba(99, 102, 241, 0.2)',
+    border: '1px solid rgba(99, 102, 241, 0.4)',
+    borderRadius: '8px',
+    padding: '10px 16px',
+    color: '#818cf8',
+    fontSize: '13px',
+    fontWeight: 600,
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
   },
   
   // Bottom Bar - Info
@@ -1472,15 +3133,36 @@ const styles: Record<string, React.CSSProperties> = {
     bottom: 0,
     left: 0,
     right: 0,
-    height: '72px',
+    height: '60px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: '20px',
+    gap: '12px',
     background: 'linear-gradient(0deg, rgba(0, 8, 20, 0.95) 0%, rgba(0, 8, 20, 0) 100%)',
     backdropFilter: 'blur(10px)',
     zIndex: 100,
     padding: '0 20px',
+  },
+  infoGroupButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    background: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '10px',
+    padding: '8px 14px',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  },
+  infoGroupButtonActive: {
+    background: 'rgba(99, 102, 241, 0.15)',
+    border: '1px solid rgba(99, 102, 241, 0.3)',
+  },
+  infoGroupContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: '1px',
   },
   infoGroup: {
     display: 'flex',
@@ -1505,20 +3187,20 @@ const styles: Record<string, React.CSSProperties> = {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    maxWidth: '100%',
+    maxWidth: '150px',
   },
   infoSubValue: {
-    fontSize: '9px',
+    fontSize: '10px',
     fontWeight: 400,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: 'rgba(255, 255, 255, 0.5)',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    maxWidth: '100%',
+    maxWidth: '150px',
   },
   infoDivider: {
     width: '1px',
-    height: '24px',
+    height: '32px',
     background: 'rgba(255, 255, 255, 0.1)',
   },
   poweredBy: {
@@ -1543,6 +3225,126 @@ const styles: Record<string, React.CSSProperties> = {
     height: '24px',
     width: 'auto',
     objectFit: 'contain',
+  },
+  creditsButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    background: 'transparent',
+    border: 'none',
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontSize: '11px',
+    fontWeight: 500,
+    cursor: 'pointer',
+    padding: '6px 8px',
+    borderRadius: '6px',
+    transition: 'all 0.2s ease',
+  },
+  creditsButtonFixed: {
+    position: 'absolute',
+    bottom: '70px',
+    left: '16px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    background: 'rgba(0, 8, 20, 0.6)',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontSize: '11px',
+    fontWeight: 500,
+    cursor: 'pointer',
+    padding: '8px 12px',
+    borderRadius: '8px',
+    transition: 'all 0.2s ease',
+    zIndex: 50,
+  },
+  
+  // Credits Modal
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'rgba(0, 0, 0, 0.7)',
+    backdropFilter: 'blur(4px)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 300,
+  },
+  creditsModal: {
+    background: 'rgba(10, 15, 30, 0.98)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '16px',
+    width: '90%',
+    maxWidth: '500px',
+    maxHeight: '80vh',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  creditsHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '16px 20px',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  creditsTitle: {
+    fontSize: '18px',
+    fontWeight: 600,
+    color: '#ffffff',
+    margin: 0,
+  },
+  closeButton: {
+    background: 'transparent',
+    border: 'none',
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontSize: '24px',
+    cursor: 'pointer',
+    padding: '0 4px',
+    lineHeight: 1,
+  },
+  creditsContent: {
+    padding: '16px 20px',
+    overflowY: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
+  },
+  creditSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+  },
+  creditSectionTitle: {
+    fontSize: '13px',
+    fontWeight: 600,
+    color: '#818cf8',
+    margin: 0,
+  },
+  creditText: {
+    fontSize: '12px',
+    color: 'rgba(255, 255, 255, 0.7)',
+    margin: 0,
+    lineHeight: 1.5,
+  },
+  creditLink: {
+    fontSize: '11px',
+    color: 'rgba(99, 102, 241, 0.8)',
+    textDecoration: 'none',
+  },
+  creditsFooter: {
+    padding: '12px 20px',
+    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+    textAlign: 'center',
+  },
+  creditsFooterText: {
+    fontSize: '12px',
+    color: 'rgba(255, 255, 255, 0.5)',
+    margin: 0,
   },
   
   // Loading Overlay

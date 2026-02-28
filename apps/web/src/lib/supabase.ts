@@ -14,9 +14,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('⚠️  Supabase credentials not configured. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local');
 }
 
+// Determine if we're in development (localhost)
+const isDevelopment = typeof window !== 'undefined' && 
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
 // Create Supabase client with cookie-based auth for cross-subdomain sharing
 export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey, {
-  cookieOptions: {
+  cookieOptions: isDevelopment ? undefined : {
     domain: '.skyguild.club',
     path: '/',
     sameSite: 'lax',
