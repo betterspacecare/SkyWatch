@@ -8,7 +8,7 @@ import { supabase } from '../lib/supabase';
 import { saveObservation, addToFavorites, isFavorited, uploadObservationPhoto } from '../services/supabase-service';
 import { getCelestialInfoWithFallback, CelestialInfo } from '../services/celestial-info-service';
 import { getOrGenerateCelestialInfo } from '../services/celestial-ai-service';
-import { getCelestialImage, hasHighQualityImage, CelestialImage } from '../services/celestial-images';
+import { getCelestialImage, CelestialImage } from '../services/celestial-images';
 import {
   Moon,
   Sun1,
@@ -533,6 +533,50 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
 
         {activeTab === 'info' ? (
           <>
+            {/* Celestial Image */}
+            {celestialImage && (
+              <div style={styles.imageSection}>
+                <div 
+                  style={styles.imageContainer}
+                  onClick={() => setShowFullImage(true)}
+                >
+                  {imageLoading && (
+                    <div style={styles.imageLoading}>
+                      <Image size={32} color="rgba(255,255,255,0.3)" variant="Bulk" />
+                      <span>Loading image...</span>
+                    </div>
+                  )}
+                  <img 
+                    src={celestialImage.url} 
+                    alt={celestialImage.title}
+                    style={{
+                      ...styles.celestialImage,
+                      display: imageError ? 'none' : 'block',
+                    }}
+                    onLoad={() => setImageLoading(false)}
+                    onError={() => {
+                      setImageLoading(false);
+                      setImageError(true);
+                    }}
+                  />
+                  {imageError && (
+                    <div style={styles.imageError}>
+                      <Image size={32} color="rgba(255,255,255,0.2)" variant="Bulk" />
+                      <span>Image unavailable</span>
+                    </div>
+                  )}
+                  {!imageLoading && !imageError && (
+                    <div style={styles.imageOverlay}>
+                      <span>Click to enlarge</span>
+                    </div>
+                  )}
+                </div>
+                <div style={styles.imageCredit}>
+                  📷 {celestialImage.credit}
+                </div>
+              </div>
+            )}
+            
             {/* Info Section Tabs */}
             <div style={styles.infoSectionNav}>
               <button
