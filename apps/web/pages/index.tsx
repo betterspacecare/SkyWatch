@@ -155,7 +155,7 @@ const initialState: AppState = {
   satellitePositions: new Map(),
   meteorShowerRadiants: new Map(),
   // Display toggles - default on
-  showConstellations: true,
+  showConstellations: false, // false = single animated constellation (default), true = show all
   showDeepSky: true,
   showSatellites: true,
   showMeteorShowers: true,
@@ -1763,8 +1763,8 @@ export default function Home() {
             horizonConfig={{ color: '#4a5568', opacity: 0.6 }}
             moonPosition={state.showMoon ? state.moonPosition : null}
             sunPosition={state.showSun ? state.sunPosition : null}
-            constellations={state.showConstellations ? state.constellations : []}
-            constellationConfig={{ enabled: state.showConstellations, showNames: true }}
+            constellations={state.constellations}
+            constellationConfig={{ enabled: true, showNames: true, showAll: state.showConstellations }}
             deepSkyPositions={state.showDeepSky ? state.deepSkyPositions : new Map()}
             deepSkyConfig={{ enabled: state.showDeepSky, showLabels: true, showAll: state.showAllDeepSky }}
             satellitePositions={state.showSatellites ? state.satellitePositions : new Map()}

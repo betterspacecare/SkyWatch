@@ -74,6 +74,7 @@ export interface SkyDomeProps {
     lineOpacity?: number;
     showNames?: boolean;
     nameColor?: string;
+    showAll?: boolean; // Show all constellations at once (toggle on) vs single animated (toggle off)
   };
   deepSkyPositions?: Map<string, DeepSkyPosition>;
   deepSkyConfig?: {
@@ -1510,6 +1511,7 @@ const HorizonLineRing: React.FC<HorizonLineProps> = ({
 };
 
 // Constellation lines component - renders the most centered constellation with drawing animation
+// Or all constellations when showAll is true
 interface ConstellationLinesProps {
   constellations: Constellation[];
   stars: Star[];
@@ -1523,6 +1525,7 @@ interface ConstellationLinesProps {
   cameraAzimuth?: number;
   cameraAltitude?: number;
   fov?: number;
+  showAll?: boolean; // Show all constellations at once instead of just the centered one
 }
 
 const ConstellationLines: React.FC<ConstellationLinesProps> = ({
@@ -1538,6 +1541,7 @@ const ConstellationLines: React.FC<ConstellationLinesProps> = ({
   cameraAzimuth = 180,
   cameraAltitude = 45,
   fov = 60,
+  showAll = false,
 }) => {
   // Create a map of HIP ID to star for fast lookup
   const starMap = useMemo(() => {
@@ -1734,6 +1738,96 @@ const ConstellationLines: React.FC<ConstellationLinesProps> = ({
     );
   };
 
+  // Render a static line for showAll mode (no animation)
+  const renderStaticLine = (start: THREE.Vector3, end: THREE.Vector3, key: string) => {
+    const direction = new THREE.Vector3().subVectors(end, start);
+    const length = direction.length();
+    if (length < 0.1) return null;
+    
+    const midpoint = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+    const quaternion = new THREE.Quaternion();
+    const up = new THREE.Vector3(0, 1, 0);
+    quaternion.setFromUnitVectors(up, direction.clone().normalize());
+    
+    return (
+      <mesh key={key} position={midpoint} quaternion={quaternion}>
+        <cylinderGeometry args={[0.06, 0.06, length, 6, 1]} />
+        <meshBasicMaterial 
+          color={lineColor}
+          opacity={lineOpacity * 0.7} 
+          transparent
+        />
+      </mesh>
+    );
+  };
+
+  // Generate all constellation lines for showAll mode
+  const allConstellationLines = useMemo(() => {
+    if (!showAll) return null;
+    
+    const lines: JSX.Element[] = [];
+    
+    for (const constellation of constellations) {
+      for (let i = 0; i < constellation.lines.length; i++) {
+        const line = constellation.lines[i]!;
+        const s1 = starMap.get(`HIP${line.star1.hipId}`);
+        const s2 = starMap.get(`HIP${line.star2.hipId}`);
+        const ra1 = s1?.ra ?? (line.star1.ra / 15);
+        const dec1 = s1?.dec ?? line.star1.dec;
+        const ra2 = s2?.ra ?? (line.star2.ra / 15);
+        const dec2 = s2?.dec ?? line.star2.dec;
+        
+        const start = celestialToHorizontal3D(ra1, dec1, lst, observerLatitude, 100);
+        const end = celestialToHorizontal3D(ra2, dec2, lst, observerLatitude, 100);
+        
+        const rendered = renderStaticLine(start, end, `${constellation.id}-${i}`);
+        if (rendered) lines.push(rendered);
+      }
+    }
+    
+    return lines;
+  }, [showAll, constellations, starMap, lst, observerLatitude, lineColor, lineOpacity]);
+
+  // Generate all constellation labels for showAll mode
+  const allConstellationLabels = useMemo(() => {
+    if (!showAll || !showNames) return null;
+    
+    return constellationData.map(data => (
+      <group key={`label-${data.constellation.id}`} position={data.position}>
+        <Html distanceFactor={80} style={{ pointerEvents: 'auto' }} zIndexRange={[0, 30]}>
+          <div
+            onClick={() => onConstellationClick?.(data.constellation)}
+            style={{
+              color: nameColor,
+              fontSize: '12px',
+              fontWeight: 500,
+              whiteSpace: 'nowrap',
+              textShadow: `0 0 10px ${lineColor}, 0 0 5px #000`,
+              textTransform: 'uppercase',
+              letterSpacing: '2px',
+              opacity: 0.85,
+              cursor: onConstellationClick ? 'pointer' : 'default',
+              padding: '4px 8px',
+            }}
+          >
+            {data.constellation.name}
+          </div>
+        </Html>
+      </group>
+    ));
+  }, [showAll, showNames, constellationData, nameColor, lineColor, onConstellationClick]);
+
+  // Show all constellations mode
+  if (showAll) {
+    return (
+      <group>
+        {allConstellationLines}
+        {allConstellationLabels}
+      </group>
+    );
+  }
+
+  // Single constellation with animation mode (default)
   return (
     <group>
       {lineData.map(renderLine)}
@@ -2836,6 +2930,7 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
             cameraAzimuth={cameraAzimuth}
             cameraAltitude={cameraAltitude}
             fov={fov}
+            showAll={constellationConfig?.showAll}
           />
         )}
         
