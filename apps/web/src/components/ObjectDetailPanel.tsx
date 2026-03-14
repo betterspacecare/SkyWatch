@@ -8,6 +8,7 @@ import { supabase } from '../lib/supabase';
 import { saveObservation, addToFavorites, isFavorited, uploadObservationPhoto } from '../services/supabase-service';
 import { getCelestialInfoWithFallback, CelestialInfo } from '../services/celestial-info-service';
 import { getOrGenerateCelestialInfo } from '../services/celestial-ai-service';
+import { getCelestialImage, hasHighQualityImage, CelestialImage } from '../services/celestial-images';
 import {
   Moon,
   Sun1,
@@ -29,6 +30,7 @@ import {
   Story,
   MagicStar,
   Cpu,
+  Image,
 } from 'iconsax-react';
 
 const OBSERVATION_CATEGORIES = [
@@ -114,6 +116,12 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
   const [celestialInfo, setCelestialInfo] = useState<CelestialInfo | null>(null);
   const [loadingInfo, setLoadingInfo] = useState(true);
   const [generatingInfo, setGeneratingInfo] = useState(false);
+  
+  // State for celestial image
+  const [celestialImage, setCelestialImage] = useState<CelestialImage | null>(null);
+  const [imageLoading, setImageLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
+  const [showFullImage, setShowFullImage] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -123,6 +131,40 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
       }
     });
   }, [object.type, object.id]);
+
+  // Fetch celestial image
+  useEffect(() => {
+    let cancelled = false;
+    
+    async function fetchImage() {
+      setImageLoading(true);
+      setImageError(false);
+      setCelestialImage(null);
+      
+      try {
+        const image = await getCelestialImage(
+          object.type as any,
+          object.id,
+          object.ra,
+          object.dec
+        );
+        
+        if (!cancelled) {
+          setCelestialImage(image);
+          setImageLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching celestial image:', error);
+        if (!cancelled) {
+          setImageError(true);
+          setImageLoading(false);
+        }
+      }
+    }
+    
+    fetchImage();
+    return () => { cancelled = true; };
+  }, [object.type, object.id, object.ra, object.dec]);
 
   // Fetch celestial info - first try DB/fallback, then AI if needed
   useEffect(() => {
@@ -431,6 +473,46 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
           </div>
         </div>
 
+        {/* Celestial Image Section */}
+        {(imageLoading || celestialImage) && (
+          <div style={styles.celestialImageSection}>
+            <div 
+              style={styles.celestialImageContainer}
+              onClick={() => celestialImage && !imageLoading && setShowFullImage(true)}
+            >
+              {imageLoading ? (
+                <div style={styles.imageLoading}>
+                  <Image size={32} color="rgba(255,255,255,0.3)" variant="Bulk" />
+                  <span>Searching NASA archives...</span>
+                </div>
+              ) : imageError || !celestialImage ? (
+                <div style={styles.imageError}>
+                  <Image size={32} color="rgba(255,255,255,0.2)" variant="Bulk" />
+                  <span>No image available</span>
+                </div>
+              ) : (
+                <>
+                  <img 
+                    src={celestialImage.thumbnail || celestialImage.url} 
+                    alt={celestialImage.title}
+                    style={styles.celestialImageThumb}
+                    onError={() => setImageError(true)}
+                  />
+                  <div style={styles.imageOverlay}>
+                    <Image size={20} color="#ffffff" variant="Bulk" />
+                    <span>View Full Image</span>
+                  </div>
+                </>
+              )}
+            </div>
+            {celestialImage && !imageLoading && !imageError && (
+              <div style={styles.celestialImageCredit}>
+                📷 {celestialImage.credit}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Tab Navigation */}
         <div style={styles.tabNav}>
           <button
@@ -630,6 +712,25 @@ export default function ObjectDetailPanel({ object, location, onClose }: ObjectD
           </div>
         )}
       </div>
+
+      {/* Full Image Modal */}
+      {showFullImage && celestialImage && (
+        <div style={styles.fullImageModal} onClick={() => setShowFullImage(false)}>
+          <button style={styles.fullImageClose} onClick={() => setShowFullImage(false)}>
+            <CloseCircle size={32} color="#ffffff" variant="Bulk" />
+          </button>
+          <img 
+            src={celestialImage.url} 
+            alt={celestialImage.title}
+            style={styles.fullImage}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <div style={styles.fullImageCaption}>
+            <div style={styles.fullImageTitle}>{celestialImage.title}</div>
+            <div style={styles.fullImageCredit}>📷 {celestialImage.credit}</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -789,5 +890,121 @@ const styles: Record<string, React.CSSProperties> = {
     position: 'absolute' as const, top: '8px', right: '8px', width: '32px', height: '32px',
     background: 'rgba(0, 0, 0, 0.7)', border: 'none', borderRadius: '50%', cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
+  },
+  
+  // Celestial Image styles
+  celestialImageSection: {
+    marginBottom: '16px',
+  },
+  celestialImageContainer: {
+    position: 'relative' as const,
+    width: '100%',
+    height: '160px',
+    borderRadius: '12px',
+    overflow: 'hidden',
+    cursor: 'pointer',
+    background: 'rgba(0, 0, 0, 0.3)',
+  },
+  celestialImageThumb: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover' as const,
+    transition: 'transform 0.3s ease',
+  },
+  imageOverlay: {
+    position: 'absolute' as const,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: '12px',
+    background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    color: '#ffffff',
+    fontSize: '12px',
+    fontWeight: 500,
+    opacity: 0.8,
+    transition: 'opacity 0.2s ease',
+  },
+  imageLoading: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    color: 'rgba(255,255,255,0.4)',
+    fontSize: '12px',
+  },
+  imageError: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    color: 'rgba(255,255,255,0.3)',
+    fontSize: '12px',
+  },
+  celestialImageCredit: {
+    marginTop: '6px',
+    fontSize: '10px',
+    color: 'rgba(255,255,255,0.4)',
+    textAlign: 'center' as const,
+  },
+  
+  // Full Image Modal styles
+  fullImageModal: {
+    position: 'fixed' as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'rgba(0, 0, 0, 0.95)',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 20000,
+    padding: '20px',
+  },
+  fullImageClose: {
+    position: 'absolute' as const,
+    top: '20px',
+    right: '20px',
+    background: 'rgba(255, 255, 255, 0.1)',
+    border: 'none',
+    borderRadius: '50%',
+    width: '48px',
+    height: '48px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'background 0.2s ease',
+  },
+  fullImage: {
+    maxWidth: '90vw',
+    maxHeight: '75vh',
+    objectFit: 'contain' as const,
+    borderRadius: '8px',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+  },
+  fullImageCaption: {
+    marginTop: '16px',
+    textAlign: 'center' as const,
+  },
+  fullImageTitle: {
+    fontSize: '18px',
+    fontWeight: 600,
+    color: '#ffffff',
+    marginBottom: '4px',
+  },
+  fullImageCredit: {
+    fontSize: '12px',
+    color: 'rgba(255, 255, 255, 0.5)',
   },
 };
