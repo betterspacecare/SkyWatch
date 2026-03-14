@@ -1525,7 +1525,7 @@ interface ConstellationLinesProps {
   cameraAzimuth?: number;
   cameraAltitude?: number;
   fov?: number;
-  showAll?: boolean; // Show all constellations at once instead of just the centered one
+  showAll?: boolean | undefined; // Show all constellations at once instead of just the centered one
 }
 
 const ConstellationLines: React.FC<ConstellationLinesProps> = ({
