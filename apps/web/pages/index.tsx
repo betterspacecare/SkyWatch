@@ -100,6 +100,8 @@ interface AppState {
   // Progressive loading state
   loadingProgress: number; // 0-100
   totalStarsToLoad: number;
+  isLoadingMoreStars: boolean; // True when loading additional stars on zoom
+  currentMagnitudeLimit: number; // Current magnitude limit loaded
   // Local Sidereal Time for real-time sky rotation
   lst: number;
   // Time travel state
@@ -181,7 +183,9 @@ const initialState: AppState = {
   selectedObject: null,
   // Progressive loading state
   loadingProgress: 0,
-  totalStarsToLoad: 45000,
+  totalStarsToLoad: 120000,
+  isLoadingMoreStars: false,
+  currentMagnitudeLimit: 6.0,
   // Local Sidereal Time
   lst: 0,
   // Time travel state
@@ -244,26 +248,28 @@ export default function Home() {
     }
   }, []);
 
-  // Track last LST update time for throttling
+  // Track last update times for throttling different calculations
   const lastLstUpdateRef = useRef<number>(0);
+  const lastDeepSkyUpdateRef = useRef<number>(0);
+  const lastMeteorUpdateRef = useRef<number>(0);
   
-  // Handle sky position updates - throttle LST updates to reduce re-renders
+  // Handle sky position updates - heavily throttled to reduce re-renders
   const handlePositionsUpdate = useCallback((positions: SkyPositions) => {
     setState(prev => {
       if (!prev.observer) return { ...prev, currentTime: positions.timestamp };
 
       const time = positions.timestamp;
       const observer = prev.observer;
-      const lst = calculateLST(observer.longitude, time);
+      const now = Date.now();
       
       // Update LST every 1 second for smooth sky rotation
-      const now = Date.now();
       const shouldUpdateLst = now - lastLstUpdateRef.current > 1000;
+      const lst = shouldUpdateLst ? calculateLST(observer.longitude, time) : prev.lst;
       if (shouldUpdateLst) {
         lastLstUpdateRef.current = now;
       }
 
-      // Calculate moon position using suncalc
+      // Calculate moon position using suncalc (fast, do every update)
       const moonData = getMoonPosition(time, observer.latitude, observer.longitude);
       const moonPosition: MoonPosition = {
         ra: moonData.ra,
@@ -272,11 +278,11 @@ export default function Home() {
         azimuth: moonData.azimuth,
         phaseName: moonData.phaseName as any,
         illumination: moonData.illumination,
-        magnitude: -12.7 + (1 - moonData.illumination / 100) * 10, // Approximate magnitude
+        magnitude: -12.7 + (1 - moonData.illumination / 100) * 10,
         isBelowHorizon: moonData.isBelowHorizon,
       };
 
-      // Calculate sun position using suncalc
+      // Calculate sun position using suncalc (fast, do every update)
       const sunData = getSunPosition(time, observer.latitude, observer.longitude);
       const sunPosition: SunPosition = {
         ra: sunData.ra,
@@ -288,29 +294,37 @@ export default function Home() {
         isBelowHorizon: sunData.isBelowHorizon,
       };
 
-      // Calculate deep sky positions - convert array to Map
-      const deepSkyArray = deepSkyCatalogRef.current?.getVisibleObjects(observer, lst) ?? [];
-      const deepSkyPositions = new Map<string, DeepSkyPosition>();
-      for (const pos of deepSkyArray) {
-        deepSkyPositions.set(pos.object.id, pos);
+      // Deep sky positions - update every 30 seconds (they move slowly)
+      const shouldUpdateDeepSky = now - lastDeepSkyUpdateRef.current > 30000;
+      let deepSkyPositions = prev.deepSkyPositions;
+      if (shouldUpdateDeepSky && shouldUpdateLst) {
+        lastDeepSkyUpdateRef.current = now;
+        const deepSkyArray = deepSkyCatalogRef.current?.getVisibleObjects(observer, lst) ?? [];
+        deepSkyPositions = new Map<string, DeepSkyPosition>();
+        for (const pos of deepSkyArray) {
+          deepSkyPositions.set(pos.object.id, pos);
+        }
       }
 
-      // Calculate satellite positions
-      const satellitePositions = sunPosition 
-        ? satelliteTrackerRef.current?.calculateAll(time, observer, sunPosition) ?? new Map()
-        : new Map<string, SatellitePosition | SatelliteTrackerError>();
+      // Satellite positions - keep previous (updated by separate interval)
+      const satellitePositions = prev.satellitePositions;
 
-      // Calculate meteor shower radiants - convert array to Map
-      const meteorArray = meteorShowerCatalogRef.current?.getRadiantPositions(time, observer, lst) ?? [];
-      const meteorShowerRadiants = new Map<string, MeteorShowerPosition>();
-      for (const pos of meteorArray) {
-        meteorShowerRadiants.set(pos.shower.id, pos);
+      // Meteor shower radiants - update every 60 seconds (they barely move)
+      const shouldUpdateMeteors = now - lastMeteorUpdateRef.current > 60000;
+      let meteorShowerRadiants = prev.meteorShowerRadiants;
+      if (shouldUpdateMeteors && shouldUpdateLst) {
+        lastMeteorUpdateRef.current = now;
+        const meteorArray = meteorShowerCatalogRef.current?.getRadiantPositions(time, observer, lst) ?? [];
+        meteorShowerRadiants = new Map<string, MeteorShowerPosition>();
+        for (const pos of meteorArray) {
+          meteorShowerRadiants.set(pos.shower.id, pos);
+        }
       }
 
       return {
         ...prev,
         currentTime: time,
-        lst: shouldUpdateLst ? lst : prev.lst, // Only update LST every 10 seconds
+        lst,
         moonPosition,
         sunPosition,
         deepSkyPositions,
@@ -463,31 +477,39 @@ export default function Home() {
         const locationName = await fetchLocationName(coords);
         setState(prev => ({ ...prev, locationName }));
 
-        // Initialize star catalog - fetch from Supabase with progress
-        let stars: Star[];
-        let constellations: Constellation[];
+        // Initialize star catalog - zoom-based progressive loading
+        // 1. Load constellation stars first (essential for constellation lines)
+        // 2. Load bright stars (mag <= 6)
+        // 3. More stars load as user zooms in
+        let stars: Star[] = [];
+        let constellations: Constellation[] = [];
         
         try {
-          const { loadStars } = await import('../src/services/star-loader');
+          // First: Load constellations with their stars (essential for constellation lines)
+          const constellationResult = await fetchConstellationsWithStars();
+          constellations = constellationResult.constellations;
+          const constellationStars = constellationResult.stars;
           
-          // Load stars from Supabase with progress callback
-          stars = await loadStars({ 
-            strategy: 'supabase', 
-            maxStars: 48000,
-            onProgress: (loadedStars, total) => {
-              const progress = Math.round((loadedStars.length / total) * 100);
-              setState(prev => ({ 
-                ...prev, 
-                stars: loadedStars,
-                loadingProgress: progress,
-                totalStarsToLoad: total,
-              }));
-            }
-          });
+          // Create a Set of constellation star IDs to avoid duplicates
+          const constellationStarIds = new Set(constellationStars.map(s => s.id));
           
-          // Load constellations from API
-          const result = await fetchConstellationsWithStars();
-          constellations = result.constellations;
+          // Load additional bright stars (mag <= 6)
+          const { fetchStarsByMagnitude } = await import('../src/services/supabase-service');
+          const brightStars = await fetchStarsByMagnitude(6.0, 10000);
+          
+          // Merge: constellation stars + bright stars (avoiding duplicates)
+          const additionalBrightStars = brightStars.filter(s => !constellationStarIds.has(s.id));
+          stars = [...constellationStars, ...additionalBrightStars];
+          
+          // Update state with initial stars and mark as ready to display
+          setState(prev => ({ 
+            ...prev, 
+            stars,
+            constellations,
+            loadingProgress: 100,
+            currentMagnitudeLimit: 6.0,
+            isLoading: false,
+          }));
           
         } catch (error) {
           // Fallback to local JSON
@@ -509,6 +531,13 @@ export default function Home() {
           } catch {
             constellations = [];
           }
+          
+          setState(prev => ({ 
+            ...prev, 
+            stars,
+            constellations,
+            isLoading: false,
+          }));
         }
         
         // Fetch celestial bodies (sun, moon, planets) from Astronomy API
@@ -839,6 +868,55 @@ export default function Home() {
     }));
   }, []);
 
+  // Load more stars based on zoom level (FOV)
+  // Lower FOV = more zoomed in = load fainter stars
+  const loadMoreStarsForZoom = useCallback(async (fov: number) => {
+    // Calculate target magnitude based on FOV
+    // FOV 60° = mag 6, FOV 30° = mag 8, FOV 15° = mag 10, FOV 5° = mag 12
+    const targetMagnitude = Math.min(12, Math.max(6, 6 + (60 - fov) / 10));
+    
+    setState(prev => {
+      // Don't load if already loading or if we already have this magnitude
+      if (prev.isLoadingMoreStars || prev.currentMagnitudeLimit >= targetMagnitude) {
+        return prev;
+      }
+      
+      // Start loading more stars
+      (async () => {
+        try {
+          // Get constellation stars first (they must always be included)
+          const constellationResult = await fetchConstellationsWithStars();
+          const constellationStars = constellationResult.stars;
+          const constellationStarIds = new Set(constellationStars.map(s => s.id));
+          
+          // Fetch stars by magnitude
+          const { fetchStarsByMagnitude } = await import('../src/services/supabase-service');
+          const dbStars = await fetchStarsByMagnitude(targetMagnitude, 100000);
+          
+          // Merge: constellation stars + database stars (avoiding duplicates)
+          const additionalStars = dbStars.filter(s => !constellationStarIds.has(s.id));
+          const mergedStars = [...constellationStars, ...additionalStars];
+          
+          setState(p => ({
+            ...p,
+            stars: mergedStars,
+            currentMagnitudeLimit: targetMagnitude,
+            isLoadingMoreStars: false,
+          }));
+          
+          // Update sky calculator
+          if (skyCalculatorRef.current) {
+            skyCalculatorRef.current.setStars(mergedStars);
+          }
+        } catch (error) {
+          setState(p => ({ ...p, isLoadingMoreStars: false }));
+        }
+      })();
+      
+      return { ...prev, isLoadingMoreStars: true };
+    });
+  }, []);
+
   // Handle camera orientation change
   const handleCameraChange = useCallback((orientation: { azimuth: number; altitude: number; fov: number }) => {
     setState(prev => ({
@@ -847,7 +925,10 @@ export default function Home() {
       viewAltitude: orientation.altitude,
       fov: orientation.fov,
     }));
-  }, []);
+    
+    // Load more stars if zoomed in
+    loadMoreStarsForZoom(orientation.fov);
+  }, [loadMoreStarsForZoom]);
 
   // Toggle real-time mode
   const toggleRealTime = useCallback(() => {
@@ -1749,7 +1830,9 @@ export default function Home() {
 
       {/* Top Bar */}
       <div style={styles.topBar} className="top-bar">
-        <div style={styles.logo} className="logo">SkyWatch</div>
+        <div style={styles.logoContainer} className="logo">
+          <img src="/pie-black-logo.png" alt="PIE" style={styles.pieLogo} />
+        </div>
         <div style={styles.topControls} className="top-controls">
           <button 
             onClick={toggleObjectSearch} 
@@ -2364,15 +2447,12 @@ export default function Home() {
         </div>
       )}
 
-      {/* Loading Progress Indicator (non-blocking) */}
-      {state.isLoading && state.loadingProgress < 100 && (
+      {/* Loading Progress Indicator - shows while loading more stars on zoom */}
+      {state.isLoadingMoreStars && (
         <div style={styles.loadingIndicator}>
           <div style={styles.loadingIndicatorContent}>
             <div style={styles.miniSpinner} />
-            <span>{state.stars.length.toLocaleString()} stars ({state.loadingProgress}%)</span>
-          </div>
-          <div style={styles.miniProgressBar}>
-            <div style={{ ...styles.miniProgressFill, width: `${state.loadingProgress}%` }} />
+            <span>Loading more stars...</span>
           </div>
         </div>
       )}
@@ -2514,6 +2594,16 @@ const styles: Record<string, React.CSSProperties> = {
     background: 'linear-gradient(180deg, rgba(0, 8, 20, 0.95) 0%, rgba(0, 8, 20, 0) 100%)',
     backdropFilter: 'blur(10px)',
     zIndex: 100,
+  },
+  logoContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  pieLogo: {
+    height: '32px',
+    width: 'auto',
+    filter: 'invert(1)', // Invert black logo to white for dark background
   },
   logo: {
     fontSize: '20px',

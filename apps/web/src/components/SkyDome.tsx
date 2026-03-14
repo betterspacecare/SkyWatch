@@ -285,6 +285,7 @@ const InstancedStars: React.FC<InstancedStarsProps> = ({
   constellationStarIds,
 }) => {
   const pointsRef = React.useRef<THREE.Points>(null);
+  const geometryRef = React.useRef<THREE.BufferGeometry | null>(null);
   const { camera, raycaster, pointer } = useThree();
   
   // Calculate zoom scale - stars get BIGGER when zoomed in (lower FOV)
@@ -292,9 +293,8 @@ const InstancedStars: React.FC<InstancedStarsProps> = ({
     return Math.max(0.8, Math.min(4.0, 60 / fov));
   }, [fov]);
   
-  // Pre-calculate all star positions and colors - memoized heavily
-  const { positions, colors, sizes, starData } = useMemo(() => {
-    const posArray = new Float32Array(stars.length * 3);
+  // Pre-calculate colors and sizes once (they don't change with LST)
+  const { colors, sizes, starData } = useMemo(() => {
     const colorArray = new Float32Array(stars.length * 3);
     const sizeArray = new Float32Array(stars.length);
     const dataArray: { star: Star; index: number }[] = [];
@@ -302,16 +302,11 @@ const InstancedStars: React.FC<InstancedStarsProps> = ({
     
     for (let i = 0; i < stars.length; i++) {
       const star = stars[i]!;
-      const position = celestialToHorizontal3D(star.ra, star.dec, lst, observerLatitude);
       const color = SPECTRAL_COLORS[star.spectralType as SpectralType] || SPECTRAL_COLORS['G'];
       const isConstellation = constellationStarIds?.has(star.id) ?? false;
       const size = magnitudeToSize(star.magnitude, isConstellation) * 4;
       
       const idx = i * 3;
-      posArray[idx] = position.x;
-      posArray[idx + 1] = position.y;
-      posArray[idx + 2] = position.z;
-      
       tempColor.set(color);
       if (isConstellation) {
         colorArray[idx] = Math.min(1, tempColor.r * 1.15);
@@ -326,8 +321,36 @@ const InstancedStars: React.FC<InstancedStarsProps> = ({
       dataArray.push({ star, index: i });
     }
     
-    return { positions: posArray, colors: colorArray, sizes: sizeArray, starData: dataArray };
-  }, [stars, lst, observerLatitude, constellationStarIds]);
+    return { colors: colorArray, sizes: sizeArray, starData: dataArray };
+  }, [stars, constellationStarIds]);
+  
+  // Calculate positions based on LST (this changes with time)
+  const positions = useMemo(() => {
+    const posArray = new Float32Array(stars.length * 3);
+    
+    for (let i = 0; i < stars.length; i++) {
+      const star = stars[i]!;
+      const position = celestialToHorizontal3D(star.ra, star.dec, lst, observerLatitude);
+      
+      const idx = i * 3;
+      posArray[idx] = position.x;
+      posArray[idx + 1] = position.y;
+      posArray[idx + 2] = position.z;
+    }
+    
+    return posArray;
+  }, [stars, lst, observerLatitude]);
+  
+  // Update buffer geometry positions when they change (instead of recreating)
+  React.useEffect(() => {
+    if (geometryRef.current) {
+      const posAttr = geometryRef.current.getAttribute('position') as THREE.BufferAttribute;
+      if (posAttr && posAttr.array.length === positions.length) {
+        posAttr.array.set(positions);
+        posAttr.needsUpdate = true;
+      }
+    }
+  }, [positions]);
   
   // Only show labels for bright named stars - limit count for performance
   const labeledStars = useMemo(() => {
@@ -387,7 +410,7 @@ const InstancedStars: React.FC<InstancedStarsProps> = ({
   return (
     <group onClick={handleClick}>
       <points ref={pointsRef} frustumCulled={false} material={shaderMaterial}>
-        <bufferGeometry key={`stars-${lst.toFixed(4)}-${observerLatitude}`}>
+        <bufferGeometry ref={geometryRef} key={`stars-${stars.length}`}>
           <bufferAttribute attach="attributes-position" count={stars.length} array={positions} itemSize={3} />
           <bufferAttribute attach="attributes-customColor" count={stars.length} array={colors} itemSize={3} />
           <bufferAttribute attach="attributes-size" count={stars.length} array={sizes} itemSize={1} />
@@ -914,6 +937,7 @@ const CameraController: React.FC<CameraControllerProps> = ({ onCameraChange, fov
   const lastTargetRef = React.useRef<string | null>(null);
   const animatedAzRef = React.useRef<number | null>(null);
   const animatedAltRef = React.useRef<number | null>(null);
+  const needsTargetResetRef = React.useRef(false);
   
   // Update camera FOV when it changes
   React.useEffect(() => {
@@ -932,16 +956,21 @@ const CameraController: React.FC<CameraControllerProps> = ({ onCameraChange, fov
       
       // Only start animation if this is a new target
       if (targetKey !== lastTargetRef.current) {
-        console.log(`🎯 Camera target set: az=${targetAzimuth.toFixed(1)}°, alt=${targetAltitude.toFixed(1)}°`);
         targetRef.current = { azimuth: targetAzimuth, altitude: targetAltitude };
         isAnimatingRef.current = true;
         lastTargetRef.current = targetKey;
+        needsTargetResetRef.current = true; // Mark that we need to reset after animation
         // Reset animated values to start fresh
         animatedAzRef.current = null;
         animatedAltRef.current = null;
       }
     }
   }, [targetAzimuth, targetAltitude]);
+  
+  // Throttle camera change callbacks to reduce re-renders
+  const lastCallbackTimeRef = React.useRef<number>(0);
+  const lastAzimuthRef = React.useRef<number>(0);
+  const lastAltitudeRef = React.useRef<number>(0);
   
   useFrame(() => {
     const controls = controlsRef?.current;
@@ -965,7 +994,6 @@ const CameraController: React.FC<CameraControllerProps> = ({ onCameraChange, fov
       if (animatedAzRef.current === null) {
         animatedAzRef.current = currentAzimuth;
         animatedAltRef.current = currentAltitude;
-        console.log(`📍 Starting animation from: az=${currentAzimuth.toFixed(1)}°, alt=${currentAltitude.toFixed(1)}°`);
       }
       
       // Calculate shortest path for azimuth (handle wrap-around)
@@ -977,9 +1005,18 @@ const CameraController: React.FC<CameraControllerProps> = ({ onCameraChange, fov
       
       // Check if we're close enough to stop
       if (Math.abs(deltaAz) < 0.5 && Math.abs(deltaAlt) < 0.5) {
-        console.log(`✅ Camera reached target`);
         isAnimatingRef.current = false;
         controls.enabled = true;
+        
+        // Reset target to small distance in front of camera ONLY after search animation
+        if (needsTargetResetRef.current) {
+          needsTargetResetRef.current = false;
+          const finalDir = new THREE.Vector3();
+          camera.getWorldDirection(finalDir);
+          controls.target.copy(finalDir.multiplyScalar(1));
+          camera.position.set(0, 0, 0.01);
+          controls.update();
+        }
       } else {
         // Disable user controls during animation
         controls.enabled = false;
@@ -996,25 +1033,36 @@ const CameraController: React.FC<CameraControllerProps> = ({ onCameraChange, fov
         const azRad = (newAzimuth * Math.PI) / 180;
         const altRad = (newAltitude * Math.PI) / 180;
         
-        // This is exactly the horizontalTo3D formula
-        const radius = 100;
-        const targetX = radius * Math.cos(altRad) * Math.sin(azRad);
-        const targetY = radius * Math.sin(altRad);
-        const targetZ = radius * Math.cos(altRad) * Math.cos(azRad);
+        // Calculate look direction (unit vector)
+        const lookX = Math.cos(altRad) * Math.sin(azRad);
+        const lookY = Math.sin(altRad);
+        const lookZ = Math.cos(altRad) * Math.cos(azRad);
         
-        // Set OrbitControls target - camera will look at this point
-        controls.target.set(targetX, targetY, targetZ);
+        // Set target to small distance in look direction during animation
+        controls.target.set(lookX, lookY, lookZ);
         camera.position.set(0, 0, 0.01);
         controls.update();
       }
     }
     
+    // Throttle camera change callbacks - only call if significant change or every 100ms
     if (onCameraChange) {
-      onCameraChange({
-        azimuth: currentAzimuth,
-        altitude: currentAltitude,
-        fov: (camera as THREE.PerspectiveCamera).fov,
-      });
+      const now = performance.now();
+      const azDiff = Math.abs(currentAzimuth - lastAzimuthRef.current);
+      const altDiff = Math.abs(currentAltitude - lastAltitudeRef.current);
+      const timeDiff = now - lastCallbackTimeRef.current;
+      
+      // Only update if camera moved significantly (>1 degree) or 100ms passed
+      if (azDiff > 1 || altDiff > 1 || timeDiff > 100) {
+        lastCallbackTimeRef.current = now;
+        lastAzimuthRef.current = currentAzimuth;
+        lastAltitudeRef.current = currentAltitude;
+        onCameraChange({
+          azimuth: currentAzimuth,
+          altitude: currentAltitude,
+          fov: (camera as THREE.PerspectiveCamera).fov,
+        });
+      }
     }
   });
   
@@ -1058,7 +1106,7 @@ const AtmosphereGround: React.FC<AtmosphereGroundProps> = ({ sunAltitude = -10, 
     if (!groundTexture) return null;
     const loader = new THREE.TextureLoader();
     const tex = loader.load(groundTexture, 
-      () => console.log('Ground texture loaded successfully'),
+      () => {},
       undefined,
       (err) => console.error('Failed to load ground texture:', err)
     );
@@ -1461,10 +1509,10 @@ const HorizonLineRing: React.FC<HorizonLineProps> = ({
   );
 };
 
-// Constellation lines component - renders line segments connecting stars using actual star coordinates
+// Constellation lines component - renders the most centered constellation with drawing animation
 interface ConstellationLinesProps {
   constellations: Constellation[];
-  stars: Star[]; // Add stars prop to get actual coordinates
+  stars: Star[];
   lst: number;
   observerLatitude: number;
   lineColor?: string | undefined;
@@ -1472,6 +1520,9 @@ interface ConstellationLinesProps {
   showNames?: boolean | undefined;
   nameColor?: string | undefined;
   onConstellationClick?: ((constellation: Constellation) => void) | undefined;
+  cameraAzimuth?: number;
+  cameraAltitude?: number;
+  fov?: number;
 }
 
 const ConstellationLines: React.FC<ConstellationLinesProps> = ({
@@ -1479,11 +1530,14 @@ const ConstellationLines: React.FC<ConstellationLinesProps> = ({
   stars,
   lst,
   observerLatitude,
-  lineColor = '#88bbff',
-  lineOpacity = 0.8,
+  lineColor = '#4da6ff',
+  lineOpacity = 0.9,
   showNames = true,
-  nameColor = '#6699ff',
+  nameColor = '#7ec8ff',
   onConstellationClick,
+  cameraAzimuth = 180,
+  cameraAltitude = 45,
+  fov = 60,
 }) => {
   // Create a map of HIP ID to star for fast lookup
   const starMap = useMemo(() => {
@@ -1493,174 +1547,236 @@ const ConstellationLines: React.FC<ConstellationLinesProps> = ({
     }
     return map;
   }, [stars]);
-  
-  // Calculate line positions for each segment using ACTUAL star coordinates from rendered stars
-  // Create tapered lines by adding intermediate points with varying opacity
-  const lineGeometries = useMemo(() => {
-    const geometries: { id: string; positions: Float32Array; colors: Float32Array }[] = [];
-    
-    for (const constellation of constellations) {
-      for (let i = 0; i < constellation.lines.length; i++) {
-        const line = constellation.lines[i]!;
-        
-        // Look up the ACTUAL stars being rendered
-        const star1 = starMap.get(`HIP${line.star1.hipId}`);
-        const star2 = starMap.get(`HIP${line.star2.hipId}`);
-        
-        // Get RA/Dec - prefer actual star data, fallback to constellation line data
-        // NOTE: Star data has RA in HOURS, but constellation JSON has RA in DEGREES
-        // Convert degrees to hours when using fallback: hours = degrees / 15
-        const ra1 = star1?.ra ?? (line.star1.ra / 15);
-        const dec1 = star1?.dec ?? line.star1.dec;
-        const ra2 = star2?.ra ?? (line.star2.ra / 15);
-        const dec2 = star2?.dec ?? line.star2.dec;
-        
-        // Use the star coordinates converted to horizontal - same radius as stars (100)
-        const startPos = celestialToHorizontal3D(ra1, dec1, lst, observerLatitude, 100);
-        const endPos = celestialToHorizontal3D(ra2, dec2, lst, observerLatitude, 100);
-        
-        // Create tapered line with multiple segments for gradient effect
-        const segments = 8;
-        const positions: number[] = [];
-        const colors: number[] = [];
-        
-        // Parse line color to RGB
-        const color = new THREE.Color(lineColor);
-        
-        for (let s = 0; s <= segments; s++) {
-          const t = s / segments;
-          // Interpolate position
-          const x = startPos.x + (endPos.x - startPos.x) * t;
-          const y = startPos.y + (endPos.y - startPos.y) * t;
-          const z = startPos.z + (endPos.z - startPos.z) * t;
-          positions.push(x, y, z);
-          
-          // Tapered opacity: full in middle, fading at ends
-          // Use a smooth curve: sin(t * PI) gives 0 at ends, 1 in middle
-          const taper = Math.sin(t * Math.PI);
-          const alpha = 0.3 + taper * 0.7; // Range from 0.3 to 1.0
-          colors.push(color.r * alpha, color.g * alpha, color.b * alpha);
-        }
-        
-        geometries.push({
-          id: `${constellation.id}-${i}`,
-          positions: new Float32Array(positions),
-          colors: new Float32Array(colors),
-        });
-      }
-    }
-    
-    return geometries;
-  }, [constellations, starMap, lst, observerLatitude, lineColor]);
 
-  // Get constellation labels at their center positions
-  const constellationLabels = useMemo(() => {
-    return constellations.map((constellation) => {
-      // Calculate center from actual star positions in the starMap
+  // Calculate constellation centers and find the most centered one
+  const { mostCenteredId, constellationData } = useMemo(() => {
+    const data = constellations.map((constellation) => {
       const ras: number[] = [];
       const decs: number[] = [];
       
       for (const line of constellation.lines) {
-        // Look up actual star coordinates from the starMap (RA in hours)
         const star1 = starMap.get(`HIP${line.star1.hipId}`);
         const star2 = starMap.get(`HIP${line.star2.hipId}`);
-        
-        if (star1) {
-          ras.push(star1.ra);
-          decs.push(star1.dec);
-        }
-        if (star2) {
-          ras.push(star2.ra);
-          decs.push(star2.dec);
-        }
+        if (star1) { ras.push(star1.ra); decs.push(star1.dec); }
+        if (star2) { ras.push(star2.ra); decs.push(star2.dec); }
       }
       
-      // Calculate average position
-      let centerRA = 0;
-      let centerDec = 0;
+      const centerRA = ras.length > 0 ? ras.reduce((a, b) => a + b, 0) / ras.length : 0;
+      const centerDec = decs.length > 0 ? decs.reduce((a, b) => a + b, 0) / decs.length : 0;
+      const position = celestialToHorizontal3D(centerRA, centerDec, lst, observerLatitude, 100);
       
-      if (ras.length > 0) {
-        centerRA = ras.reduce((a, b) => a + b, 0) / ras.length;
-        centerDec = decs.reduce((a, b) => a + b, 0) / decs.length;
-      }
+      const azimuth = (Math.atan2(position.x, position.z) * (180 / Math.PI) + 360) % 360;
+      const altitude = Math.asin(Math.max(-1, Math.min(1, position.y / 100))) * (180 / Math.PI);
+      
+      let azDiff = azimuth - cameraAzimuth;
+      if (azDiff > 180) azDiff -= 360;
+      if (azDiff < -180) azDiff += 360;
+      const altDiff = altitude - cameraAltitude;
+      const cosAlt = Math.cos(cameraAltitude * Math.PI / 180);
+      const angularDistance = Math.sqrt((azDiff * cosAlt) * (azDiff * cosAlt) + altDiff * altDiff);
+      
+      return { constellation, position, angularDistance, altitude, isVisible: altitude > -5 && angularDistance < fov * 0.8 };
+    });
+    
+    const visible = data.filter(d => d.isVisible);
+    const mostCentered = visible.length > 0 ? visible.reduce((a, b) => a.angularDistance < b.angularDistance ? a : b) : null;
+    
+    return { mostCenteredId: mostCentered?.constellation.id ?? null, constellationData: data };
+  }, [constellations, starMap, lst, observerLatitude, cameraAzimuth, cameraAltitude, fov]);
+
+  // Animation state
+  const [activeId, setActiveId] = React.useState<string | null>(null);
+  const [drawProgress, setDrawProgress] = React.useState(0);
+  const [opacity, setOpacity] = React.useState(0);
+  const animFrameRef = React.useRef<number>(0);
+  const prevIdRef = React.useRef<string | null>(null);
+  
+  // Handle constellation transitions with drawing animation
+  React.useEffect(() => {
+    if (mostCenteredId === prevIdRef.current) return;
+    
+    cancelAnimationFrame(animFrameRef.current);
+    
+    const fadeOutAndSwitch = () => {
+      setOpacity(prev => {
+        if (prev <= 0.02) {
+          prevIdRef.current = mostCenteredId;
+          setActiveId(mostCenteredId);
+          setDrawProgress(0);
+          if (mostCenteredId) {
+            // Start drawing animation
+            const draw = () => {
+              setDrawProgress(p => {
+                if (p >= 1) { setOpacity(1); return 1; }
+                setOpacity(Math.min(1, p * 2));
+                animFrameRef.current = requestAnimationFrame(draw);
+                return p + 0.02;
+              });
+            };
+            animFrameRef.current = requestAnimationFrame(draw);
+          }
+          return 0;
+        }
+        animFrameRef.current = requestAnimationFrame(fadeOutAndSwitch);
+        return prev * 0.85;
+      });
+    };
+    
+    if (prevIdRef.current) {
+      animFrameRef.current = requestAnimationFrame(fadeOutAndSwitch);
+    } else if (mostCenteredId) {
+      prevIdRef.current = mostCenteredId;
+      setActiveId(mostCenteredId);
+      setDrawProgress(0);
+      const draw = () => {
+        setDrawProgress(p => {
+          if (p >= 1) { setOpacity(1); return 1; }
+          setOpacity(Math.min(1, p * 2));
+          animFrameRef.current = requestAnimationFrame(draw);
+          return p + 0.02;
+        });
+      };
+      animFrameRef.current = requestAnimationFrame(draw);
+    }
+    
+    return () => cancelAnimationFrame(animFrameRef.current);
+  }, [mostCenteredId]);
+
+  // Get line data for active constellation
+  const lineData = useMemo(() => {
+    if (!activeId) return [];
+    const c = constellations.find(x => x.id === activeId);
+    if (!c) return [];
+    
+    return c.lines.map((line, i) => {
+      const s1 = starMap.get(`HIP${line.star1.hipId}`);
+      const s2 = starMap.get(`HIP${line.star2.hipId}`);
+      const ra1 = s1?.ra ?? (line.star1.ra / 15);
+      const dec1 = s1?.dec ?? line.star1.dec;
+      const ra2 = s2?.ra ?? (line.star2.ra / 15);
+      const dec2 = s2?.dec ?? line.star2.dec;
       
       return {
-        id: constellation.id,
-        name: constellation.name,
-        position: celestialToHorizontal3D(centerRA, centerDec, lst, observerLatitude, 100),
+        idx: i,
+        total: c.lines.length,
+        start: celestialToHorizontal3D(ra1, dec1, lst, observerLatitude, 100),
+        end: celestialToHorizontal3D(ra2, dec2, lst, observerLatitude, 100),
       };
     });
-  }, [constellations, starMap, lst, observerLatitude]);
+  }, [activeId, constellations, starMap, lst, observerLatitude]);
+
+  // Get star glow points
+  const glowPoints = useMemo(() => {
+    if (!activeId || opacity < 0.1) return [];
+    const c = constellations.find(x => x.id === activeId);
+    if (!c) return [];
+    
+    const seen = new Set<string>();
+    const pts: { pos: THREE.Vector3; mag: number }[] = [];
+    
+    for (const line of c.lines) {
+      for (const starRef of [line.star1, line.star2]) {
+        const id = `HIP${starRef.hipId}`;
+        if (seen.has(id)) continue;
+        seen.add(id);
+        const s = starMap.get(id);
+        const ra = s?.ra ?? (starRef.ra / 15);
+        const dec = s?.dec ?? starRef.dec;
+        pts.push({ pos: celestialToHorizontal3D(ra, dec, lst, observerLatitude, 100), mag: s?.magnitude ?? 3 });
+      }
+    }
+    return pts;
+  }, [activeId, constellations, starMap, lst, observerLatitude, opacity]);
+
+  // Get label info
+  const labelInfo = useMemo(() => {
+    if (!activeId) return null;
+    return constellationData.find(d => d.constellation.id === activeId);
+  }, [activeId, constellationData]);
+
+  // Render a single animated line using cylinder mesh for visibility
+  const renderLine = (data: typeof lineData[0]) => {
+    const lineStart = data.idx / data.total * 0.5;
+    const lineEnd = lineStart + 0.5;
+    const progress = Math.max(0, Math.min(1, (drawProgress - lineStart) / (lineEnd - lineStart)));
+    
+    if (progress <= 0.01) return null;
+    
+    // Calculate the current end point based on progress
+    const currentEnd = new THREE.Vector3(
+      data.start.x + (data.end.x - data.start.x) * progress,
+      data.start.y + (data.end.y - data.start.y) * progress,
+      data.start.z + (data.end.z - data.start.z) * progress
+    );
+    
+    // Calculate line properties
+    const direction = new THREE.Vector3().subVectors(currentEnd, data.start);
+    const length = direction.length();
+    if (length < 0.1) return null;
+    
+    // Calculate midpoint and rotation
+    const midpoint = new THREE.Vector3().addVectors(data.start, currentEnd).multiplyScalar(0.5);
+    
+    // Create quaternion to rotate cylinder from Y-axis to line direction
+    const quaternion = new THREE.Quaternion();
+    const up = new THREE.Vector3(0, 1, 0);
+    quaternion.setFromUnitVectors(up, direction.clone().normalize());
+    
+    return (
+      <mesh key={`line-${data.idx}`} position={midpoint} quaternion={quaternion}>
+        <cylinderGeometry args={[0.08, 0.08, length, 6, 1]} />
+        <meshBasicMaterial 
+          color={lineColor}
+          opacity={lineOpacity * opacity} 
+          transparent
+        />
+      </mesh>
+    );
+  };
 
   return (
     <group>
-      {/* Render constellation line segments with tapered effect */}
-      {lineGeometries.map((geom) => (
-        <line key={`${geom.id}-${lst.toFixed(4)}`}>
-          <bufferGeometry>
-            <bufferAttribute
-              attach="attributes-position"
-              count={geom.positions.length / 3}
-              array={geom.positions}
-              itemSize={3}
-            />
-            <bufferAttribute
-              attach="attributes-color"
-              count={geom.colors.length / 3}
-              array={geom.colors}
-              itemSize={3}
-            />
-          </bufferGeometry>
-          <lineBasicMaterial
-            vertexColors
-            opacity={lineOpacity}
-            transparent
-            depthWrite={false}
-            depthTest={true}
-          />
-        </line>
-      ))}
+      {lineData.map(renderLine)}
       
-      {/* Render constellation name labels */}
-      {showNames && constellationLabels.map((label) => {
-        const constellation = constellations.find(c => c.id === label.id);
+      {/* Star glow points */}
+      {glowPoints.map((pt, i) => {
+        const size = Math.max(0.3, 0.7 - pt.mag * 0.1);
         return (
-          <group key={`${label.id}-${lst.toFixed(4)}`} position={label.position}>
-            <Html distanceFactor={80} style={{ pointerEvents: onConstellationClick ? 'auto' : 'none' }} zIndexRange={[0, 30]}>
-              <div 
-                onClick={() => constellation && onConstellationClick?.(constellation)}
-                style={{
-                  color: nameColor,
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  whiteSpace: 'nowrap',
-                  textShadow: '0 0 8px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.9)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '3px',
-                  opacity: 0.7,
-                  transform: 'translateY(-20px)',
-                  cursor: onConstellationClick ? 'pointer' : 'default',
-                  padding: '8px 12px',
-                  borderRadius: '6px',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  if (onConstellationClick) {
-                    e.currentTarget.style.opacity = '1';
-                    e.currentTarget.style.background = 'rgba(100, 149, 237, 0.2)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = '0.7';
-                  e.currentTarget.style.background = 'transparent';
-                }}
-              >
-                {label.name}
-              </div>
-            </Html>
-          </group>
+          <mesh key={`glow-${i}`} position={pt.pos}>
+            <sphereGeometry args={[size, 12, 12]} />
+            <meshBasicMaterial color={lineColor} transparent opacity={opacity * 0.7} />
+          </mesh>
         );
       })}
+      
+      {/* Label */}
+      {showNames && labelInfo && opacity > 0.1 && (
+        <group position={labelInfo.position}>
+          <Html distanceFactor={80} style={{ pointerEvents: opacity > 0.5 ? 'auto' : 'none' }} zIndexRange={[0, 30]}>
+            <div
+              onClick={() => onConstellationClick?.(labelInfo.constellation)}
+              style={{
+                color: nameColor,
+                fontSize: '15px',
+                fontWeight: 600,
+                whiteSpace: 'nowrap',
+                textShadow: `0 0 15px ${lineColor}, 0 0 8px ${lineColor}, 0 0 3px #000`,
+                textTransform: 'uppercase',
+                letterSpacing: '3px',
+                opacity: opacity * 0.95,
+                transform: `translateY(-22px) scale(${0.9 + 0.1 * opacity})`,
+                cursor: onConstellationClick ? 'pointer' : 'default',
+                padding: '8px 14px',
+                transition: 'background 0.2s',
+              }}
+              onMouseEnter={(e) => { if (opacity > 0.5) e.currentTarget.style.background = 'rgba(77,166,255,0.2)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+            >
+              {labelInfo.constellation.name}
+            </div>
+          </Html>
+        </group>
+      )}
     </group>
   );
 };
@@ -2515,6 +2631,8 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
   onCloseHighlight,
 }) => {
   const [fov, setFov] = useState<number>(config.fov);
+  const [cameraAzimuth, setCameraAzimuth] = useState<number>(180);
+  const [cameraAltitude, setCameraAltitude] = useState<number>(45);
   const containerRef = React.useRef<HTMLDivElement>(null);
   
   // Handle scroll wheel for FOV zoom - use non-passive listener to allow preventDefault
@@ -2599,8 +2717,6 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
     // This ensures constellation lines remain connected
     const allVisibleStars = [...constellationStars, ...filteredBrightStars];
     
-    console.log(`🔍 FOV LOD: FOV=${fov.toFixed(1)}°, lightPollutionLimit=${configMaxMag.toFixed(1)}, mag≤${magnitudeThreshold.toFixed(2)}, stars=${allVisibleStars.length} (${constellationStars.length} constellation + ${filteredBrightStars.length} bright)`);
-    
     return allVisibleStars;
   }, [constellationStars, brightStars, fov, config?.maxMagnitude]);
   
@@ -2614,6 +2730,9 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
   }, [onPlanetClick]);
   
   const handleCameraChange = useCallback((orientation: CameraOrientation) => {
+    // Update local state for constellation visibility
+    setCameraAzimuth(orientation.azimuth);
+    setCameraAltitude(orientation.altitude);
     // Pass to parent
     onCameraChange?.(orientation);
   }, [onCameraChange]);
@@ -2714,6 +2833,9 @@ export const SkyDome: React.FC<SkyDomeProps> = ({
             showNames={constellationConfig?.showNames}
             nameColor={constellationConfig?.nameColor}
             onConstellationClick={onConstellationClick}
+            cameraAzimuth={cameraAzimuth}
+            cameraAltitude={cameraAltitude}
+            fov={fov}
           />
         )}
         

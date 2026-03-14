@@ -32,6 +32,36 @@ export interface UserFavorite {
 }
 
 /**
+ * Fetch stars by maximum magnitude (brightness limit)
+ * Used for progressive loading based on zoom level
+ */
+export async function fetchStarsByMagnitude(
+  maxMagnitude: number,
+  limit: number = 50000
+): Promise<Star[]> {
+  const { data, error } = await supabase
+    .from('stars')
+    .select('*')
+    .lte('magnitude', maxMagnitude)
+    .order('magnitude', { ascending: true })
+    .limit(limit);
+
+  if (error) {
+    console.error('Error fetching stars by magnitude:', error);
+    return [];
+  }
+
+  return (data || []).map((star: any) => ({
+    id: star.hip_id ? `HIP${star.hip_id}` : star.id,
+    name: star.name,
+    ra: star.ra,
+    dec: star.dec,
+    magnitude: star.magnitude,
+    spectralType: star.spectral_type,
+  }));
+}
+
+/**
  * Fetch stars from Supabase by region
  */
 export async function fetchStarsFromSupabase(
